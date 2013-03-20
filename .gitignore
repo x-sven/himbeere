@@ -11,3 +11,15 @@
 *.lai
 *.la
 *.a
+
+*.svn
+*.DS_Store
+DEBUG*
+RELEASE*
+*~
+
+*.b#1
+*.depend
+*.layout
+tmp
+bin

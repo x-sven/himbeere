@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="test/src/Drotek10dof" />
+		<Option pch_mode="2" />
+		<Option default_target="release_linux32_x86_gcc" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="debug_linux32_x86_gcc">
+				<Option output="../../../../bin/test_drotek_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../../tmp/bin/test/drotek/debug/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="release_linux32_x86_gcc">
+				<Option output="../../../../bin/test_drotek_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../../tmp/bin/test/drotek/release/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="/opt/local/include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="release_linux32_arm_gcc">
+				<Option output="../../../../bin/test_drotek_linux32_arm_release" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../../tmp/bin/test/drotek/debug/linux32/arm/" />
+				<Option type="1" />
+				<Option compiler="armunknownlinuxgnueabigcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-g" />
+					<Add option="-D_STDC_PREDEF_H" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add option="-DBOOST_TEST_DYN_LINK" />
+			<Add directory="../../../i2cdevlib" />
+			<Add directory="../../I2Cdev" />
+			<Add directory="../../Delay" />
+			<Add directory=".." />
+			<Add directory="." />
+		</Compiler>
+		<Linker>
+			<Add library="boost_unit_test_framework" />
+			<Add library="boost_thread" />
+			<Add library="boost_system" />
+			<Add library="boost_signals" />
+		</Linker>
+		<Unit filename="../../../i2cdevlib/HMC5883L/HMC5883L.cpp" />
+		<Unit filename="../../../i2cdevlib/HMC5883L/HMC5883L.h" />
+		<Unit filename="../../../i2cdevlib/MPU6050/MPU6050.cpp" />
+		<Unit filename="../../../i2cdevlib/MPU6050/MPU6050.h" />
+		<Unit filename="../../../i2cdevlib/MS561101/MS561101BA.cpp" />
+		<Unit filename="../../../i2cdevlib/MS561101/MS561101BA.h" />
+		<Unit filename="../../Delay/Delay.cpp" />
+		<Unit filename="../../Delay/Delay.h" />
+		<Unit filename="../../I2Cdev/I2Cdev.cpp" />
+		<Unit filename="../../I2Cdev/I2Cdev.h" />
+		<Unit filename="../Drotek10dof.cpp" />
+		<Unit filename="../Drotek10dof.h" />
+		<Unit filename="Drotek10dof_tests.cpp" />
+		<Unit filename="boost_test_main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

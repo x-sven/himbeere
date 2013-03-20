@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="test/mavlink" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="debug_linux32_x86_gcc">
+				<Option output="../../../bin/test_mavlink_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../tmp/bin/test/mavlink/debug/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="release_linux32_x86_gcc">
+				<Option output="../../../bin/test_mavlink_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../tmp/bin/test/mavlink/release/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="release_linux32_arm_gcc">
+				<Option output="../../../bin/test_mavlink_linux32_arm_release" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../tmp/bin/test/mavlink/debug/linux32/arm/" />
+				<Option type="1" />
+				<Option compiler="armunknownlinuxgnueabigcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add option="-DBOOST_TEST_DYN_LINK" />
+			<Add directory="../../../src/mavlink/include/common" />
+			<Add directory=".." />
+			<Add directory="." />
+		</Compiler>
+		<Linker>
+			<Add library="boost_unit_test_framework" />
+		</Linker>
+		<Unit filename="../../../mavlink/include/checksum.h" />
+		<Unit filename="../../../mavlink/include/common/common.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_attitude.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_attitude_quaternion.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_auth_key.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_battery_status.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_change_operator_control.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_change_operator_control_ack.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_command_ack.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_command_long.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_data_stream.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_debug.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_debug_vect.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_file_transfer_dir_list.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_file_transfer_res.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_file_transfer_start.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_global_position_int.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_global_position_setpoint_int.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_global_vision_position_estimate.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_gps_global_origin.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_gps_raw_int.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_gps_status.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_heartbeat.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_highres_imu.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_hil_controls.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_hil_rc_inputs_raw.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_hil_state.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_local_position_ned.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_local_position_ned_system_global_offset.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_local_position_setpoint.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_manual_control.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_manual_setpoint.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_memory_vect.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_ack.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_clear_all.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_count.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_current.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_item.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_item_reached.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_request.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_request_list.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_request_partial_list.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_set_current.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_mission_write_partial_list.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_named_value_float.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_named_value_int.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_nav_controller_output.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_omnidirectional_flow.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_optical_flow.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_param_request_list.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_param_request_read.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_param_set.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_param_value.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_ping.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_raw_imu.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_raw_pressure.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_rc_channels_override.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_rc_channels_raw.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_rc_channels_scaled.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_request_data_stream.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_roll_pitch_yaw_thrust_setpoint.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_safety_allowed_area.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_safety_set_allowed_area.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_scaled_imu.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_scaled_pressure.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_servo_output_raw.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_set_global_position_setpoint_int.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_set_gps_global_origin.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_set_local_position_setpoint.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_set_mode.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_set_quad_motors_setpoint.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_set_quad_swarm_led_roll_pitch_yaw_thrust.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_set_quad_swarm_roll_pitch_yaw_thrust.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_set_roll_pitch_yaw_speed_thrust.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_set_roll_pitch_yaw_thrust.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_setpoint_6dof.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_setpoint_8dof.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_state_correction.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_statustext.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_sys_status.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_system_time.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_vfr_hud.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_vicon_position_estimate.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_vision_position_estimate.h" />
+		<Unit filename="../../../mavlink/include/common/mavlink_msg_vision_speed_estimate.h" />
+		<Unit filename="../../../mavlink/include/common/testsuite.h" />
+		<Unit filename="../../../mavlink/include/common/version.h" />
+		<Unit filename="../../../mavlink/include/mavlink_helpers.h" />
+		<Unit filename="../../../mavlink/include/mavlink_protobuf_manager.hpp" />
+		<Unit filename="../../../mavlink/include/mavlink_types.h" />
+		<Unit filename="../../../mavlink/include/protocol.h" />
+		<Unit filename="boost_test_main.cpp" />
+		<Unit filename="mavlink_tests.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

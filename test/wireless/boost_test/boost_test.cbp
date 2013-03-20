@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="test/wireless" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="debug_linux32_x86_gcc">
+				<Option output="../../../bin/test_wireless_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../tmp/bin/test/wireless/debug/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="release_linux32_x86_gcc">
+				<Option output="../../../bin/test_wireless_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../tmp/bin/test/wireless/release/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="/opt/local/include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="release_linux32_arm_gcc">
+				<Option output="../../../bin/test_wireless_linux32_arm_release" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../../tmp/bin/test/wireless/debug/linux32/arm/" />
+				<Option type="1" />
+				<Option compiler="armunknownlinuxgnueabigcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add option="-DBOOST_TEST_DYN_LINK" />
+			<Add directory=".." />
+			<Add directory="." />
+		</Compiler>
+		<Linker>
+			<Add library="boost_unit_test_framework" />
+			<Add library="boost_iostreams" />
+		</Linker>
+		<Unit filename="boost_test_main.cpp" />
+		<Unit filename="ping_time_tests.cpp" />
+		<Unit filename="wireless_tests.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

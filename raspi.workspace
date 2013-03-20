@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="src/i2cdevlib/i2cdevlib.cbp" />
+		<Project filename="app/GPS_logger/gps_logger.cbp" />
+		<Project filename="app/IMU_logger/imu_logger.cbp" />
+		<Project filename="app/OBS_logger/obs_logger.cbp" />
+		<Project filename="app/event_timer/asio_event_timer.cbp" />
+		<Project filename="app/event_timer/event_timer.cbp" />
+		<Project filename="src/cECF/boost_test/boost_test.cbp" />
+		<Project filename="src/linux/Drotek10dof/boost_test/boost_test.cbp" />
+		<Project filename="test/wireless/boost_test/boost_test.cbp" />
+		<Project filename="test/MAVlink/boost_test/boost_test.cbp" />
+		<Project filename="test/event_timer/boost_test/boost_test.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>
