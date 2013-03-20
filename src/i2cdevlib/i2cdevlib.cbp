@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ref/i2cdevlib" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/i2cdevlib" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/i2cdevlib" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="Arduino/I2Cdev" />
+		</Compiler>
+		<Unit filename="Arduino/AD7746/AD7746.cpp" />
+		<Unit filename="Arduino/AD7746/AD7746.h" />
+		<Unit filename="Arduino/ADS1115/ADS1115.cpp" />
+		<Unit filename="Arduino/ADS1115/ADS1115.h" />
+		<Unit filename="Arduino/ADXL345/ADXL345.cpp" />
+		<Unit filename="Arduino/ADXL345/ADXL345.h" />
+		<Unit filename="Arduino/ADXL345/Examples/ADXL345_raw/ADXL345_raw.ino" />
+		<Unit filename="Arduino/AK8975/AK8975.cpp" />
+		<Unit filename="Arduino/AK8975/AK8975.h" />
+		<Unit filename="Arduino/AK8975/Examples/AK8975_MPUEVB_heading/AK8975_MPUEVB_heading.ino" />
+		<Unit filename="Arduino/AK8975/Examples/AK8975_MPUEVB_raw/AK8975_MPUEVB_raw.ino" />
+		<Unit filename="Arduino/AK8975/Examples/AK8975_raw/AK8975_raw.ino" />
+		<Unit filename="Arduino/BMA150/BMA150.cpp" />
+		<Unit filename="Arduino/BMA150/BMA150.h" />
+		<Unit filename="Arduino/BMA150/examples/BMA150_raw/BMA150_raw.ino" />
+		<Unit filename="Arduino/BMP085/BMP085.cpp" />
+		<Unit filename="Arduino/BMP085/BMP085.h" />
+		<Unit filename="Arduino/BMP085/Examples/BMP085_basic/BMP085_basic.ino" />
+		<Unit filename="Arduino/DS1307/DS1307.cpp" />
+		<Unit filename="Arduino/DS1307/DS1307.h" />
+		<Unit filename="Arduino/DS1307/Examples/DS1307_tick/DS1307_tick.ino" />
+		<Unit filename="Arduino/HMC5843/Examples/HMC5843_raw/HMC5843_raw.ino" />
+		<Unit filename="Arduino/HMC5843/HMC5843.cpp" />
+		<Unit filename="Arduino/HMC5843/HMC5843.h" />
+		<Unit filename="Arduino/HMC5883L/Examples/HMC5883L_raw/HMC5883L_raw.ino" />
+		<Unit filename="Arduino/HMC5883L/HMC5883L.cpp" />
+		<Unit filename="Arduino/HMC5883L/HMC5883L.h" />
+		<Unit filename="Arduino/I2Cdev/I2Cdev.cpp" />
+		<Unit filename="Arduino/I2Cdev/I2Cdev.h" />
+		<Unit filename="Arduino/IAQ2000/IAQ2000.cpp" />
+		<Unit filename="Arduino/IAQ2000/IAQ2000.h" />
+		<Unit filename="Arduino/IAQ2000/examples/IAQ2000/IAQ2000.ino" />
+		<Unit filename="Arduino/ITG3200/Examples/ITG3200_raw/ITG3200_raw.ino" />
+		<Unit filename="Arduino/ITG3200/ITG3200.cpp" />
+		<Unit filename="Arduino/ITG3200/ITG3200.h" />
+		<Unit filename="Arduino/LM73/LM73.cpp" />
+		<Unit filename="Arduino/LM73/LM73.h" />
+		<Unit filename="Arduino/MPR121/MPR121.cpp" />
+		<Unit filename="Arduino/MPR121/MPR121.h" />
+		<Unit filename="Arduino/MPU6050/Examples/MPU6050_DMP6/MPU6050_DMP6.ino" />
+		<Unit filename="Arduino/MPU6050/Examples/MPU6050_raw/MPU6050_raw.ino" />
+		<Unit filename="Arduino/MPU6050/MPU6050.cpp" />
+		<Unit filename="Arduino/MPU6050/MPU6050.h" />
+		<Unit filename="Arduino/MPU6050/MPU6050_6Axis_MotionApps20.h" />
+		<Unit filename="Arduino/MPU6050/MPU6050_9Axis_MotionApps41.h" />
+		<Unit filename="Arduino/MPU6050/helper_3dmath.h" />
+		<Unit filename="Arduino/SSD1308/SSD1308.cpp" />
+		<Unit filename="Arduino/SSD1308/SSD1308.h" />
+		<Unit filename="Arduino/SSD1308/fixedWidthFont.h" />
+		<Unit filename="Arduino/TCA6424A/TCA6424A.cpp" />
+		<Unit filename="Arduino/TCA6424A/TCA6424A.h" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
