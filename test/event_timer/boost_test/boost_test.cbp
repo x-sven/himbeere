@@ -8,6 +8,7 @@
 		<Build>
 			<Target title="debug_linux32_x86_gcc">
 				<Option output="../../../bin/test_scheduling_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../../bin" />
 				<Option object_output="../../../tmp/bin/test/scheduling/debug/linux32/x86/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -18,6 +19,7 @@
 			</Target>
 			<Target title="release_linux32_x86_gcc">
 				<Option output="../../../bin/test_scheduling_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../../bin" />
 				<Option object_output="../../../tmp/bin/test/scheduling/release/linux32/x86/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -31,6 +33,7 @@
 			</Target>
 			<Target title="release_linux32_arm_gcc">
 				<Option output="../../../bin/test_scheduling_linux32_arm_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../../bin" />
 				<Option object_output="../../../tmp/bin/test/scheduling/debug/linux32/arm/" />
 				<Option type="1" />
 				<Option compiler="armunknownlinuxgnueabigcc" />
@@ -38,6 +41,7 @@
 					<Add option="-O2" />
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
+					<Add option="-D_STDC_PREDEF_H" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -49,16 +53,24 @@
 			<Add option="-fexceptions" />
 			<Add directory=".." />
 			<Add directory="." />
+			<Add directory="../../../src/linux/Millis" />
+			<Add directory="../../../src/linux/Logging" />
 		</Compiler>
 		<Linker>
 			<Add library="boost_unit_test_framework" />
+			<Add library="boost_filesystem" />
 			<Add library="boost_system" />
 			<Add library="boost_thread" />
 			<Add library="pthread" />
 			<Add library="rt" />
 		</Linker>
+		<Unit filename="../../../src/linux/Logging/Logging.cpp" />
+		<Unit filename="../../../src/linux/Logging/Logging.h" />
+		<Unit filename="../../../src/linux/Millis/millis.cpp" />
+		<Unit filename="../../../src/linux/Millis/millis.h" />
 		<Unit filename="asio_event_main.cpp" />
 		<Unit filename="boost_test_main.cpp" />
+		<Unit filename="logging_parser.cpp" />
 		<Unit filename="sleep_event_main.cpp" />
 		<Extensions>
 			<code_completion />
