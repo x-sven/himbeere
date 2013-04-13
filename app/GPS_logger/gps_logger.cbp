@@ -56,6 +56,8 @@
 		</Compiler>
 		<Linker>
 			<Add library="boost_thread" />
+			<Add library="boost_system" />
+			<Add library="boost_filesystem" />
 		</Linker>
 		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
 		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />

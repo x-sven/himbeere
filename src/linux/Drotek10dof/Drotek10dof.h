@@ -14,7 +14,7 @@ class Drotek10dof
     public:
         Drotek10dof();
         ~Drotek10dof();
-        void begin(uint16_t frequency = 100, uint8_t sched_priority = 1, uint8_t sched_policy = SCHED_FIFO);
+        void begin(uint16_t frequency = 100, uint8_t sched_priority = 30, uint8_t sched_policy = SCHED_FIFO);
         //http://www.kernel.org/doc/man-pages/online/pages/man2/sched_setscheduler.2.html
 
         void end(void);
@@ -25,10 +25,23 @@ class Drotek10dof
 
         void getIMUConfigString(const char* prefix);
 
+        void getScaledIMU(float *ax, float *ay, float *az, float *rx, float *ry, float *rz);
+        void getScaledMAG(float *mx, float *my, float *mz);
+        void getScaledBaro(float *p, float *T);
 
+        void getScaledMAG(float *mx, float *my, float *mz, boost::posix_time::ptime *ptime);
+        void getScaledBaro(float *_p, float *_T, boost::posix_time::ptime *ptime);
+        void getScaledIMU(float *ax, float *ay, float *az, float *rx, float *ry, float *rz, boost::posix_time::ptime *ptime);
+
+
+        boost::posix_time::ptime time_imu;
         int16_t ax, ay, az;
         int16_t gx, gy, gz;
+
+        boost::posix_time::ptime time_mag;
         int16_t mx, my, mz;
+
+        boost::posix_time::ptime time_baro;
         int32_t pressure, temp;
 
     protected:
@@ -49,9 +62,6 @@ class Drotek10dof
         long     m_imu_timing_buffer; //milliseconds
         uint16_t m_imu_timing_counter;
         float    m_timing_average;    //milliseconds
-
-
-
 };
 
 #endif // DROTEK10DOF_H

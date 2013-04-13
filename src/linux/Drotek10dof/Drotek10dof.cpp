@@ -26,6 +26,12 @@ Drotek10dof::Drotek10dof()
     thread_running = false;
     m_imu_timing_buffer = 0;
     m_timing_average = 0.;
+
+   ax=ay=az=0;
+   gx=gy=gz=0;
+   mx=my=mz=0;
+   pressure=temp=0;
+   time_imu = time_mag = time_baro = boost::posix_time::microsec_clock::local_time();
 }
 
 void Drotek10dof::begin(uint16_t frequency, uint8_t sched_priority, uint8_t sched_policy)
@@ -53,10 +59,20 @@ void Drotek10dof::begin(uint16_t frequency, uint8_t sched_priority, uint8_t sche
         DEBUGMSG("MPU6050 bypass disabled\n");
 
     mag->initialize();
-    //continious mode?
-    //sample rate?
-    //average?
-
+    if(mag->testConnection())
+    {
+        //Select number of samples averaged (1 to 8) per
+        // measurement output.
+        mag->setSampleAveraging(HMC5883L_AVERAGING_8);
+        // 1370 LSB/Gauss  => ± 0.88 Ga recommended, range 2048/1370 = ±1,49 Ga
+        mag->setGain(HMC5883L_GAIN_1370);
+        // Typical Data Output Rate (Hz) => 75Hz
+        mag->setDataRate(HMC5883L_RATE_75);
+        // During continuous-measurement mode, the device continuously
+        // makes measurements, at user selectable rate, and
+        // places measured data in data output registers.
+        mag->setMode(HMC5883L_MODE_CONTINUOUS);
+    }
     baro->initialize();
     // settings?
 
@@ -137,6 +153,116 @@ void Drotek10dof::getIMUConfigString(const char* prefix)
     //return(IMUConfigString);
 }
 
+void Drotek10dof::getScaledIMU(float *_ax, float *_ay, float *_az, float *_rx, float *_ry, float *_rz, boost::posix_time::ptime *time)
+{
+    getScaledIMU(_ax, _ay, _az, _rx, _ry, _rz);
+    *time = time_imu;
+}
+
+void Drotek10dof::getScaledIMU(float *_ax, float *_ay, float *_az, float *_rx, float *_ry, float *_rz)
+{
+    float ACC_SCALE = (32.*9.81)/pow(2,16);
+    float GYRO_SCALE = (2000.)/pow(2,16);
+
+    switch(imu->getFullScaleGyroRange())
+    {
+    case(MPU6050_GYRO_FS_250):
+        GYRO_SCALE = (500.)/pow(2,16);
+        break;
+    case(MPU6050_GYRO_FS_500):
+        GYRO_SCALE = (1000.)/pow(2,16);
+        break;
+    case(MPU6050_GYRO_FS_1000):
+        GYRO_SCALE = (2000.)/pow(2,16);
+        break;
+    case(MPU6050_GYRO_FS_2000):
+        GYRO_SCALE = (4000.)/pow(2,16);
+        break;
+    }
+
+    switch(imu->getFullScaleAccelRange())
+    {
+    case(MPU6050_ACCEL_FS_2):
+        ACC_SCALE = (4.*9.81)/pow(2,16);
+        break;
+    case(MPU6050_ACCEL_FS_4):
+        ACC_SCALE = (8.*9.81)/pow(2,16);
+        break;
+    case(MPU6050_ACCEL_FS_8):
+        ACC_SCALE = (16.*9.81)/pow(2,16);
+        break;
+    case(MPU6050_ACCEL_FS_16):
+        ACC_SCALE = (32.*9.81)/pow(2,16);
+        break;
+    }
+
+    *_ax = ACC_SCALE*ax;
+    *_ay = ACC_SCALE*ay;
+    *_az = ACC_SCALE*az;
+    *_rx = GYRO_SCALE*gx;
+    *_ry = GYRO_SCALE*gy;
+    *_rz = GYRO_SCALE*gz;
+}
+
+void Drotek10dof::getScaledMAG(float *_mx, float *_my, float *_mz, boost::posix_time::ptime *time)
+{
+    getScaledMAG(_mx, _my, _mz);
+    *time = time_mag;
+}
+
+void Drotek10dof::getScaledMAG(float *_mx, float *_my, float *_mz)
+{
+    float MAG_SCALE = 1./1370.;
+
+    switch(mag->getGain())
+    {
+    case(HMC5883L_GAIN_1370):
+        MAG_SCALE = 1./1370.;
+        break;
+    case(HMC5883L_GAIN_1090):
+        MAG_SCALE = 1./1090.;
+        break;
+    case(HMC5883L_GAIN_820):
+        MAG_SCALE = 1./820.;
+        break;
+    case(HMC5883L_GAIN_660):
+        MAG_SCALE = 1./660.;
+        break;
+    case(HMC5883L_GAIN_440):
+        MAG_SCALE = 1./440.;
+        break;
+    case(HMC5883L_GAIN_390):
+        MAG_SCALE = 1./390.;
+        break;
+    case(HMC5883L_GAIN_330):
+        MAG_SCALE = 1./330.;
+        break;
+    case(HMC5883L_GAIN_220):
+        MAG_SCALE = 1./220.;
+        break;
+    }
+
+    *_mx = MAG_SCALE*mx;
+    *_my = MAG_SCALE*my;
+    *_mz = MAG_SCALE*mz;
+}
+
+void Drotek10dof::getScaledBaro(float *_p, float *_T, boost::posix_time::ptime *time)
+{
+    getScaledBaro(_p, _T);
+    *time = time_baro;
+}
+
+void Drotek10dof::getScaledBaro(float *_p, float *_T)
+{
+    float BARO_SCALE = (1./100.);
+    float TEMP_SCALE = (1./100.);
+
+    *_p = BARO_SCALE*pressure;
+    *_T = TEMP_SCALE*temp;
+}
+
+
 void Drotek10dof::connect_imu_callback(boost::function<void (void)> func)
 {
     signal_imudata.connect(func);
@@ -154,9 +280,8 @@ float Drotek10dof::getTimingAverage(void)
 
 void Drotek10dof::loop(void)
 {
-    m_imu_timing_buffer  = 0;
-    m_imu_timing_counter = 0;
-    m_timing_average = 0.0;
+    long m_imu_timing_buffer  = 0;
+    uint16_t m_imu_timing_counter = 0;
 
     try
     {
@@ -177,13 +302,17 @@ void Drotek10dof::loop(void)
             imu->getMotion6(&ax, &ay, &az, &gx, &gy, &gz); // 1-1.2ms
             //imu.getAcceleration(&ax, &ay, &az); //1.2ms
             //imu.getRotation(&gx, &gy, &gz); //1.2ms
+            time_imu = boost::posix_time::microsec_clock::local_time();
+            signal_imudata();
 
             if (timer_imu > timer_50Hz) //50Hz
             {
                 DEBUGMSG("DROTEK thread loop: 50Hz\n");
 
-                mag->getHeading(&mx, &my, &mz); //0.6ms
+                mag->getMeasurments(&mx, &my, &mz); //0.6ms
+                time_mag = boost::posix_time::microsec_clock::local_time();
                 baro->read(&pressure, &temp);   //3.6-3.8ms@OSR=1024, 2.4ms@OSR=512
+                time_baro = boost::posix_time::microsec_clock::local_time();
                 signal_baromagdata();
 
                 timer_50Hz = timer_50Hz + interval_50Hz;
@@ -205,9 +334,6 @@ void Drotek10dof::loop(void)
                 }
                 timer_1Hz = timer_1Hz + interval_1Hz;
             }//1Hz
-
-            signal_imudata();
-
             timer_imu = timer_imu + interval_imu; // update timer
 
             //performance counter

@@ -37,7 +37,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-g" />
-					<Add option="-DDEBUG" />
+					<Add option="-D_STDC_PREDEF_H" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />

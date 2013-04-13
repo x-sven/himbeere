@@ -96,6 +96,8 @@ void HardwareSerial::receive_loop(void)
 
 HardwareSerial::HardwareSerial( const char* device)
 {
+    memset(&rx_buffer, 0, sizeof(rx_buffer));
+    memset(&tx_buffer, 0, sizeof(tx_buffer));
     _rx_buffer = &rx_buffer;
     _tx_buffer = &tx_buffer;
 
@@ -107,8 +109,8 @@ HardwareSerial::HardwareSerial( const char* device)
                   << " in HardwareSerial::HardwareSerial()!"
                   << std::endl << fflush(stdout);
     }
-    thread_running = false;
 #endif // defined
+    thread_running = false;
 }
 
 // Public Methods //////////////////////////////////////////////////////////////

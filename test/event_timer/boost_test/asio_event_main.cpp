@@ -18,11 +18,7 @@ void time_based_function(const boost::system::error_code &, boost::asio::deadlin
     boost::posix_time::time_duration interval(boost::posix_time::microseconds(1000000 / frequency));
     boost::posix_time::ptime ptimer = boost::posix_time::microsec_clock::local_time() + interval;
 
-#if defined(__arm__)
-    for(volatile unsigned int ii=0; ii<20000/4; ii++) //about 40% CPU for raspberry
-#else
     for(volatile unsigned int ii=0; ii<20000; ii++) //about 40% CPU for eeePC
-#endif
     {
         {
             volatile int n = 0.1;

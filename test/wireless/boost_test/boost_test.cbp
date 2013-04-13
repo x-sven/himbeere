@@ -38,6 +38,7 @@
 					<Add option="-O2" />
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
+					<Add option="-D_STDC_PREDEF_H" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -54,6 +55,8 @@
 		<Linker>
 			<Add library="boost_unit_test_framework" />
 			<Add library="boost_iostreams" />
+			<Add library="bz2" />
+			<Add library="z" />
 		</Linker>
 		<Unit filename="boost_test_main.cpp" />
 		<Unit filename="ping_time_tests.cpp" />

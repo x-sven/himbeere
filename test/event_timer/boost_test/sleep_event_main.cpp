@@ -40,11 +40,7 @@ void event_loop(void)
     clock_gettime(CLOCK_REALTIME, &ts_beg); // http://linux.die.net/man/3/clock_gettime
     while(event_loop_execute && loopcount < 500)
     {
-#if defined(__arm__)
-        for(volatile unsigned int ii=0; ii<20000/4; ii++) //about 40% CPU for raspberry
-#else
         for(volatile unsigned int ii=0; ii<20000; ii++) //about 40% CPU for eeePC
-#endif
         {
             {
                 volatile int n = 0.1;
@@ -52,7 +48,10 @@ void event_loop(void)
                 pretendWeNeedTheResult = pretendWeNeedTheResult + pretendWeNeedTheResult;
             }
         }
-        timelog.write(std::ostringstream().flush() << millis() << "\t"  << sleeptime.total_microseconds() << "\t" << (1-((float)sleeptime.total_microseconds()/(float)interval.total_microseconds())) << std::endl);
+        timelog.write(std::ostringstream().flush() << millis() << "\t"
+                            << sleeptime.total_microseconds() << "\t"
+                            << (1-((float)sleeptime.total_microseconds()/(float)interval.total_microseconds()))
+                            << std::endl);
 
         loopcount++;
         timer = timer + interval;

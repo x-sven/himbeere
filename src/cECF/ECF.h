@@ -25,9 +25,13 @@ public:
   ECFClass(void); //Constructor
   void set_GyroVector_rads(float x, float y, float z);
   void set_AccelVector_mss(float x, float y, float z);
+  void set_MagVector_Gauss(float x, float y, float z);
+
   float get_Acceleration_mss(uint8_t axis);
   float get_GyroRate_rads(uint8_t axis);
   float get_CorrectedRate_rads(uint8_t axis);
+  float get_Heading_rad(void);
+
   void set_speed_msdeg(float ground_speed, float ground_course, float speed_3d);
   void update(void);
   stEuler_t get_euler_angles_rad(void);
@@ -42,44 +46,59 @@ public:
     float get_Ki_Yaw(void);
 
 
-  float ECF_Matrix[3][3];
+  float DCM_Matrix[3][3];
 
   float G_Dt;    // Integration time (ECF algorithm)
 
 private:
-  void Matrix_update(void);
-  void Normalize(void);
-  void Drift_correction(void);
-  void Accel_adjust(void);
+    void Matrix_update(void);
+    void Normalize(void);
+    void Drift_correction(void);
+    void Accel_adjust(void);
 
-  float Update_Matrix[3][3];
-  float Temporary_Matrix[3][3];
+    float Update_Matrix[3][3];
+    float Temporary_Matrix[3][3];
 
-  float Accel_Vector[3]; //Store the acceleration in a vector
-  float Gyro_Vector[3];  //Store the gyros rates in a vector
+    float Accel_Vector[3]; //Store the acceleration in a vector (m/s2)
+    float Gyro_Vector[3];  //Store the gyros rates in a vector (rad/s)
+    float Mag_Vector[3];   //Store the magnetic field in a vector (Gauss)
 
-  float Omega_Vector[3]; //Corrected Gyro_Vector data
-  float Omega_P[3];      //Omega Proportional correction
-  float Omega_I[3];      //Omega Integrator
-  float Omega[3];        //Turn rate for accel adjustment
+    float Omega_Vector[3]; //Corrected Gyro_Vector data
+    float Omega_P[3];      //Omega Proportional correction
+    float Omega_I[3];      //Omega Integrator
+    float Omega[3];        //Turn rate for accel adjustment
 
-  float errorRollPitch[3];
-  float errorYaw[3];
-  float errorCourse;
-  float COGX; //Course overground X axis
-  float COGY; //Course overground Y axis
+    float errorRollPitch[3];
+    float errorYaw[3];
+    float errorCourse;
+    float COGX; //Course overground X axis
+    float COGY; //Course overground Y axis
 
-  float f_ground_speed;
-  float f_ground_course;
-  float f_speed_3d;
+    float f_ground_speed;
+    float f_ground_course;
+    float f_speed_3d;
 
-  const float f_g_const;
+    const float f_g_const;
+
+    float f_declination; //Declination for magnetometer correction
+    bool mag_enabled;
+    float f_heading;
 
     float Kp_ROLLPITCH;
     float Ki_ROLLPITCH;
     float Kp_YAW;
     float Ki_YAW;
 
+    float wrap_pi ( float r )
+    {
+        while ( r > M_PI ) {
+            r -= 2 * M_PI;
+        }
+        while ( r <= -M_PI ) {
+            r += 2 * M_PI;
+        }
+        return r;
+    }
 };
 
 #endif //_ECF_H_INCLUDED

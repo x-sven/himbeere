@@ -175,6 +175,7 @@ int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint16
 int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data, uint16_t timeout) {
     int8_t count = 0;
 
+    memset(data, 0, length);
     char device_str[] = I2C_DEVICE_STR;
     int fd = open(device_str, O_RDWR);
 

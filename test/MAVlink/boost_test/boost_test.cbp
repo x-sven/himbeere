@@ -37,6 +37,7 @@
 					<Add option="-O2" />
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
+					<Add option="-D_STDC_PREDEF_H" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -48,11 +49,13 @@
 			<Add option="-fexceptions" />
 			<Add option="-DBOOST_TEST_DYN_LINK" />
 			<Add directory="../../../src/mavlink/include/common" />
+			<Add directory="../../../src/linux/DataLink" />
 			<Add directory=".." />
 			<Add directory="." />
 		</Compiler>
 		<Linker>
 			<Add library="boost_unit_test_framework" />
+			<Add library="boost_thread" />
 		</Linker>
 		<Unit filename="../../../mavlink/include/checksum.h" />
 		<Unit filename="../../../mavlink/include/common/common.h" />
@@ -148,6 +151,8 @@
 		<Unit filename="../../../mavlink/include/mavlink_protobuf_manager.hpp" />
 		<Unit filename="../../../mavlink/include/mavlink_types.h" />
 		<Unit filename="../../../mavlink/include/protocol.h" />
+		<Unit filename="../../../src/linux/DataLink/cDataLink.cpp" />
+		<Unit filename="../../../src/linux/DataLink/cDataLink.h" />
 		<Unit filename="boost_test_main.cpp" />
 		<Unit filename="mavlink_tests.cpp" />
 		<Extensions>

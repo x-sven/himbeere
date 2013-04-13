@@ -5,8 +5,6 @@
 		<Project filename="app/GPS_logger/gps_logger.cbp" />
 		<Project filename="app/IMU_logger/imu_logger.cbp" />
 		<Project filename="app/OBS_logger/obs_logger.cbp" />
-		<Project filename="app/event_timer/asio_event_timer.cbp" />
-		<Project filename="app/event_timer/event_timer.cbp" />
 		<Project filename="src/cECF/boost_test/boost_test.cbp" />
 		<Project filename="src/linux/Drotek10dof/boost_test/boost_test.cbp" />
 		<Project filename="test/wireless/boost_test/boost_test.cbp" />

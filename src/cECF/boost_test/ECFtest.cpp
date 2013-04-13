@@ -123,9 +123,9 @@ BOOST_AUTO_TEST_CASE( Matrix_update_test )
         for (uint8_t jj=0; jj<3; jj++)
         {
             if(ii==jj)
-                BOOST_CHECK_CLOSE_FRACTION(ECF.ECF_Matrix[ii][jj], (float)1.0, (float)1e-5);
+                BOOST_CHECK_CLOSE_FRACTION(ECF.DCM_Matrix[ii][jj], (float)1.0, (float)1e-5);
             else
-                BOOST_CHECK_SMALL(ECF.ECF_Matrix[ii][jj], (float)1e-5);
+                BOOST_CHECK_SMALL(ECF.DCM_Matrix[ii][jj], (float)1e-5);
         }//for jj
     }//for ii
 
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE( Accel_adjust_test )
 
 }
 
-BOOST_AUTO_TEST_CASE(ECF_parameter_test )
+BOOST_AUTO_TEST_CASE(ECF_set_parameter_test )
 {
     ECFClass ECF;
 
@@ -290,11 +290,209 @@ BOOST_AUTO_TEST_CASE(ECF_tuning_test )
     BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().yaw , (float)5.0);
 
 
+//    if (system(NULL))
+//    {
+//        /*int ret = */system ("gnuplot -persist plot_roll.gnuplot");
+//    }
+
+}
+
+BOOST_AUTO_TEST_CASE( Euler_from_ECF_with_mag )
+{
+    ECFClass ECF;
+
+    //check initialization
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().pitch,  (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().roll ,  (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().yaw  ,  (float)1e-5);
+
+    ECF.set_AccelVector_mss(0.0, 0.0, 9.81);
+    ECF.set_MagVector_Gauss(0.4, 0.0, 0.4); //Pointing north + declination
+    ECF.update();
+
+    BOOST_CHECK_SMALL(ECF.get_Acceleration_mss(0),  (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_Acceleration_mss(1),  (float)1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Acceleration_mss(2), (float)9.81, (float)1e-5);
+
+    BOOST_CHECK_CLOSE_FRACTION(ECF.errorRollPitch[0], 0.0, 1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.errorRollPitch[1], 0.0, 1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.errorRollPitch[2], 0.0, 1e-5);
+
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().pitch,  (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().roll ,  (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().yaw  ,  (float)1e-5);
+
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().pitch,  (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().roll ,  (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().yaw  ,  (float)1e-5);
+
+    ECF.set_AccelVector_mss(-6.9367, 0.0, 6.9367);
+    ECF.set_MagVector_Gauss(0.565, 0.0, 0.0); //Pointing north + declination
+
+#include <iostream>
+    ofstream outfile;
+    outfile.open("history_pitch_mag.txt", ios_base::trunc);
+    outfile<<"# Time\t"<<"pitch\t"<<"roll\t"<<"yaw"<<endl;
+    for(int ii=0; ii<60*50; ii++)
+    {
+        ECF.update();
+        outfile<<ii/50.<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().pitch<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().roll<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().yaw<<"\t"
+        <<endl;
+    }
+    outfile.close();
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_from_acc_rad().toDeg().pitch, (float)45.0, (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().roll , (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().yaw  , (float)1e-5);
+
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_rad().toDeg().pitch, (float)45.0, (float)0.5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().roll, (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().yaw , (float)1e-5);
+
+    ECF.set_AccelVector_mss(0.0, 6.9367, 6.9367);
+    ECF.set_MagVector_Gauss(0.4, 0.283, 0.283); //Pointing north + declination
+
+    outfile.open("history_roll_mag.txt", ios_base::trunc);
+    outfile<<"# Time\t"<<"pitch\t"<<"roll\t"<<"yaw"<<endl;
+    for(int ii=0; ii<60*50; ii++)
+    {
+        ECF.update();
+        outfile<<ii/50.<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().pitch<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().roll<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().yaw<<"\t"
+        <<endl;
+    }
+    outfile.close();
+
+    //ECF is at pitch=45° and roll=45°
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().pitch,  (float)1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_from_acc_rad().toDeg().roll , (float)45.0, (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().yaw  ,  (float)1e-5);
+
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().pitch, (float)0.5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_rad().toDeg().roll , (float)45.0, (float)0.5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().yaw, (float)0.5);
+}
+
+BOOST_AUTO_TEST_CASE(ECF_tuning_test_with_mag )
+{
+    ECFClass ECF;
+
+    //org. Kp = 1500*Ki
+    ECF.set_Kp_RollPitch(0.015);
+    ECF.set_Ki_RollPitch(0.00001);
+
+//    //faster
+//    ECF.set_Kp_RollPitch(0.075);
+//    ECF.set_Ki_RollPitch(0.00005);
+
+//    //slower
+//    ECF.set_Kp_RollPitch(0.0075);
+//    ECF.set_Ki_RollPitch(0.000005);
+
+
+    ECF.set_AccelVector_mss(-6.9367, 0.0, 6.9367);
+    ECF.set_MagVector_Gauss(0.4, 0.0, 0.4); //Pointing north + declination
+
+    //wait to settle attitude to 45deg
+    for(int ii=0; ii<60*50; ii++)
+    {
+        ECF.update();
+    }
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_from_acc_rad().toDeg().pitch, (float)45.0, (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().roll , (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().yaw  , (float)1e-5);
+
+ #include <iostream>
+    ofstream outfile;
+    outfile.open("history_pitch_acc_mag.txt", ios_base::trunc);
+    outfile<<"# Time\t"<<"pitch\t"<<"roll\t"<<"yaw"<<endl;
+    for(int ii=0; ii<60*50; ii++)
+    {
+        if(20*60 < ii)
+           ECF.set_AccelVector_mss(-6.9367+3., 0.0, 6.9367); //2m/s2 more for a short periode of time
+        if(22*60 < ii)
+           ECF.set_AccelVector_mss(-6.9367, 0.0, 6.9367); //back to original acceleration
+
+        ECF.update();
+        outfile<<ii/50.<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().pitch<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().roll<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().yaw<<"\t"
+        <<endl;
+    }
+    outfile.close();
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_from_acc_rad().toDeg().pitch, (float)45.0, (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().roll , (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_from_acc_rad().toDeg().yaw  , (float)1e-5);
+
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_rad().toDeg().pitch, (float)45.0, (float)0.5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().roll, (float)1e-5);
+    BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().yaw , (float)1e-5);
+
+
+//    if (system(NULL))
+//    {
+//        /*int ret = */system ("gnuplot -persist plot_result_mag.gnuplot");
+//    }
+
+}
+
+BOOST_AUTO_TEST_CASE(ECF_heading_update_with_mag )
+{
+    ECFClass ECF;
+
+    ECF.set_Kp_Yaw(3.);
+    ECF.set_Ki_Yaw(0.001);
+
+    ECF.set_AccelVector_mss(0, 0.0, 9.81);
+    ECF.set_MagVector_Gauss(0.2, 0.0, 0.6); //Pointing north + declination
+
+    ECF.update();
+
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_rad().pitch, (float)0.0, (float)1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_rad().roll , (float)0.0, (float)1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_rad().yaw  , (float)0.0, (float)1e-5);
+
+ #include <iostream>
+    ofstream outfile;
+    outfile.open("history_yaw_mag.txt", ios_base::trunc);
+    outfile<<"# Time\t"<<"roll\t"<<"pitch\t"<<"yaw\t"<< "f_heading\t"<<"errorCourse\t"<<endl;
+    for(int ii=0; ii<60*50; ii++) //
+    {
+        ECF.set_MagVector_Gauss(0.1, 0.1, 0.6); //45deg
+
+        ECF.update();
+        outfile<<ii/50.<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().roll<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().pitch<<"\t"
+        <<ECF.get_euler_angles_rad().toDeg().yaw<<"\t"
+        <<ECF.f_heading*180./M_PI<<"\t"
+        <<ECF.errorCourse*180./M_PI<<"\t"
+        <<endl;
+    }
+    outfile.close();
+    BOOST_CHECK_CLOSE_FRACTION(ECF.f_heading,  -(float)45.0*M_PI/180., (float)1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.errorCourse, (float)0.0*M_PI/180., (float)1e-3);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.errorYaw[0], (float)0.0*M_PI/180., (float)1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.errorYaw[1], (float)0.0*M_PI/180., (float)1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.errorYaw[2], (float)0.0*M_PI/180., (float)1e-3);
+
+
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_rad().pitch,         (float)0.0,  (float)1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_rad().roll ,         (float)0.0,  (float)1e-5);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_euler_angles_rad().toDeg().yaw  , (float)45.0, (float)1e-5);
+
     if (system(NULL))
     {
-        /*int ret = */system ("gnuplot -persist plot_roll.gnuplot");
+        int ret = system ("gnuplot -persist plot_result_yaw_mag.gnuplot");
+        (void)ret;
     }
 
 }
+
 
 BOOST_AUTO_TEST_SUITE_END( )

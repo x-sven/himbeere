@@ -73,7 +73,7 @@ xmin = time[0]
 xmax = time[-1]
 
 ACC_SCALE = (32*9.81)/np.power(2,16);
-GYRO_SCALE = (2000.)/np.power(2,16);
+GYRO_SCALE = (4000.)/np.power(2,16);
 MAG_SCALE = 1;
 
 

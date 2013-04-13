@@ -104,7 +104,7 @@ class HMC5883L {
     public:
         HMC5883L();
         HMC5883L(uint8_t address);
-        
+
         void initialize();
         bool testConnection();
 
@@ -125,10 +125,10 @@ class HMC5883L {
         void setMode(uint8_t mode);
 
         // DATA* registers
-        void getHeading(int16_t *x, int16_t *y, int16_t *z);
-        int16_t getHeadingX();
-        int16_t getHeadingY();
-        int16_t getHeadingZ();
+        void getMeasurments(int16_t *x, int16_t *y, int16_t *z);
+        int16_t getMeasurmentX();
+        int16_t getMeasurmentY();
+        int16_t getMeasurmentZ();
 
         // STATUS register
         bool getLockStatus();

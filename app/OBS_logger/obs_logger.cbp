@@ -8,6 +8,7 @@
 		<Build>
 			<Target title="debug_linux32_x86_gcc">
 				<Option output="../../bin/obs_logger_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
 				<Option object_output="../../tmp/bin/obs/debug/linux32/x86/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -20,6 +21,7 @@
 			</Target>
 			<Target title="release_linux32_x86_gcc">
 				<Option output="../../bin/obs_logger_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
 				<Option object_output="../../tmp/bin/obs/release/linux32/x86/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -32,6 +34,7 @@
 			</Target>
 			<Target title="release_linux32_arm_gcc">
 				<Option output="../../bin/obs_logger_linux32_arm_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
 				<Option object_output="../../tmp/bin/obs/debug/linux32/arm/" />
 				<Option type="1" />
 				<Option compiler="armunknownlinuxgnueabigcc" />
@@ -56,12 +59,17 @@
 			<Add directory="../../src/linux/Millis" />
 			<Add directory="../../src/linux/HardwareSerial" />
 			<Add directory="../../src/linux/Drotek10dof" />
+			<Add directory="../../src/cECF" />
+			<Add directory="../../src/cECF/boost_test" />
+			<Add directory="../../src/mavlink/include/common" />
+			<Add directory="../../src/linux/DataLink" />
 		</Compiler>
 		<Linker>
 			<Add library="boost_thread" />
 			<Add library="boost_system" />
 			<Add library="boost_filesystem" />
 			<Add library="boost_signals" />
+			<Add library="boost_program_options" />
 		</Linker>
 		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
 		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />
@@ -75,12 +83,22 @@
 		<Unit filename="../../src/ARDUINO/Stream.h" />
 		<Unit filename="../../src/ARDUINO/WString.cpp" />
 		<Unit filename="../../src/ARDUINO/WString.h" />
+		<Unit filename="../../src/cECF/ECF.cpp" />
+		<Unit filename="../../src/cECF/ECF.h" />
+		<Unit filename="../../src/cECF/MatrixMath.cpp" />
+		<Unit filename="../../src/cECF/MatrixMath.h" />
+		<Unit filename="../../src/cECF/VectorMath.cpp" />
+		<Unit filename="../../src/cECF/VectorMath.h" />
+		<Unit filename="../../src/cECF/boost_test/wiring.h" />
+		<Unit filename="../../src/cECF/st_Euler.h" />
 		<Unit filename="../../src/i2cdevlib/HMC5883L/HMC5883L.cpp" />
 		<Unit filename="../../src/i2cdevlib/HMC5883L/HMC5883L.h" />
 		<Unit filename="../../src/i2cdevlib/MPU6050/MPU6050.cpp" />
 		<Unit filename="../../src/i2cdevlib/MPU6050/MPU6050.h" />
 		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.cpp" />
 		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.h" />
+		<Unit filename="../../src/linux/DataLink/cDataLink.cpp" />
+		<Unit filename="../../src/linux/DataLink/cDataLink.h" />
 		<Unit filename="../../src/linux/Delay/Delay.cpp" />
 		<Unit filename="../../src/linux/Delay/Delay.h" />
 		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.cpp" />

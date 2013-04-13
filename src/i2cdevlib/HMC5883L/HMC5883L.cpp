@@ -67,7 +67,7 @@ void HMC5883L::initialize() {
 
     // write CONFIG_B register
     setGain(HMC5883L_GAIN_1090);
-    
+
     // write MODE register
     setMode(HMC5883L_MODE_SINGLE);
 }
@@ -250,7 +250,7 @@ void HMC5883L::setMode(uint8_t newMode) {
     // use this method to guarantee that bits 7-2 are set to zero, which is a
     // requirement specified in the datasheet; it's actually more efficient than
     // using the I2Cdev.writeBits method
-    I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, mode << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
+    I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, newMode << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     mode = newMode; // track to tell if we have to clear bit 7 after a read
 }
 
@@ -267,7 +267,7 @@ void HMC5883L::setMode(uint8_t newMode) {
  * @param z 16-bit signed integer container for Z-axis heading
  * @see HMC5883L_RA_DATAX_H
  */
-void HMC5883L::getHeading(int16_t *x, int16_t *y, int16_t *z) {
+void HMC5883L::getMeasurments(int16_t *x, int16_t *y, int16_t *z) {
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
     if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     *x = (((int16_t)buffer[0]) << 8) | buffer[1];
@@ -278,7 +278,7 @@ void HMC5883L::getHeading(int16_t *x, int16_t *y, int16_t *z) {
  * @return 16-bit signed integer with X-axis heading
  * @see HMC5883L_RA_DATAX_H
  */
-int16_t HMC5883L::getHeadingX() {
+int16_t HMC5883L::getMeasurmentX() {
     // each axis read requires that ALL axis registers be read, even if only
     // one is used; this was not done ineffiently in the code by accident
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
@@ -289,7 +289,7 @@ int16_t HMC5883L::getHeadingX() {
  * @return 16-bit signed integer with Y-axis heading
  * @see HMC5883L_RA_DATAY_H
  */
-int16_t HMC5883L::getHeadingY() {
+int16_t HMC5883L::getMeasurmentY() {
     // each axis read requires that ALL axis registers be read, even if only
     // one is used; this was not done ineffiently in the code by accident
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
@@ -300,7 +300,7 @@ int16_t HMC5883L::getHeadingY() {
  * @return 16-bit signed integer with Z-axis heading
  * @see HMC5883L_RA_DATAZ_H
  */
-int16_t HMC5883L::getHeadingZ() {
+int16_t HMC5883L::getMeasurmentZ() {
     // each axis read requires that ALL axis registers be read, even if only
     // one is used; this was not done ineffiently in the code by accident
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
