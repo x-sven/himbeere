@@ -70,9 +70,9 @@ class MS561101BA {
 
 	public:
 
-		MS561101BA();
+//		MS561101BA();
 		MS561101BA(uint8_t address);
-		MS561101BA(uint8_t address, uint8_t osr);
+		MS561101BA(uint8_t address = MS561101BA_DEFAULT_ADDRESS, uint8_t osr = MS561101BA_OSR_1024);
 
 		void initialize();
 		bool testConnection();
@@ -80,7 +80,14 @@ class MS561101BA {
 		bool readPROM();
 		bool setOverSampleRate(uint8_t osr);
 
-		bool read(int32_t * pressure, int32_t * temperature, int8_t osr=-1);
+        uint16_t StartPressureConversion(void);                     // 1. step: trigger conversion of D1, returns conversion time in us
+        void ReadPressure(void);                                    // 2. step: read result of D1, if conversion time is over
+        uint16_t StartTemperatureConversion(void);                  // 3. step: trigger conversion of D2, returns conversion time in us
+        void ReadTemperature(void);                                 // 4. step: read result of D2, if conversion time is over
+        void getValues(int32_t * pressure, int32_t * temperature);  // 5. step: get compensated results
+
+
+		bool read(int32_t * pressure, int32_t * temperature);
 
 		int32_t readD1(int8_t osr = -1);
 		int32_t readD2(int8_t osr = -1);
@@ -102,7 +109,11 @@ class MS561101BA {
 		// Default oversample rate
 		uint8_t defaultOsr;
 
+        void startConversion(uint8_t regAddr, uint8_t osr);
 		int32_t readConversion(uint8_t regAddr, uint8_t osr);
+		int32_t readConversion(uint8_t regAddr);
+        bool TemperatureCompensation(int32_t * pressure, int32_t * temperature, int32_t d1, int32_t d2);
+        uint16_t getConversionTime(void); // conversion time required in us
 
         // Calibration parameters
 		uint16_t prom[MS561101BA_PROM_NUM_REGISTERS];
@@ -113,7 +124,8 @@ class MS561101BA {
 		uint16_t getTREF();
 		uint16_t getTEMPSENS();
 
-
+        int32_t m_d1;
+        int32_t m_d2;
 };
 
 #endif /* _MS561101BA_H_ */

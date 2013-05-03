@@ -24,6 +24,7 @@
 #endif
 
 #include <boost/thread.hpp>
+#include <boost/signal.hpp>
 
 #include "mavlink.h"
 
@@ -34,17 +35,19 @@ class cDataLink
         void connect(std::string ip = "127.0.0.1", long port=14551);
         void disconnect(void);
 
-        void StatusMsg(int load, int millivoltage);
-        void ImuMsg(float ax, float ay, float az,
+        void SendStatusMsg(int load, int millivoltage);
+        void SendImuMsg(float ax, float ay, float az,
                     float rx, float ry, float rz,
                     float mx, float my, float mz,
                     float p, float T, float p_alt,
                     long update_mask);
-        void GpsMsg(unsigned short fix_type, long lat, long lon, long alt,
+        void SendGpsMsg(unsigned short fix_type, long lat, long lon, long alt,
                         long vdop, long hdop,
                         long vel, long course, unsigned short sats);
-        void AttMsg(float roll, float pitch, float yaw,
+        void SendAttMsg(float roll, float pitch, float yaw,
                     float rollspeed, float pitchspeed, float yawspeed);
+
+        boost::signal<void (void)>  signal_mag_calibration;
 
         virtual ~cDataLink();
     protected:
@@ -61,8 +64,20 @@ class cDataLink
         boost::thread heartbeat_thread;
         bool execute_heartbeat_thread;
 
+        boost::thread receive_thread;
+        bool execute_receive_thread;
+
         void heartbeat_loop(void);
+        void receive_loop(void);
+
+        void handleMessage(mavlink_message_t* msg);
+
         uint64_t microsSinceEpoch(void);
+
+        int packet_drops;
+        int mav_mode;
+        int mav_state;
+
 
 };
 

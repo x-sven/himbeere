@@ -445,8 +445,8 @@ BOOST_AUTO_TEST_CASE(ECF_heading_update_with_mag )
 {
     ECFClass ECF;
 
-    ECF.set_Kp_Yaw(3.);
-    ECF.set_Ki_Yaw(0.001);
+    ECF.set_Kp_Yaw(0*3.);
+    ECF.set_Ki_Yaw(3./1.e+6);
 
     ECF.set_AccelVector_mss(0, 0.0, 9.81);
     ECF.set_MagVector_Gauss(0.2, 0.0, 0.6); //Pointing north + declination

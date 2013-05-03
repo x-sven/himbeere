@@ -9,10 +9,11 @@ import csv
 
 # get filename
 loadfile = tkFileDialog.askopenfilename(title='Select a logfile...',
-filetypes=[('Files','*.txt')],defaultextension='.txt',initialdir="../")
+filetypes=[('Files','*.log')],defaultextension='.log',initialdir="../")
 
 # toDo: read this file in a better way!!!
-timeMS = []
+timeS = []
+timeUS = []
 ax = []
 ay = []
 az = []
@@ -38,20 +39,21 @@ for row in ifile:
             header = row;
         else:
            line = row.split("\t")
-           if len(line) == 14:
-               timeMS   = np.append(timeMS, int(line[0]))
-               ax       = np.append(ax, float(line[1]))
-               ay       = np.append(ay, float(line[2]))
-               az       = np.append(az, float(line[3]))
-               gx       = np.append(gx, float(line[4]))
-               gy       = np.append(gy, float(line[5]))
-               gz       = np.append(gz, float(line[6]))
-               mx       = np.append(mx, float(line[7]))
-               my       = np.append(my, float(line[8]))
-               mz       = np.append(mz, float(line[9]))
-               pressure = np.append(pressure, float(line[10]))
-               temp     = np.append(temp, float(line[11]))
-               runtime_ms= np.append(runtime_ms, float(line[12]))
+           if len(line) == 15:
+               timeS   = np.append(timeS, int(line[0]))
+	       timeUS   = np.append(timeUS, int(line[1]))
+               ax       = np.append(ax, float(line[2]))
+               ay       = np.append(ay, float(line[3]))
+               az       = np.append(az, float(line[4]))
+               gx       = np.append(gx, float(line[5]))
+               gy       = np.append(gy, float(line[6]))
+               gz       = np.append(gz, float(line[7]))
+               mx       = np.append(mx, float(line[8]))
+               my       = np.append(my, float(line[9]))
+               mz       = np.append(mz, float(line[10]))
+               pressure = np.append(pressure, float(line[11]))
+               temp     = np.append(temp, float(line[12]))
+               runtime_ms= np.append(runtime_ms, float(line[13]))
                # last string is '\n'
         rownum += 1
     except ValueError:
@@ -61,7 +63,7 @@ ifile.close()
 
 # let time (x-axis) start at 0
 time = []
-time = (timeMS - timeMS[0])/1000
+time = ((timeS )  + (timeUS /1e+6)) - ((timeS[0] )  + (timeUS[0] /1e+6))
 
 delta_t = []
 delta_t = np.append(delta_t, 0)
@@ -72,8 +74,8 @@ for ii in range(1, len(time)):
 xmin = time[0]
 xmax = time[-1]
 
-ACC_SCALE = (32*9.81)/np.power(2,16);
-GYRO_SCALE = (4000.)/np.power(2,16);
+ACC_SCALE = 1; #(32*9.81)/np.power(2,16);
+GYRO_SCALE = 1; # (4000.)/np.power(2,16);
 MAG_SCALE = 1;
 
 
@@ -159,14 +161,14 @@ savefig('Magnetometer.svg')
 figure(4)
 subplot(2,1,1)
 title('Barometer')
-plot(time, pressure/100)
+plot(time, pressure)
 #[ymin,ymax] = mm.minmax(ax, False)
 axis([xmin, xmax, 1000, 1020])
 grid(True)
 ylabel('p in Pa')
 
 subplot(2,1,2)
-plot(time, temp/100)
+plot(time, temp)
 #[ymin,ymax] = mm.minmax(ax, False)
 #axis([xmin, xmax, -degmax, degmax])
 grid(True)

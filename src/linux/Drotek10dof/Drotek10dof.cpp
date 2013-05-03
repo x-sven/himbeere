@@ -27,11 +27,18 @@ Drotek10dof::Drotek10dof()
     m_imu_timing_buffer = 0;
     m_timing_average = 0.;
 
-   ax=ay=az=0;
-   gx=gy=gz=0;
-   mx=my=mz=0;
-   pressure=temp=0;
-   time_imu = time_mag = time_baro = boost::posix_time::microsec_clock::local_time();
+    ax=ay=az=0;
+    gx=gy=gz=0;
+    mx=my=mz=0;
+    for(uint8_t ii=0; ii<3; ii++)
+    {
+        mag_min[ii] = 0;
+        mag_max[ii] = 0;
+        mag_ofs[ii] = 0.0;
+    }
+    mag_calibration_running = false;
+    pressure=temp=0;
+    time_imu = time_mag = time_baro = boost::posix_time::microsec_clock::local_time();
 }
 
 void Drotek10dof::begin(uint16_t frequency, uint8_t sched_priority, uint8_t sched_policy)
@@ -40,12 +47,14 @@ void Drotek10dof::begin(uint16_t frequency, uint8_t sched_priority, uint8_t sche
     DEBUGMSG("Initializing I2C devices...\n");
 
     imu->initialize();
-    imu->setFullScaleGyroRange(MPU6050_GYRO_FS_1000);  //+/-1000deg/s
-    imu->setFullScaleAccelRange(MPU6050_ACCEL_FS_16);  //+/-16g
+    if(imu->testConnection())
+    {
+        imu->setFullScaleGyroRange(MPU6050_GYRO_FS_1000);  //+/-1000deg/s
+        imu->setFullScaleAccelRange(MPU6050_ACCEL_FS_16);  //+/-16g
 
-    imu->setI2CBypassEnabled(true);
-    imu->setI2CMasterModeEnabled(false);
-
+        imu->setI2CBypassEnabled(true);
+        imu->setI2CMasterModeEnabled(false);
+    }
     // master & bypass
     DEBUGMSG("Testing device configuration...\n");
     if (1 == imu->getI2CMasterModeEnabled())
@@ -196,12 +205,14 @@ void Drotek10dof::getScaledIMU(float *_ax, float *_ay, float *_az, float *_rx, f
         break;
     }
 
+    mutex.lock();
     *_ax = ACC_SCALE*ax;
     *_ay = ACC_SCALE*ay;
     *_az = ACC_SCALE*az;
     *_rx = GYRO_SCALE*gx;
     *_ry = GYRO_SCALE*gy;
     *_rz = GYRO_SCALE*gz;
+    mutex.unlock();
 }
 
 void Drotek10dof::getScaledMAG(float *_mx, float *_my, float *_mz, boost::posix_time::ptime *time)
@@ -242,9 +253,11 @@ void Drotek10dof::getScaledMAG(float *_mx, float *_my, float *_mz)
         break;
     }
 
+    mutex.lock();
     *_mx = MAG_SCALE*mx;
     *_my = MAG_SCALE*my;
     *_mz = MAG_SCALE*mz;
+    mutex.unlock();
 }
 
 void Drotek10dof::getScaledBaro(float *_p, float *_T, boost::posix_time::ptime *time)
@@ -258,19 +271,10 @@ void Drotek10dof::getScaledBaro(float *_p, float *_T)
     float BARO_SCALE = (1./100.);
     float TEMP_SCALE = (1./100.);
 
+    mutex.lock();
     *_p = BARO_SCALE*pressure;
     *_T = TEMP_SCALE*temp;
-}
-
-
-void Drotek10dof::connect_imu_callback(boost::function<void (void)> func)
-{
-    signal_imudata.connect(func);
-}
-
-void Drotek10dof::connect_baromag_callback(boost::function<void (void)> func)
-{
-    signal_baromagdata.connect(func);
+    mutex.unlock();
 }
 
 float Drotek10dof::getTimingAverage(void)
@@ -283,11 +287,14 @@ void Drotek10dof::loop(void)
     long m_imu_timing_buffer  = 0;
     uint16_t m_imu_timing_counter = 0;
 
+    uint8_t baro_task = 0;
+    uint16_t baro_delay = 0;
+
     try
     {
         boost::posix_time::time_duration interval_imu(boost::posix_time::microseconds(1000000 / m_frequency));
         boost::posix_time::time_duration interval_50Hz(boost::posix_time::milliseconds(1000 / 50));
-        boost::posix_time::time_duration interval_1Hz(boost::posix_time::seconds(1 ));
+        boost::posix_time::time_duration interval_1Hz(boost::posix_time::seconds(1));
 
         boost::posix_time::ptime timer_imu = boost::posix_time::microsec_clock::local_time()  + interval_imu;
         boost::posix_time::ptime timer_50Hz = boost::posix_time::microsec_clock::local_time() + interval_50Hz;
@@ -299,58 +306,163 @@ void Drotek10dof::loop(void)
             //update member here...
 
             // read raw measurements from device
+            mutex.lock();
             imu->getMotion6(&ax, &ay, &az, &gx, &gy, &gz); // 1-1.2ms
+            mutex.unlock();
             //imu.getAcceleration(&ax, &ay, &az); //1.2ms
             //imu.getRotation(&gx, &gy, &gz); //1.2ms
             time_imu = boost::posix_time::microsec_clock::local_time();
             signal_imudata();
 
+            switch(baro_task)
+            {
+            case 0:
+                {
+                    baro_task++;
+                    baro_delay = baro->StartPressureConversion();
+                    time_baro =  boost::posix_time::microsec_clock::local_time()
+                                 + boost::posix_time::microseconds(baro_delay);
+                }
+                break;
+            case 1:
+                if( boost::posix_time::microsec_clock::local_time() >= time_baro)
+                {
+                    baro_task++;
+                    baro->ReadPressure();
+                }
+                break;
+            case 2:
+                {
+                    baro_task++;
+                    baro_delay = baro->StartTemperatureConversion();
+                    time_baro =  boost::posix_time::microsec_clock::local_time()
+                                 + boost::posix_time::microseconds(baro_delay);
+                 }
+                break;
+            case 3:
+                if( boost::posix_time::microsec_clock::local_time() >= time_baro)
+                {
+                    baro->ReadTemperature();
+                    mutex.lock();
+                    baro->getValues(&pressure, &temp);
+                    mutex.unlock();
+                    time_baro =  boost::posix_time::microsec_clock::local_time();
+                    baro_task = 0; //reset
+                    signal_barodata();
+                }
+                break;
+            default:
+                baro_task = 0; //reset
+                break;
+            }
+
             if (timer_imu > timer_50Hz) //50Hz
             {
+
                 DEBUGMSG("DROTEK thread loop: 50Hz\n");
-
+                mutex.lock();
                 mag->getMeasurments(&mx, &my, &mz); //0.6ms
+                mutex.unlock();
                 time_mag = boost::posix_time::microsec_clock::local_time();
-                baro->read(&pressure, &temp);   //3.6-3.8ms@OSR=1024, 2.4ms@OSR=512
-                time_baro = boost::posix_time::microsec_clock::local_time();
-                signal_baromagdata();
+                signal_magdata();
+                mag_calibration();
 
-                timer_50Hz = timer_50Hz + interval_50Hz;
+                timer_50Hz +=  interval_50Hz;
             }// 50 Hz
             if (timer_imu > timer_1Hz) //1Hz
             {
                 DEBUGMSG("DROTEK thread loop: 1Hz\n");
-
                 // update performance counter
                 if(0 < m_imu_timing_counter)
                 {
-                    m_timing_average = (float)m_imu_timing_buffer/(float)m_imu_timing_counter;
+                    m_timing_average = 1.e-3*((float)m_imu_timing_buffer/(float)m_imu_timing_counter);
                     m_imu_timing_buffer = 0;
                     m_imu_timing_counter = 0;
 
-                    DEBUGMSG("Drotek thread's 1s-mean working time(ms): ");
+                    DEBUGMSG("Drotek thread's 1s-mean working time (ms): ");
                     DEBUGMSG(m_timing_average);
                     DEBUGMSG("\n");
                 }
-                timer_1Hz = timer_1Hz + interval_1Hz;
+                timer_1Hz +=  interval_1Hz;
             }//1Hz
-            timer_imu = timer_imu + interval_imu; // update timer
 
             //performance counter
             boost::posix_time::time_duration spare_time = (timer_imu - boost::posix_time::microsec_clock::local_time()); //spare time
             boost::posix_time::time_duration working_time = interval_imu-spare_time;
-            m_imu_timing_buffer += (long)working_time.total_milliseconds();
+            if (spare_time.is_negative())
+            {
+                std::cout << "Warning: Drotek10dof overrun! (+"
+                          << (working_time-interval_imu).total_microseconds()
+                          << " us)" << std::endl;
+            }
+
+            m_imu_timing_buffer += (long)working_time.total_microseconds();
             m_imu_timing_counter++;
-            #if defined(DEBUG)
+
+#if defined(DEBUG)
             std::cout << "t: " << timer_imu << "\ti: " << interval_imu << std::endl;
-            #endif
+#endif
             boost::this_thread::sleep(timer_imu - boost::posix_time::microsec_clock::local_time());
+
+            timer_imu += interval_imu; // update timer
         }//while(1)
         DEBUGMSG("Leaving drotek's thread\n");
     }
     catch(boost::thread_interrupted const& )
     {
         DEBUGMSG("Drotek10dof: serious problems in drotek receive_loop thread.\n");
+    }
+}
+
+void Drotek10dof::run_mag_calibration(void)
+{
+    run_mag_calibration(30);
+}
+
+void Drotek10dof::run_mag_calibration(uint16_t runtime)
+{
+    if(false == mag_calibration_running)
+    {
+        mag_calibration_running = true;
+        printf("run_mag_calibration(): Starting thread\n");
+        calibration_timer = boost::thread( boost::bind(&Drotek10dof::mag_calibration_timer, this, 30) );
+    }
+}
+
+void Drotek10dof::mag_calibration_timer(uint16_t runtime)
+{
+    printf("run_mag_calibration(): Running thread for %d seconds!\n", runtime);
+
+    boost::this_thread::sleep(boost::posix_time::time_duration(boost::posix_time::seconds(runtime)));
+    mag_calibration_running = false;
+    printf("MAG-Offsets: %f \t %f \t %f\n", mag_ofs[0], mag_ofs[1], mag_ofs[2]);
+
+    //logging & parameter to file!?
+}
+
+void Drotek10dof::mag_calibration(void)
+{
+    if(mag_calibration_running)
+    {
+        mag_calibration(mx, my, mz);
+    }
+}
+
+void Drotek10dof::mag_calibration(int16_t _mx, int16_t _my, int16_t _mz)
+{
+    //capture min
+    if( _mx < mag_min[0] ) mag_min[0] = _mx;
+    if( _my < mag_min[1] ) mag_min[1] = _my;
+    if( _mz < mag_min[2] ) mag_min[2] = _mz;
+    // capture max
+    if( _mx > mag_max[0] ) mag_max[0] = _mx;
+    if( _my > mag_max[1] ) mag_max[1] = _my;
+    if( _mz > mag_max[2] ) mag_max[2] = _mz;
+
+    // calculate offsets
+    for(uint8_t ii=0; ii<3; ii++)
+    {
+        mag_ofs[ii] = -(mag_max[ii]+mag_min[ii])/2.;
     }
 }
 

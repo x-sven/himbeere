@@ -50,10 +50,10 @@ ECFClass::ECFClass(void):f_g_const(9.81)
         }//for kk
     }//for jj
 
-    errorCourse = 180.0;
+    errorCourse = 0.0;
     COGX=0;
     COGY=1;
-    G_Dt=0.02;
+    G_Dt=0.01;
     f_ground_course = 0.0;
     f_ground_speed = 0.0;
     f_speed_3d = 0.0;

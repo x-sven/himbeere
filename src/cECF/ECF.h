@@ -1,7 +1,13 @@
+// Origin: arduimu
+// Released under Creative Commons License
+// Code by Jordi Munoz and William Premerlani, Supported by Chris Anderson and Doug Weibel
+// adopted by Sven Lorenz
+
 #ifndef _ECF_H_INCLUDED
 #define _ECF_H_INCLUDED
 
 #include <inttypes.h>
+#include <math.h>
 #include "st_Euler.h"
 
 #define ToRad(x) (x*0.01745329252)  // *pi/180

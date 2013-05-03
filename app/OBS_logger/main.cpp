@@ -11,6 +11,7 @@
 #include <boost/thread.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/program_options.hpp>
+#include <boost/timer/timer.hpp> //http://www.boost.org/doc/libs/1_52_0/libs/timer/doc/cpu_timers.html
 
 using namespace std;
 namespace po = boost::program_options;
@@ -25,9 +26,9 @@ namespace pt = boost::posix_time;
 #include "AP_GPS.h"
 #include "Delay.h"
 #include "millis.h"
-#include "Logging.h"
+#include "DataLogger.h"
 #include "st_Euler.h"
-#include "ECF.h"
+#include "SensorFusion.h"
 
 #include "cDataLink.h"
 
@@ -37,13 +38,24 @@ HardwareSerial Serial("/dev/ttyAMA0");
 AP_GPS_MTK16 gps(&Serial);
 long gps_timing_buffer = 0;
 uint8_t gps_timing_counter = 0;
-Logging gpslog;
 
 Drotek10dof imu10dof;
-Logging imulog;
+SensorFusion ECF;
 
-ECFClass ECF;
-Logging ecflog;
+DataLogger gpslog;
+Logging imulog;
+DataLogger ecflog;
+
+class DataLogging: public DataLogger
+{
+public:
+    void record(void)
+    {
+        write(std::ostringstream().flush()
+              << "Hallo" << "\n"
+             );
+    }
+} mylog;
 
 struct st_options
 {
@@ -53,6 +65,11 @@ struct st_options
 cDataLink GCSlink;
 
 bool execute = true;
+
+
+void imu_log(void);
+void ecf_imu_update(void);
+
 
 //***************************************
 void trap(int signal)
@@ -107,7 +124,8 @@ void setup()
     imulog.begin("logfile_drotek10.log");
 
     imulog.write(std::ostringstream().flush()
-                 << "timer_ms" << "\t"
+                 << "time_s" << "\t"
+                 << "time_us" << "\t"
                  << "ax" << "\t"
                  << "ay" << "\t"
                  << "az" << "\t"
@@ -123,10 +141,14 @@ void setup()
                  << endl
                 );
 
+//    mylog.begin("Hallo.log");
+    imu10dof.signal_imudata.connect( boost::bind(&DataLogging::update, &mylog) );
+
     Serial.begin(38400);
     gpslog.begin("logfile_gps-mtk.log");
     gpslog.write(std::ostringstream().flush()
-                 << "timer_ms" << "\t"
+                 << "time_s" << "\t"
+                 << "time_us" << "\t"
                  << "latitude" << "\t"
                  << "longitude" << "\t"
                  << "altitude" << "\t"
@@ -142,7 +164,8 @@ void setup()
 
     ecflog.begin("logfile_ecf.log");
     ecflog.write(std::ostringstream().flush()
-                 << "timer_ms" << "\t"
+                 << "time_s" << "\t"
+                 << "time_us" << "\t"
                  << "phi_deg" << "\t"
                  << "theta_deg" << "\t"
                  << "psi_deg" << "\t"
@@ -175,44 +198,39 @@ void imu_log(void)
     imu10dof.getScaledIMU(&acc[0], &acc[1], &acc[2], &gyro[0], &gyro[1], &gyro[2], &time);
     imu10dof.getScaledMAG(&mag[0], &mag[1], &mag[2]);
 
+    pt::time_duration difftime = time - pt::from_time_t(0);
+
     imulog.write(std::ostringstream().flush()
-                         << time    << "\t"
-//                         << imu10dof.ax << "\t"
-//                         << imu10dof.ay << "\t"
-//                         << imu10dof.az << "\t"
-//                         << imu10dof.gx << "\t"
-//                         << imu10dof.gy << "\t"
-//                         << imu10dof.gz << "\t"
-//                         << imu10dof.mx << "\t"
-//                         << imu10dof.my << "\t"
-//                         << imu10dof.mz << "\t"
-                         << acc[0] << "\t"
-                         << acc[1] << "\t"
-                         << acc[2] << "\t"
-                         << gyro[0] << "\t"
-                         << gyro[1] << "\t"
-                         << gyro[2] << "\t"
-                         << mag[0] << "\t"
-                         << mag[1] << "\t"
-                         << mag[2] << "\t"
-                         << (float)imu10dof.pressure/100. << "\t"
-                         << (float)imu10dof.temp/100. << "\t"
-                         << imu10dof.getTimingAverage() << "\t"
-                         << endl
-                        );
+                 << difftime.total_seconds()       << "\t"
+                 << difftime.fractional_seconds()  << "\t"
+                 << acc[0] << "\t"
+                 << acc[1] << "\t"
+                 << acc[2] << "\t"
+                 << gyro[0] << "\t"
+                 << gyro[1] << "\t"
+                 << gyro[2] << "\t"
+                 << mag[0] << "\t"
+                 << mag[1] << "\t"
+                 << mag[2] << "\t"
+                 << (float)imu10dof.pressure/100. << "\t"
+                 << (float)imu10dof.temp/100. << "\t"
+                 << (float)imu10dof.getTimingAverage() << "\t"
+                 << endl
+                );
 }
 
 //***************************************
 void gps_log(void)
 {
-    pt::ptime time = pt::microsec_clock::local_time();
-
     gps.update();
 
     if (gps.new_data)
     {
+        pt::time_duration difftime = pt::microsec_clock::local_time() - pt::from_time_t(0);
+
         gpslog.write(std::ostringstream().flush()
-                     << time << "\t"
+                     << difftime.total_seconds()       << "\t"
+                     << difftime.fractional_seconds()  << "\t"
                      << gps.latitude << "\t"
                      << gps.longitude << "\t"
                      << gps.altitude << "\t"
@@ -254,6 +272,9 @@ void gps_log(void)
 //***************************************
 void ecf_imu_update(void)
 {
+    pt::time_duration difftime;
+    static pt::ptime last_update = pt::microsec_clock::local_time();
+
     float acc[3] = {0., 0., 9.81};
     float gyro[3]= {0., 0., 0.};
 
@@ -266,11 +287,17 @@ void ecf_imu_update(void)
     ECF.set_AccelVector_mss(-acc[0], -acc[1], -acc[2]);
     ECF.set_GyroVector_rads(gyro[0]*C_DEG2RAD, gyro[1]*C_DEG2RAD, gyro[2]*C_DEG2RAD);
 
-    ECF.G_Dt = 0.01; //set real time here!!!
+    difftime    = pt::microsec_clock::local_time() - last_update;
+    last_update = pt::microsec_clock::local_time();
+
+    ECF.G_Dt = difftime.total_microseconds()/1.e+6;
     ECF.update();
 
+    difftime = pt::microsec_clock::local_time() - pt::from_time_t(0);
+
     ecflog.write(std::ostringstream().flush()
-                 << pt::microsec_clock::local_time() << "\t"
+                 << difftime.total_seconds()       << "\t"
+                 << difftime.fractional_seconds()  << "\t"
                  << ECF.get_euler_angles_rad().toDeg().roll << "\t"
                  << ECF.get_euler_angles_rad().toDeg().pitch << "\t"
                  << ECF.get_euler_angles_rad().toDeg().yaw << "\t"
@@ -285,7 +312,7 @@ void ecf_imu_update(void)
 }
 
 //***************************************
-void ecf_mag_baro_update(void)
+void ecf_mag_update(void)
 {
     float mag[3] = {0., 0., 0.};
 
@@ -296,38 +323,47 @@ void ecf_mag_baro_update(void)
 
 bool parse_options(st_options& opt, int argc, char **argv)
 {
-    try {
-		// Declare the supported options.
-		po::options_description desc("Allowed options");
-		desc.add_options()
-			("help", "produce help message")
+    try
+    {
+        // Declare the supported options.
+        po::options_description desc("Allowed options");
+        desc.add_options()
+        ("help", "produce help message")
+        ("gcs-ip", po::value<string>(&opt.gcs_udp_addr), "IP address for sending data to.")
+        ;
 
-			("gcs-ip", po::value<string>(&opt.gcs_udp_addr), "IP address for sending data to.")
-		;
+        po::variables_map vm;
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+        po::notify(vm);
 
-		po::variables_map vm;
-		po::store(po::parse_command_line(argc, argv, desc), vm);
-		po::notify(vm);
+        if (vm.count("help"))
+        {
+            cout << desc << endl;
+            return false;
+        }
 
-		if (vm.count("help")) {
-			cout << desc << endl;
-			return false;
-		}
-
-	} catch (exception& e) {
-		cout << "Error parsing command line: " << e.what() << endl;
-		cout << "Use --help option for usage" << endl;
-		return false;
-	}
-	return true;
+    }
+    catch (exception& e)
+    {
+        cout << "Error parsing command line: " << e.what() << endl;
+        cout << "Use --help option for usage" << endl;
+        return false;
+    }
+    return true;
 }
+
+//void run_calibration(void)
+//{
+//    imu10dof.run_mag_calibration();
+//}
+
 //***************************************
 int main(int argc, char **argv )
 //***************************************
 {
-	st_options options;
+    st_options options;
     if (!parse_options(options, argc, argv))
-		return 1;
+        return 1;
 
     if(!options.gcs_udp_addr.empty())
     {
@@ -336,13 +372,29 @@ int main(int argc, char **argv )
     }
     setup();
 
+    boost::timer::auto_cpu_timer t(1,"Program has within the %w s run time the CPU used for %t s (%p \%).\n\n");
+
     // register Ctrl-C signal
     signal(SIGINT, &trap);
 
-    //register functions
-    imu10dof.connect_imu_callback( (boost::function<void (void)>)imu_log );
-    imu10dof.connect_imu_callback( (boost::function<void (void)>)ecf_imu_update );
-    imu10dof.connect_baromag_callback( (boost::function<void (void)>)ecf_mag_baro_update );
+    /**< register functions, remember not to block the signal as much as necessary! */
+    /* Bind IMU's logging to IMU's update signal*/
+//    imu10dof.signal_imudata.connect( boost::bind(&DataLogger::update, &imulog) ); //1.2ms without logging
+    imu10dof.signal_imudata.connect( (boost::function<void (void)>)imu_log ); //2.6ms with logging
+
+    /* Bind SensorFusions's update to IMU's update signals*/
+    imu10dof.signal_imudata.connect( boost::bind(&SensorFusion::update, &ECF) );// signal_imudata() calls ECF.update()
+    //imu10dof.signal_imudata.connect( (boost::function<void (void)>)ecf_imu_update );
+    imu10dof.signal_magdata.connect((boost::function<void (void)>)ecf_mag_update );
+
+    /* Bind IMU's logging function to IMU's update signal (just a hack this time)*/
+//    imulog.signal_trigger.connect( (boost::function<void (void)>)imu_log );
+    /* Bind SensorFusions's update/logging to SensorFusions update signal (just a hack this time)*/
+    ECF.signal_trigger.connect( (boost::function<void (void)>)ecf_imu_update ); //signal_trigger() calls ecf_imu_update()
+
+    /* Bind Drotek10dof's calibration function to GCSlink's signal*/
+    //GCSlink.signal_mag_calibration.connect( (boost::function<void (void)>)run_calibration );
+//    GCSlink.signal_mag_calibration.connect( boost::bind(&Drotek10dof::run_mag_calibration, &imu10dof) );
 
     //start threads
     imu10dof.begin(100,50,SCHED_FIFO);
@@ -352,46 +404,50 @@ int main(int argc, char **argv )
     while(execute)
     {
         //cout << "Nothing to do here!?" << endl;
-        gps_log();
+        // TODO (Sven#1#): Add a signal to GPS
+//        gps_log();
 
-        //Status Message
-        GCSlink.StatusMsg(500, 12600); // load in percent*10, voltage in millivolt
-
-        { //IMU Message
-        float acc[3] = {0., 0., 9.81};
-        float gyro[3]= {0., 0., 0.};
-        float mag[3] = {0., 0., 0.};
-
-        imu10dof.getScaledIMU(&acc[0], &acc[1], &acc[2], &gyro[0], &gyro[1], &gyro[2]);
-        imu10dof.getScaledMAG(&mag[0], &mag[1], &mag[2]);
-
-        GCSlink.ImuMsg(acc[0] , acc[1] , acc[2],
-                       gyro[0], gyro[1], gyro[2],
-                       mag[0] , mag[1] , mag[2],
-                       (float)imu10dof.pressure/100., (float)imu10dof.temp/100.,
-                        0., //p_alt
-                        0xffff); //update flags
-        }
-
-        { // GPS Message
-        GCSlink.GpsMsg(gps.fix, gps.latitude, gps.longitude, gps.altitude,
-                       gps.hdop, 65535,
-                       gps.ground_speed , gps.ground_course,
-                       gps.num_sats);
-        }
-        { // Attitude Message
-        GCSlink.AttMsg(ECF.get_euler_angles_rad().roll,
-                       ECF.get_euler_angles_rad().pitch,
-                       ECF.get_euler_angles_rad().yaw,
-                       ECF.get_CorrectedRate_rads(0),
-                       ECF.get_CorrectedRate_rads(1),
-                       ECF.get_CorrectedRate_rads(2));
-        }
+//        //Status Message
+//        GCSlink.SendStatusMsg(500, 12600); // load in percent*10, voltage in millivolt
+//
+//        {
+//            //IMU Message
+//            float acc[3] = {0., 0., 9.81};
+//            float gyro[3]= {0., 0., 0.};
+//            float mag[3] = {0., 0., 0.};
+//
+//            imu10dof.getScaledIMU(&acc[0], &acc[1], &acc[2], &gyro[0], &gyro[1], &gyro[2]);
+//            imu10dof.getScaledMAG(&mag[0], &mag[1], &mag[2]);
+//
+//            GCSlink.SendImuMsg(acc[0] , acc[1] , acc[2],
+//                               gyro[0], gyro[1], gyro[2],
+//                               mag[0] , mag[1] , mag[2],
+//                               (float)imu10dof.pressure/100., (float)imu10dof.temp/100.,
+//                               0., //p_alt
+//                               0xffff); //update flags
+//        }
+//
+//        {
+//            // GPS Message
+//            GCSlink.SendGpsMsg(gps.fix, gps.latitude, gps.longitude, gps.altitude,
+//                               gps.hdop, 65535,
+//                               gps.ground_speed , gps.ground_course,
+//                               gps.num_sats);
+//        }
+//        {
+//            // Attitude Message
+//            GCSlink.SendAttMsg(ECF.get_euler_angles_rad().roll,
+//                               ECF.get_euler_angles_rad().pitch,
+//                               ECF.get_euler_angles_rad().yaw,
+//                               ECF.get_CorrectedRate_rads(0),
+//                               ECF.get_CorrectedRate_rads(1),
+//                               ECF.get_CorrectedRate_rads(2));
+//        }
         boost::this_thread::sleep(pt::milliseconds(100)); //arround 10 Hz
     }
 
 
-    cout << "\n Bye bye!" << endl;
+    cout << "Bye bye!" << endl;
     return(0);
 }
 

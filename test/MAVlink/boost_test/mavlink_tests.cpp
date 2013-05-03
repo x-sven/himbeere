@@ -214,48 +214,184 @@ uint64_t microsSinceEpoch();
 uint64_t microsSinceEpoch()
 {
 
-	struct timespec time;
+    struct timespec time;
 
-	uint64_t micros = 0;
+    uint64_t micros = 0;
 
-	clock_gettime(CLOCK_REALTIME, &time);
-	micros = (uint64_t)time.tv_sec * 100000 + time.tv_nsec/1000;
+    clock_gettime(CLOCK_REALTIME, &time);
+    micros = (uint64_t)time.tv_sec * 100000 + time.tv_nsec/1000;
 
-	return micros;
+    return micros;
 }
 #else
 uint64_t microsSinceEpoch()
 {
 
-	struct timeval tv;
+    struct timeval tv;
 
-	uint64_t micros = 0;
+    uint64_t micros = 0;
 
-	gettimeofday(&tv, NULL);
-	micros =  ((uint64_t)tv.tv_sec) * 1000000 + tv.tv_usec;
+    gettimeofday(&tv, NULL);
+    micros =  ((uint64_t)tv.tv_sec) * 1000000 + tv.tv_usec;
 
-	return micros;
+    return micros;
 }
 #endif
 
 #include "cDataLink.h"
 BOOST_AUTO_TEST_CASE( cDataLink_test )
 {
-    cDataLink GCSlink("192.168.0.190");
-    for(int ii=0; ii < 30; ii++)
+    //cDataLink GCSlink("192.168.0.190");
+    cDataLink GCSlink("192.168.2.57");
+    for(int ii=0; ii < 3*60; ii++) // N*60 seconds
     {
-        GCSlink.StatusMsg(500, 12600); // load in percent*10, voltage in millivolt
-        GCSlink.ImuMsg(0.1, 0.2, 0.3,
-                       1.1, 1.2, 1.3,
-                       0.11, 0.01, 0.31,
-                       1013., 22., 10.,
-                       0xffff);
-        GCSlink.GpsMsg(3, 521234567, 101234567, 60123,
-                       100, 300,
-                       1100, 63, 7);
-        GCSlink.AttMsg(0.1, 0.2, 0.3, 1.1, 1.2, 1.3);
+        GCSlink.SendStatusMsg(500, 12600); // load in percent*10, voltage in millivolt
+        GCSlink.SendImuMsg(0.1, 0.2, 0.3,
+                           1.1, 1.2, 1.3,
+                           0.11, 0.01, 0.31,
+                           1013., 22., 10.,
+                           0xffff);
+        GCSlink.SendGpsMsg(3, 521234567, 101234567, 60123,
+                           100, 300,
+                           1100, 63, 7);
+        GCSlink.SendAttMsg(0.1, 0.2, 0.3, 1.1, 1.2, 1.3);
         sleep(1);
     }
     GCSlink.disconnect();
 
 }
+
+
+void handleMessage(mavlink_message_t* msg)
+{
+
+    //uint8_t result = MAV_RESULT_UNSUPPORTED;
+    switch (msg->msgid)
+    {
+        case MAVLINK_MSG_ID_COMMAND_LONG:
+        {
+            // decode
+            mavlink_command_long_t packet;
+            mavlink_msg_command_long_decode(msg, &packet);
+
+            switch(packet.command)
+            {
+            case MAV_CMD_PREFLIGHT_CALIBRATION:
+                if (packet.param1 == 1 ||
+                        packet.param2 == 1 ||
+                        packet.param3 == 1)
+                {
+                    //action 1-2-3
+                    printf("Magnetometer calibration!\n");
+                }
+                if (packet.param4 == 1)
+                {
+                    //action 4
+                }
+                if (packet.param5 == 1)
+                {
+                    //action 5
+                }
+//                result = MAV_RESULT_ACCEPTED;
+                break;
+            default:
+//                result = MAV_RESULT_UNSUPPORTED;
+                break;
+            } // switch packet.command
+//            mavlink_msg_command_ack_send(chan,
+//                                         packet.command,
+//                                         result);
+            break;
+        } // case MAVLINK_MSG_ID_COMMAND_LONG
+        default:
+            break;
+    }// switch msgid
+
+}
+
+
+//BOOST_AUTO_TEST_CASE( mavlink_receive_test )
+//{
+//    //members
+//    int sock;
+//    std::string gcs_ip = "192.168.0.190";
+//    long gcs_port=14551;
+//    struct sockaddr_in gcAddr;
+//
+//    //new vars
+//    uint8_t buf[2048];
+//    ssize_t recsize;
+//    socklen_t fromlen;
+//    int i = 0;
+//
+//    unsigned int temp = 0;
+//
+//
+//    // Socket preparation
+//    sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+//    struct sockaddr_in locAddr;
+//
+//    memset(&locAddr, 0, sizeof(locAddr));
+//    locAddr.sin_family = AF_INET;
+//    locAddr.sin_addr.s_addr = INADDR_ANY;
+//    locAddr.sin_port = htons(gcs_port);
+//
+//    /* Bind the socket to port - necessary to receive packets from qgroundcontrol */
+//    if (-1 == bind(sock,(struct sockaddr *)&locAddr, sizeof(struct sockaddr)))
+//    {
+//        perror("error bind failed");
+//        close(sock);
+//        //exit(EXIT_FAILURE);
+//    }
+//
+//    /* Attempt to make it non blocking */
+//    if (fcntl(sock, F_SETFL, O_NONBLOCK | FASYNC) < 0)
+//    {
+//        fprintf(stderr, "error setting nonblocking: %s\n", strerror(errno));
+//        close(sock);
+//        //exit(EXIT_FAILURE);
+//    }
+//
+//
+//    memset(&gcAddr, 0, sizeof(gcAddr));
+//    gcAddr.sin_family = AF_INET;
+//    gcAddr.sin_addr.s_addr = inet_addr(gcs_ip.c_str());
+//    gcAddr.sin_port = htons(14550);
+//
+//
+//
+//    // Receiver
+//    for(int ii=0; ii < 3*60; ii++) //N*60 SECONDS
+//    {
+//        memset(buf, 0, BUFFER_LENGTH);
+//        recsize = recvfrom(sock, (void *)buf, BUFFER_LENGTH, 0, (struct sockaddr *)&gcAddr, &fromlen);
+//        if (recsize > 0)
+//        {
+//            // Something received - print out all bytes and parse packet
+//            mavlink_message_t msg;
+//            mavlink_status_t status;
+//
+//            printf("Bytes Received: %d\nDatagram: ", (int)recsize);
+//            for (i = 0; i < recsize; ++i)
+//            {
+//                temp = buf[i];
+//                printf("%02x ", (unsigned char)temp);
+//                if (mavlink_parse_char(MAVLINK_COMM_0, buf[i], &msg, &status))
+//                {
+//                    // Packet received
+//                    printf("\nReceived packet: SYS: %d, COMP: %d, LEN: %d, MSG ID: %d\n", msg.sysid, msg.compid, msg.len, msg.msgid);
+//
+//                    handleMessage(&msg);
+//
+//                }// parse is ok
+//
+//            }// for all bytes received
+//            printf("\n");
+//        }
+//        memset(buf, 0, BUFFER_LENGTH);
+//        sleep(1); // Sleep one second
+//    }
+//}
+//
+
+

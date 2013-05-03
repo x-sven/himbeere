@@ -3,6 +3,7 @@
 
 #include <boost/thread.hpp>
 #include <boost/signal.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include <I2Cdev.h>
 #include <MPU6050/MPU6050.h>
@@ -19,8 +20,10 @@ class Drotek10dof
 
         void end(void);
 
-        void connect_imu_callback(boost::function<void (void)>func);
-        void connect_baromag_callback(boost::function<void (void)>func);
+        boost::signal<void (void)>  signal_imudata;
+        boost::signal<void (void)>  signal_magdata;
+        boost::signal<void (void)>  signal_barodata;
+
         float getTimingAverage(void); //returns calculation time average w.r.t. a second
 
         void getIMUConfigString(const char* prefix);
@@ -33,6 +36,8 @@ class Drotek10dof
         void getScaledBaro(float *_p, float *_T, boost::posix_time::ptime *ptime);
         void getScaledIMU(float *ax, float *ay, float *az, float *rx, float *ry, float *rz, boost::posix_time::ptime *ptime);
 
+        void run_mag_calibration(void);
+        void run_mag_calibration(uint16_t runtime); //seconds
 
         boost::posix_time::ptime time_imu;
         int16_t ax, ay, az;
@@ -56,12 +61,20 @@ class Drotek10dof
         bool thread_running;
         uint16_t m_frequency;
 
-        boost::signal<void (void)>  signal_imudata;
-        boost::signal<void (void)>  signal_baromagdata;
-
         long     m_imu_timing_buffer; //milliseconds
         uint16_t m_imu_timing_counter;
         float    m_timing_average;    //milliseconds
+
+        void mag_calibration(void);
+        void mag_calibration(int16_t _mx, int16_t _my, int16_t _mz);
+
+        int16_t mag_min[3];
+        int16_t mag_max[3];
+        float mag_ofs[3];
+        bool mag_calibration_running;
+        void mag_calibration_timer(uint16_t runtime);
+        boost::thread calibration_timer;
+        boost::mutex mutex;
 };
 
 #endif // DROTEK10DOF_H

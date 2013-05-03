@@ -7,6 +7,9 @@
 #define Debug(fmt, args ...)
 #endif
 
+using namespace std;
+
+
 Logging::Logging()
 {
     //ctor

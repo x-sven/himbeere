@@ -54,15 +54,17 @@
 			<Add directory="../../src/AP_GPS" />
 			<Add directory="../../src/i2cdevlib" />
 			<Add directory="../../src/linux/I2Cdev" />
-			<Add directory="../../src/linux/Logging" />
+			<Add directory="../../src/linux/DataLogger" />
 			<Add directory="../../src/linux/Delay" />
 			<Add directory="../../src/linux/Millis" />
 			<Add directory="../../src/linux/HardwareSerial" />
 			<Add directory="../../src/linux/Drotek10dof" />
 			<Add directory="../../src/cECF" />
-			<Add directory="../../src/cECF/boost_test" />
 			<Add directory="../../src/mavlink/include/common" />
 			<Add directory="../../src/linux/DataLink" />
+			<Add directory="../../src/linux/SensorFusion" />
+			<Add directory="../../src/linux/BackgroundAction" />
+			<Add directory="../../src/linux/Wiring" />
 		</Compiler>
 		<Linker>
 			<Add library="boost_thread" />
@@ -70,6 +72,8 @@
 			<Add library="boost_filesystem" />
 			<Add library="boost_signals" />
 			<Add library="boost_program_options" />
+			<Add library="boost_chrono" />
+			<Add library="boost_timer" />
 		</Linker>
 		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
 		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />
@@ -97,8 +101,12 @@
 		<Unit filename="../../src/i2cdevlib/MPU6050/MPU6050.h" />
 		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.cpp" />
 		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.h" />
+		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.cpp" />
+		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.h" />
 		<Unit filename="../../src/linux/DataLink/cDataLink.cpp" />
 		<Unit filename="../../src/linux/DataLink/cDataLink.h" />
+		<Unit filename="../../src/linux/DataLogger/DataLogger.cpp" />
+		<Unit filename="../../src/linux/DataLogger/DataLogger.h" />
 		<Unit filename="../../src/linux/Delay/Delay.cpp" />
 		<Unit filename="../../src/linux/Delay/Delay.h" />
 		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.cpp" />
@@ -111,6 +119,11 @@
 		<Unit filename="../../src/linux/Logging/Logging.h" />
 		<Unit filename="../../src/linux/Millis/millis.cpp" />
 		<Unit filename="../../src/linux/Millis/millis.h" />
+		<Unit filename="../../src/linux/SensorFusion/SensorFusion.cpp" />
+		<Unit filename="../../src/linux/SensorFusion/SensorFusion.h" />
+		<Unit filename="../../src/linux/ThreadModule/ThreadModule.cpp" />
+		<Unit filename="../../src/linux/ThreadModule/ThreadModule.h" />
+		<Unit filename="../../src/linux/Wiring/wiring.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
