@@ -121,8 +121,7 @@
 		<Unit filename="../../src/linux/Millis/millis.h" />
 		<Unit filename="../../src/linux/SensorFusion/SensorFusion.cpp" />
 		<Unit filename="../../src/linux/SensorFusion/SensorFusion.h" />
-		<Unit filename="../../src/linux/ThreadModule/ThreadModule.cpp" />
-		<Unit filename="../../src/linux/ThreadModule/ThreadModule.h" />
+		<Unit filename="../../src/linux/Sensors/i_IMU.h" />
 		<Unit filename="../../src/linux/Wiring/wiring.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>

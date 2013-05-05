@@ -24,16 +24,16 @@ bool Logging::FreeSpace(boost::filesystem::path p)
         if(s.available > 50000000) //approx 48MB
         {
             retval = true;
-            #if defined(DEBUG)
+#if defined(DEBUG)
             std::cout << s.available   << " Bytes available for logging." << std::endl;
-            #endif// (DEBUG)
+#endif// (DEBUG)
         }
     }
     catch (boost::filesystem::filesystem_error &e)
     {
-        #if defined(DEBUG)
+#if defined(DEBUG)
         std::cerr << e.what() << std::endl;
-        #endif //DEBUG
+#endif //DEBUG
     }
     return(retval);
 }
@@ -48,15 +48,15 @@ void Logging::begin(const char* filename)
 
     while (boost::filesystem::exists(boost::filesystem::path( logfile.str() )))
     {
-        #if defined(DEBUG)
+#if defined(DEBUG)
         std::cout << logfile.str() << " already exists!" << std::endl;
-        #endif //DEBUG
+#endif //DEBUG
         logfile.str("");
         logfile << "_" << counter++ << "_" << filename;
     }
-    #if defined(DEBUG)
+#if defined(DEBUG)
     std::cout << "--> Using " << logfile.str() <<" for logging" << std::endl;
-    #endif //DEBUG
+#endif //DEBUG
 
     if( FreeSpace("/") )
     {
@@ -73,9 +73,11 @@ void Logging::begin(const char* filename)
         _logfile.close();
     }
 
+    thread_running = true;
+    background_thread = boost::thread( boost::bind(&Logging::loop, this));
 }
 
-void Logging::write(const char* data)
+void Logging::record(const char* data)
 {
     if( FreeSpace("/") )
     {
@@ -85,15 +87,48 @@ void Logging::write(const char* data)
     }
 }
 
+void Logging::write(const char* data)
+{
+    this->write_buffer(data);
+}
+
 void Logging::write(std::ostream &data)
 {
     std::ostringstream& s = dynamic_cast<std::ostringstream&>(data);
-    this->write((const char*)s.str().c_str());
+    //this->write((const char*)s.str().c_str());
+    this->write_buffer((const char*)s.str().c_str());
+}
+
+void Logging::write_buffer(const char* data)
+{
+    mutex_buffer.lock();
+    string_buffer += data;
+    mutex_buffer.unlock();
+    if(4*1024 < string_buffer.length()) //4kbyte blocks
+    {
+        thread_trigger.notify_all();
+    }
+}
+
+void Logging::loop(void)
+{
+    boost::unique_lock<boost::mutex> lock(mutex);
+
+    while(thread_running)
+    {
+        thread_trigger.wait(lock);
+        this->record((const char*)string_buffer.c_str());
+        mutex_buffer.lock();
+        string_buffer.clear();
+        mutex_buffer.unlock();
+    }
 }
 
 void Logging::end(void)
 {
-
+    thread_running = false;
+    thread_trigger.notify_all();
+    background_thread.join();
 
     if (_logfile.is_open())
     {

@@ -56,6 +56,7 @@
 		<Linker>
 			<Add library="boost_unit_test_framework" />
 			<Add library="boost_thread" />
+			<Add library="boost_signals" />
 		</Linker>
 		<Unit filename="../../../src/linux/DataLink/cDataLink.cpp" />
 		<Unit filename="../../../src/linux/DataLink/cDataLink.h" />
