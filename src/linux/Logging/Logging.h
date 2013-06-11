@@ -27,15 +27,20 @@ public:
 protected:
 private:
     bool FreeSpace(boost::filesystem::path p);
+    bool NewFile(const char* basename);
 
-    std::ofstream _logfile;
+    //std::ofstream _logfile;
+    FILE *_logfile;
     std::string _logfilename;
 
     void loop(void);
     void write_buffer(const char* data);
-    void record(const char* data);
+    //void record(const char* data);
 
-    std::string string_buffer;
+    std::string string_buffer_1, string_buffer_2;
+    std::string *active_buffer;
+
+    std::string string_headline;
 
     bool thread_running;
     boost::thread background_thread;

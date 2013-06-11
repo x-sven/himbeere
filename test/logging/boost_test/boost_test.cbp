@@ -55,6 +55,7 @@
 			<Add directory="../../../src/linux/Logging" />
 		</Compiler>
 		<Linker>
+			<Add library="boost_iostreams" />
 			<Add library="boost_unit_test_framework" />
 			<Add library="boost_filesystem" />
 			<Add library="boost_system" />
@@ -68,6 +69,8 @@
 		<Unit filename="../../../src/linux/Millis/millis.h" />
 		<Unit filename="boost_test_main.cpp" />
 		<Unit filename="logging_tests.cpp" />
+		<Unit filename="logging_thread_tests.cpp" />
+		<Unit filename="logging_thread_tests2.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

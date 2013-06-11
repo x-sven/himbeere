@@ -391,7 +391,9 @@ void Drotek10dof::loop(void)
             boost::posix_time::time_duration working_time = interval_imu-spare_time;
             if (spare_time.is_negative())
             {
-                std::cout << "Warning: Drotek10dof overrun! (+"
+                std::cout << boost::posix_time::microsec_clock::local_time()
+                          << ": "
+                          << "Warning: Drotek10dof overrun! (+"
                           << (working_time-interval_imu).total_microseconds()
                           << " us)" << std::endl;
             }
