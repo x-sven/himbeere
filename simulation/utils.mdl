@@ -1,0 +1,666 @@
+Model {
+  Name			  "utils"
+  Version		  5.1
+  SaveDefaultBlockParams  on
+  SampleTimeColors	  off
+  LibraryLinkDisplay	  "none"
+  WideLines		  off
+  ShowLineDimensions	  off
+  ShowPortDataTypes	  off
+  ShowLoopsOnError	  on
+  IgnoreBidirectionalLines off
+  ShowStorageClass	  off
+  SortedOrder		  off
+  RecordCoverage	  off
+  CovPath		  "/"
+  CovSaveName		  "covdata"
+  CovMetricSettings	  "dw"
+  CovNameIncrementing	  off
+  CovHtmlReporting	  on
+  covSaveCumulativeToWorkspaceVar on
+  CovSaveSingleToWorkspaceVar on
+  CovCumulativeVarName	  "covCumulativeData"
+  CovCumulativeReport	  off
+  DataTypeOverride	  "UseLocalSettings"
+  MinMaxOverflowLogging	  "UseLocalSettings"
+  MinMaxOverflowArchiveMode "Overwrite"
+  BlockNameDataTip	  off
+  BlockParametersDataTip  off
+  BlockDescriptionStringDataTip	off
+  ToolBar		  on
+  StatusBar		  on
+  BrowserShowLibraryLinks off
+  BrowserLookUnderMasks	  off
+  Created		  "Sat Feb 18 14:36:08 2006"
+  UpdateHistory		  "UpdateHistoryNever"
+  ModifiedByFormat	  "%<Auto>"
+  LastModifiedBy	  "User"
+  ModifiedDateFormat	  "%<Auto>"
+  LastModifiedDate	  "Sat Feb 18 14:36:43 2006"
+  ModelVersionFormat	  "1.%<AutoIncrement:1>"
+  ConfigurationManager	  "None"
+  SimParamPage		  "Solver"
+  LinearizationMsg	  "none"
+  Profile		  off
+  ParamWorkspaceSource	  "MATLABWorkspace"
+  AccelSystemTargetFile	  "accel.tlc"
+  AccelTemplateMakefile	  "accel_default_tmf"
+  AccelMakeCommand	  "make_rtw"
+  TryForcingSFcnDF	  off
+  ExtModeMexFile	  "ext_comm"
+  ExtModeBatchMode	  off
+  ExtModeTrigType	  "manual"
+  ExtModeTrigMode	  "normal"
+  ExtModeTrigPort	  "1"
+  ExtModeTrigElement	  "any"
+  ExtModeTrigDuration	  1000
+  ExtModeTrigHoldOff	  0
+  ExtModeTrigDelay	  0
+  ExtModeTrigDirection	  "rising"
+  ExtModeTrigLevel	  0
+  ExtModeArchiveMode	  "off"
+  ExtModeAutoIncOneShot	  off
+  ExtModeIncDirWhenArm	  off
+  ExtModeAddSuffixToVar	  off
+  ExtModeWriteAllDataToWs off
+  ExtModeArmWhenConnect	  on
+  ExtModeSkipDownloadWhenConnect off
+  ExtModeLogAll		  on
+  ExtModeAutoUpdateStatusClock on
+  BufferReuse		  on
+  RTWExpressionDepthLimit 5
+  SimulationMode	  "normal"
+  Solver		  "ode45"
+  SolverMode		  "Auto"
+  StartTime		  "0.0"
+  StopTime		  "10.0"
+  MaxOrder		  5
+  MaxStep		  "auto"
+  MinStep		  "auto"
+  MaxNumMinSteps	  "-1"
+  InitialStep		  "auto"
+  FixedStep		  "auto"
+  RelTol		  "1e-3"
+  AbsTol		  "auto"
+  OutputOption		  "RefineOutputTimes"
+  OutputTimes		  "[]"
+  Refine		  "1"
+  LoadExternalInput	  off
+  ExternalInput		  "[t, u]"
+  LoadInitialState	  off
+  InitialState		  "xInitial"
+  SaveTime		  on
+  TimeSaveName		  "tout"
+  SaveState		  off
+  StateSaveName		  "xout"
+  SaveOutput		  on
+  OutputSaveName	  "yout"
+  SaveFinalState	  off
+  FinalStateName	  "xFinal"
+  SaveFormat		  "Array"
+  Decimation		  "1"
+  LimitDataPoints	  on
+  MaxDataPoints		  "1000"
+  SignalLoggingName	  "sigsOut"
+  ConsistencyChecking	  "none"
+  ArrayBoundsChecking	  "none"
+  AlgebraicLoopMsg	  "warning"
+  BlockPriorityViolationMsg "warning"
+  MinStepSizeMsg	  "warning"
+  InheritedTsInSrcMsg	  "warning"
+  DiscreteInheritContinuousMsg "warning"
+  MultiTaskRateTransMsg	  "error"
+  SingleTaskRateTransMsg  "none"
+  CheckForMatrixSingularity "none"
+  IntegerOverflowMsg	  "warning"
+  Int32ToFloatConvMsg	  "warning"
+  ParameterDowncastMsg	  "error"
+  ParameterOverflowMsg	  "error"
+  ParameterPrecisionLossMsg "warning"
+  UnderSpecifiedDataTypeMsg "none"
+  UnnecessaryDatatypeConvMsg "none"
+  VectorMatrixConversionMsg "none"
+  InvalidFcnCallConnMsg	  "error"
+  SignalLabelMismatchMsg  "none"
+  UnconnectedInputMsg	  "warning"
+  UnconnectedOutputMsg	  "warning"
+  UnconnectedLineMsg	  "warning"
+  SfunCompatibilityCheckMsg "none"
+  RTWInlineParameters	  off
+  BlockReductionOpt	  on
+  BooleanDataType	  on
+  ConditionallyExecuteInputs on
+  ParameterPooling	  on
+  OptimizeBlockIOStorage  on
+  ZeroCross		  on
+  AssertionControl	  "UseLocalSettings"
+  ProdHWDeviceType	  "Microprocessor"
+  ProdHWWordLengths	  "8,16,32,32"
+  RTWSystemTargetFile	  "grt.tlc"
+  RTWTemplateMakefile	  "grt_default_tmf"
+  RTWMakeCommand	  "make_rtw"
+  RTWGenerateCodeOnly	  off
+  RTWRetainRTWFile	  off
+  TLCProfiler		  off
+  TLCDebug		  off
+  TLCCoverage		  off
+  TLCAssertion		  off
+  BlockDefaults {
+    Orientation		    "right"
+    ForegroundColor	    "black"
+    BackgroundColor	    "white"
+    DropShadow		    off
+    NamePlacement	    "normal"
+    FontName		    "Helvetica"
+    FontSize		    10
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+    ShowName		    on
+  }
+  BlockParameterDefaults {
+    Block {
+      BlockType		      Constant
+      Value		      "1"
+      VectorParams1D	      on
+      ShowAdditionalParam     off
+      OutDataTypeMode	      "Inherit from 'Constant value'"
+      OutDataType	      "sfix(16)"
+      ConRadixGroup	      "Use specified scaling"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Gain
+      Gain		      "1"
+      Multiplication	      "Element-wise(K.*u)"
+      ShowAdditionalParam     off
+      ParameterDataTypeMode   "Same as input"
+      ParameterDataType	      "sfix(16)"
+      ParameterScalingMode    "Best Precision: Matrix-wise"
+      ParameterScaling	      "2^0"
+      OutDataTypeMode	      "Same as input"
+      OutDataType	      "sfix(16)"
+      OutScaling	      "2^0"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+    }
+    Block {
+      BlockType		      Inport
+      Port		      "1"
+      PortDimensions	      "-1"
+      ShowAdditionalParam     off
+      LatchInput	      off
+      DataType		      "auto"
+      OutDataType	      "sfix(16)"
+      OutScaling	      "2^0"
+      SignalType	      "auto"
+      SamplingMode	      "auto"
+      Interpolate	      on
+    }
+    Block {
+      BlockType		      Math
+      Operator		      "exp"
+      OutputSignalType	      "auto"
+    }
+    Block {
+      BlockType		      Outport
+      Port		      "1"
+      OutputWhenDisabled      "held"
+      InitialOutput	      "[]"
+    }
+    Block {
+      BlockType		      Product
+      Inputs		      "2"
+      Multiplication	      "Element-wise(.*)"
+      ShowAdditionalParam     off
+      InputSameDT	      on
+      OutDataTypeMode	      "Same as first input"
+      OutDataType	      "sfix(16)"
+      OutScaling	      "2^0"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+    }
+    Block {
+      BlockType		      Signum
+      ZeroCross		      on
+    }
+    Block {
+      BlockType		      SubSystem
+      ShowPortLabels	      on
+      Permissions	      "ReadWrite"
+      RTWSystemCode	      "Auto"
+      RTWFcnNameOpts	      "Auto"
+      RTWFileNameOpts	      "Auto"
+      SimViewingDevice	      off
+      DataTypeOverride	      "UseLocalSettings"
+      MinMaxOverflowLogging   "UseLocalSettings"
+    }
+  }
+  AnnotationDefaults {
+    HorizontalAlignment	    "center"
+    VerticalAlignment	    "middle"
+    ForegroundColor	    "black"
+    BackgroundColor	    "white"
+    DropShadow		    off
+    FontName		    "Helvetica"
+    FontSize		    10
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+  }
+  LineDefaults {
+    FontName		    "Helvetica"
+    FontSize		    9
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+  }
+  System {
+    Name		    "utils"
+    Location		    [480, 85, 1060, 386]
+    Open		    on
+    ModelBrowserVisibility  off
+    ModelBrowserWidth	    200
+    ScreenColor		    "white"
+    PaperOrientation	    "landscape"
+    PaperPositionMode	    "auto"
+    PaperType		    "A4"
+    PaperUnits		    "centimeters"
+    ZoomFactor		    "100"
+    ReportName		    "simulink-default.rpt"
+    Block {
+      BlockType		      SubSystem
+      Name		      "Auftrieb"
+      Ports		      [1, 1]
+      Position		      [110, 174, 210, 216]
+      FontSize		      10
+      TreatAsAtomicUnit	      off
+      System {
+	Name			"Auftrieb"
+	Location		[244, 97, 909, 692]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"A4"
+	PaperUnits		"centimeters"
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "omega"
+	  Position		  [115, 183, 145, 197]
+	}
+	Block {
+	  BlockType		  Product
+	  Name			  "Auftrieb"
+	  Ports			  [8, 1]
+	  Position		  [320, 108, 375, 557]
+	  Inputs		  "8"
+	  InputSameDT		  off
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "Caalpha"
+	  Position		  [210, 400, 260, 430]
+	  Value			  "Caalpha"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Direction"
+	  Position		  [270, 125, 300, 155]
+	  Gain			  "-1"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "Rb"
+	  Position		  [230, 290, 260, 320]
+	  Value			  "Rb"
+	}
+	Block {
+	  BlockType		  Signum
+	  Name			  "Sign"
+	  Position		  [205, 125, 235, 155]
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "alpha"
+	  Position		  [230, 455, 260, 485]
+	  Value			  "alpha"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "eta"
+	  Position		  [230, 510, 260, 540]
+	  Value			  "eta"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "lb"
+	  Position		  [230, 345, 260, 375]
+	  Value			  "lb"
+	}
+	Block {
+	  BlockType		  Product
+	  Name			  "omega^2"
+	  Ports			  [2, 1]
+	  Position		  [225, 176, 270, 209]
+	  InputSameDT		  off
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "rho"
+	  Position		  [230, 235, 260, 265]
+	  Value			  "rho"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "F_A"
+	  Position		  [425, 298, 455, 312]
+	}
+	Line {
+	  SrcBlock		  "omega"
+	  SrcPort		  1
+	  Points		  [35, 0]
+	  Branch {
+	    Points		    [0, 10]
+	    DstBlock		    "omega^2"
+	    DstPort		    2
+	  }
+	  Branch {
+	    Points		    [0, -5; 15, 0]
+	    Branch {
+	      DstBlock		      "omega^2"
+	      DstPort		      1
+	    }
+	    Branch {
+	      Points		      [0, -45]
+	      DstBlock		      "Sign"
+	      DstPort		      1
+	    }
+	  }
+	}
+	Line {
+	  SrcBlock		  "omega^2"
+	  SrcPort		  1
+	  DstBlock		  "Auftrieb"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "rho"
+	  SrcPort		  1
+	  DstBlock		  "Auftrieb"
+	  DstPort		  3
+	}
+	Line {
+	  SrcBlock		  "Rb"
+	  SrcPort		  1
+	  DstBlock		  "Auftrieb"
+	  DstPort		  4
+	}
+	Line {
+	  SrcBlock		  "lb"
+	  SrcPort		  1
+	  DstBlock		  "Auftrieb"
+	  DstPort		  5
+	}
+	Line {
+	  SrcBlock		  "Caalpha"
+	  SrcPort		  1
+	  DstBlock		  "Auftrieb"
+	  DstPort		  6
+	}
+	Line {
+	  SrcBlock		  "alpha"
+	  SrcPort		  1
+	  DstBlock		  "Auftrieb"
+	  DstPort		  7
+	}
+	Line {
+	  SrcBlock		  "Sign"
+	  SrcPort		  1
+	  DstBlock		  "Direction"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Direction"
+	  SrcPort		  1
+	  DstBlock		  "Auftrieb"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Auftrieb"
+	  SrcPort		  1
+	  Points		  [0, -30]
+	  DstBlock		  "F_A"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "eta"
+	  SrcPort		  1
+	  DstBlock		  "Auftrieb"
+	  DstPort		  8
+	}
+      }
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Moment"
+      Ports		      [2, 1]
+      Position		      [140, 104, 240, 146]
+      FontSize		      10
+      TreatAsAtomicUnit	      off
+      System {
+	Name			"Moment"
+	Location		[209, 86, 874, 681]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"A4"
+	PaperUnits		"centimeters"
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "FA"
+	  Position		  [65, 168, 95, 182]
+	}
+	Block {
+	  BlockType		  Inport
+	  Name			  "omega"
+	  Position		  [65, 488, 95, 502]
+	  Port			  "2"
+	}
+	Block {
+	  BlockType		  Product
+	  Name			  "(F/etaP)*sqrt"
+	  Ports			  [2, 1]
+	  Position		  [455, 161, 500, 194]
+	  InputSameDT		  off
+	  Port {
+	    PortNumber		    1
+	    Name		    "Prot"
+	    TestPoint		    off
+	    LinearAnalysisOutput    off
+	    LinearAnalysisInput	    off
+	    RTWStorageClass	    "Auto"
+	    DataLogging		    off
+	    DataLoggingNameMode	    "SignalName"
+	    DataLoggingDecimateData off
+	    DataLoggingDecimation   "2"
+	    DataLoggingLimitDataPoints off
+	    DataLoggingMaxPoints    "5000"
+	  }
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "2"
+	  Position		  [70, 250, 100, 280]
+	  Value			  "2"
+	}
+	Block {
+	  BlockType		  Math
+	  Name			  "Math\nFunction"
+	  Ports			  [1, 1]
+	  Position		  [320, 170, 350, 200]
+	  Operator		  "sqrt"
+	}
+	Block {
+	  BlockType		  Product
+	  Name			  "Product"
+	  Ports			  [2, 1]
+	  Position		  [235, 166, 280, 199]
+	  Inputs		  "*/"
+	  InputSameDT		  off
+	}
+	Block {
+	  BlockType		  Product
+	  Name			  "Product1"
+	  Ports			  [4, 1]
+	  Position		  [135, 238, 190, 427]
+	  Inputs		  "4"
+	  InputSameDT		  off
+	}
+	Block {
+	  BlockType		  Product
+	  Name			  "Product2"
+	  Ports			  [2, 1]
+	  Position		  [375, 101, 420, 134]
+	  Inputs		  "*/"
+	  InputSameDT		  off
+	}
+	Block {
+	  BlockType		  Product
+	  Name			  "Prot/omega"
+	  Ports			  [2, 1]
+	  Position		  [560, 171, 605, 204]
+	  Inputs		  "*/"
+	  InputSameDT		  off
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "Rb^2"
+	  Position		  [70, 385, 100, 415]
+	  Value			  "Rb^2"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "etaP"
+	  Position		  [315, 120, 345, 150]
+	  Value			  "etaP"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "pi"
+	  Position		  [70, 340, 100, 370]
+	  Value			  "pi"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "rho"
+	  Position		  [70, 295, 100, 325]
+	  Value			  "rho"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "MD"
+	  Position		  [630, 183, 660, 197]
+	}
+	Line {
+	  SrcBlock		  "FA"
+	  SrcPort		  1
+	  Points		  [0, 0; 105, 0]
+	  Branch {
+	    DstBlock		    "Product"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Points		    [0, -65]
+	    DstBlock		    "Product2"
+	    DstPort		    1
+	  }
+	}
+	Line {
+	  SrcBlock		  "2"
+	  SrcPort		  1
+	  DstBlock		  "Product1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "rho"
+	  SrcPort		  1
+	  DstBlock		  "Product1"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Rb^2"
+	  SrcPort		  1
+	  DstBlock		  "Product1"
+	  DstPort		  4
+	}
+	Line {
+	  SrcBlock		  "pi"
+	  SrcPort		  1
+	  DstBlock		  "Product1"
+	  DstPort		  3
+	}
+	Line {
+	  SrcBlock		  "Product1"
+	  SrcPort		  1
+	  Points		  [10, 0; 0, -145]
+	  DstBlock		  "Product"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Product"
+	  SrcPort		  1
+	  DstBlock		  "Math\nFunction"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "etaP"
+	  SrcPort		  1
+	  Points		  [0, -10]
+	  DstBlock		  "Product2"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Product2"
+	  SrcPort		  1
+	  Points		  [10, 0; 0, 50]
+	  DstBlock		  "(F/etaP)*sqrt"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Math\nFunction"
+	  SrcPort		  1
+	  DstBlock		  "(F/etaP)*sqrt"
+	  DstPort		  2
+	}
+	Line {
+	  Name			  "Prot"
+	  Labels		  [0, 0]
+	  SrcBlock		  "(F/etaP)*sqrt"
+	  SrcPort		  1
+	  DstBlock		  "Prot/omega"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "omega"
+	  SrcPort		  1
+	  Points		  [445, 0]
+	  DstBlock		  "Prot/omega"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Prot/omega"
+	  SrcPort		  1
+	  DstBlock		  "MD"
+	  DstPort		  1
+	}
+      }
+    }
+  }
+}
