@@ -36,8 +36,8 @@ public:
   float get_Acceleration_mss(uint8_t axis);
   float get_GyroRate_rads(uint8_t axis);
   float get_CorrectedRate_rads(uint8_t axis);
-  float get_Heading_rad(void);
 
+// NOTE (Sven#1#): Better to use other velocity representation here!?
   void set_speed_msdeg(float ground_speed, float ground_course, float speed_3d);
   void update(void);
   stEuler_t get_euler_angles_rad(void);
@@ -76,9 +76,6 @@ private:
 
     float errorRollPitch[3];
     float errorYaw[3];
-    float errorCourse;
-    float COGX; //Course overground X axis
-    float COGY; //Course overground Y axis
 
     float f_ground_speed;
     float f_ground_course;
@@ -88,7 +85,6 @@ private:
 
     float f_declination; //Declination for magnetometer correction
     bool mag_enabled;
-    float f_heading;
 
     float Kp_ROLLPITCH;
     float Ki_ROLLPITCH;

@@ -284,7 +284,7 @@ void ecf_imu_update(void)
     imu10dof.getScaledIMU(&acc[0], &acc[1], &acc[2], &gyro[0], &gyro[1], &gyro[2]);
     //Orientation!?
 
-    ECF.set_AccelVector_mss(-acc[0], -acc[1], -acc[2]);
+    ECF.set_AccelVector_mss(acc[0], acc[1], acc[2]);
     ECF.set_GyroVector_rads(gyro[0]*C_DEG2RAD, gyro[1]*C_DEG2RAD, gyro[2]*C_DEG2RAD);
 
     difftime    = pt::microsec_clock::local_time() - last_update;

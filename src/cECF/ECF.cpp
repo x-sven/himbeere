@@ -1,7 +1,7 @@
 #if !defined(__linux__)  && !defined(__APPLE__)
-    #include <Arduino.h>
+#include <Arduino.h>
 #else
-    #include <iostream>
+#include <iostream>
 #endif
 
 #include <math.h>
@@ -34,7 +34,7 @@ ECFClass::ECFClass(void):f_g_const(9.81)
         errorRollPitch[ii] = 0.0;
         errorYaw[ii] = 0.0;
     }//for
-    Accel_Vector[2] = f_g_const;
+    Accel_Vector[2] = -f_g_const;
 
     for(uint8_t jj=0; jj<3; jj++)
     {
@@ -50,21 +50,17 @@ ECFClass::ECFClass(void):f_g_const(9.81)
         }//for kk
     }//for jj
 
-    errorCourse = 0.0;
-    COGX=0;
-    COGY=1;
     G_Dt=0.01;
     f_ground_course = 0.0;
     f_ground_speed = 0.0;
     f_speed_3d = 0.0;
     f_declination = 0.0;
-    f_heading = 0.0;
     mag_enabled = false;
 
-    Kp_ROLLPITCH = 0.15;
-    Ki_ROLLPITCH = 0.00010;
-    Kp_YAW = .5;
-    Ki_YAW = 0.00005;
+    Kp_ROLLPITCH = -0.15;
+    Ki_ROLLPITCH = -0.00010;
+    Kp_YAW = -4; // was -0.5
+    Ki_YAW = Kp_YAW/1.e+6;
 }
 
 /**************************************************/
@@ -121,12 +117,6 @@ float ECFClass::get_CorrectedRate_rads(uint8_t axis)
 }
 
 /**************************************************/
-float ECFClass::get_Heading_rad(void)
-{
-    return(this->f_heading);
-}
-
-/**************************************************/
 void ECFClass::set_speed_msdeg(float ground_speed, float ground_course, float speed_3d)
 {
     f_ground_speed = ground_speed;
@@ -151,7 +141,7 @@ void ECFClass::Matrix_update(void)
     Vector_Add(&Omega[0], &Gyro_Vector[0], &Omega_I[0]);  //adding Integrator term
     Vector_Add(&Omega_Vector[0], &Omega[0], &Omega_P[0]); //adding proportional term
 #if USE_GPS
-    Accel_adjust();    //Remove centrifugal acceleration.
+ //   Accel_adjust();    //Remove centrifugal acceleration.
 #endif /*USE_GPS*/
 
     Update_Matrix[0][0]= 0.0;
@@ -325,7 +315,9 @@ void ECFClass::Drift_correction(void)
     float Accel_magnitude;
     float Accel_weight;
     float Integrator_magnitude;
-
+    float errorCourse = 0.0;
+    float Heading_X;
+    float Heading_Y;
     //*****Roll and Pitch***************
 
     // Calculate the magnitude of the accelerometer vector
@@ -345,8 +337,6 @@ void ECFClass::Drift_correction(void)
     //*****YAW***************
     if(mag_enabled)
     {
-        float Heading_X;
-        float Heading_Y;
         float cos_pitch;
 
         if(1 > (DCM_Matrix[2][0]*DCM_Matrix[2][0]))
@@ -359,24 +349,10 @@ void ECFClass::Drift_correction(void)
             {
                 // Tilt compensated magnetic field X component:
                 Heading_X = Mag_Vector[0]*cos_pitch - Mag_Vector[1]*DCM_Matrix[2][1]*DCM_Matrix[2][0]/cos_pitch - Mag_Vector[2]*DCM_Matrix[2][2]*DCM_Matrix[2][0]/cos_pitch;
-                // Tilt compensated magnetic field Y component:
-                Heading_Y = Mag_Vector[1]*DCM_Matrix[2][2]/cos_pitch - Mag_Vector[2]*DCM_Matrix[2][1]/cos_pitch;
-                // magnetic heading
-                // 6/4/11 - added constrain to keep bad values from ruining DCM Yaw - Jason S.
-                f_heading = constrain(atan2(-Heading_Y,Heading_X), -M_PI, M_PI);
+                // Tilt compensated magnetic field Y component: (Sven: I have the sign changed!)
+                Heading_Y = Mag_Vector[2]*DCM_Matrix[2][1]/cos_pitch - Mag_Vector[1]*DCM_Matrix[2][2]/cos_pitch;
 
-                // Declination correction (if supplied)
-                if( fabs(f_declination) > 0.0 )
-                {
-                    f_heading = f_heading + f_declination;
-                    if (f_heading > M_PI)    // Angle normalization (-180 deg, 180 deg)
-                        f_heading -= (2.0 * M_PI);
-                    else if (f_heading < -M_PI)
-                        f_heading += (2.0 * M_PI);
-                }
-                // We make the gyro YAW drift correction based on compass magnetic heading
-                errorCourse=(DCM_Matrix[0][0]*Heading_Y) - (DCM_Matrix[1][0]*Heading_X);  //Calculating YAW error
-
+                errorCourse= -(DCM_Matrix[0][0]*Heading_Y) +(DCM_Matrix[1][0]*Heading_X);  //Calculating YAW error
                 Vector_Scale(errorYaw,&DCM_Matrix[2][0],errorCourse); //Applys the yaw correction to the XYZ rotation of the aircraft, depeding the position.
 
                 Vector_Scale(&Scaled_Omega_P[0],&errorYaw[0],Kp_YAW);
@@ -384,6 +360,7 @@ void ECFClass::Drift_correction(void)
 
                 Vector_Scale(&Scaled_Omega_I[0],&errorYaw[0],Ki_YAW);
                 Vector_Add(Omega_I,Omega_I,Scaled_Omega_I);//adding integrator to the Omega_I
+
             }
         }
     }
@@ -391,18 +368,23 @@ void ECFClass::Drift_correction(void)
     {
         if(f_ground_speed>=SPEEDFILT)
         {
-            COGX = cos(ToRad(f_ground_course));
-            COGY = sin(ToRad(f_ground_course));
-            errorCourse=(DCM_Matrix[0][0]*COGY) - (DCM_Matrix[1][0]*COGX);  //Calculating YAW error
-            Vector_Scale(errorYaw,&DCM_Matrix[2][0],errorCourse); //Applys the yaw correction to the XYZ rotation of the aircraft, depeding the position.
+            Heading_X = cos(ToRad(f_ground_course));
+            Heading_Y = sin(ToRad(f_ground_course));
 
-            Vector_Scale(&Scaled_Omega_P[0],&errorYaw[0],Kp_YAW);//.01proportional of YAW.
+            errorCourse= -(DCM_Matrix[0][0]*Heading_Y) +(DCM_Matrix[1][0]*Heading_X);  //Calculating YAW error
+            Vector_Scale(errorYaw,&DCM_Matrix[2][0],errorCourse); //Applys the yaw correction to the XYZ rotation of the aircraft, depeding its attitude.
+
+// FIXME (Sven#1#): Scale factor required, indicates missing normialization of "error"-effects!?
+            Vector_Scale(&Scaled_Omega_P[0],&errorYaw[0],Kp_YAW/8.);
             Vector_Add(Omega_P,Omega_P,Scaled_Omega_P);//Adding  Proportional.
 
-            Vector_Scale(&Scaled_Omega_I[0],&errorYaw[0],Ki_YAW);//.00001Integrator
+            Vector_Scale(&Scaled_Omega_I[0],&errorYaw[0],Ki_YAW/8.);
             Vector_Add(Omega_I,Omega_I,Scaled_Omega_I);//adding integrator to the Omega_I
+
         }
     }
+
+
     //  Here we will place a limit on the integrator so that the integrator cannot ever exceed half the saturation limit of the gyros
     Integrator_magnitude = sqrt(Vector_Dot_Product(Omega_I,Omega_I));
     if (Integrator_magnitude > ToRad(300))
@@ -425,9 +407,16 @@ void ECFClass::Drift_correction(void)
 #if USE_GPS
 void ECFClass::Accel_adjust(void)
 {
-    //assumtions: flat turn & slip angle = 0
-    Accel_Vector[1] += f_speed_3d*Omega[2];  // Centrifugal force on Acc_y = GPS_speed*GyroZ
-    Accel_Vector[2] -= f_speed_3d*Omega[1];  // Centrifugal force on Acc_z = GPS_speed*GyroY
+    float centrifugal_accel_vector[3];
+    float vel_g[3];
+
+    //assumtion: slip angle = 0
+    vel_g[0] = f_ground_speed*cos(ToRad(f_ground_course));
+    vel_g[1] = f_ground_speed*sin(ToRad(f_ground_course));
+    vel_g[2] = sqrt(vel_g[0]*vel_g[0] + vel_g[1]*vel_g[1]) - f_speed_3d;
+
+    Vector_Cross_Product(&centrifugal_accel_vector[0],&Omega[0],&vel_g[0]); // delta_acc = omega x V
+    Vector_Add(&Accel_Vector[0], &Accel_Vector[0], &centrifugal_accel_vector[0]);// acc = acc + delta_acc
 }
 #endif /* USE_GPS */
 
@@ -437,8 +426,8 @@ stEuler_t ECFClass::get_euler_angles_rad(void)
     stEuler_t Euler;
 
     Euler.pitch = -asin(DCM_Matrix[2][0]);
-    Euler.roll  = atan2(DCM_Matrix[2][1],DCM_Matrix[2][2]);
-    Euler.yaw   = atan2(DCM_Matrix[1][0],DCM_Matrix[0][0]);
+    Euler.roll  =  atan2(DCM_Matrix[2][1],DCM_Matrix[2][2]);
+    Euler.yaw   =  atan2(DCM_Matrix[1][0],DCM_Matrix[0][0]);
 
     return(Euler);
 }
@@ -448,8 +437,8 @@ stEuler_t ECFClass::get_euler_angles_from_acc_rad(void)
 {
     stEuler_t Euler;
 
-    Euler.roll  =  atan2(Accel_Vector[1],Accel_Vector[2]);    // atan2(acc_y,acc_z)
-    Euler.pitch = -asin((Accel_Vector[0])/(double)f_g_const);
+    Euler.roll  = -atan2(Accel_Vector[1],-Accel_Vector[2]);    // atan2(acc_y,acc_z)
+    Euler.pitch = -asin((Accel_Vector[0])/(double)-f_g_const);
     Euler.yaw   = 0;
 
     return(Euler);
