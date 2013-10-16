@@ -21,12 +21,12 @@ namespace pt = boost::posix_time;
 #include "MPU6050/MPU6050.h"
 #include "HMC5883L/HMC5883L.h"
 #include "MS561101/MS561101BA.h"
+#include "Logging.h"
 #include "Drotek10dof.h"
 #include "HardwareSerial.h"
 #include "AP_GPS.h"
 #include "Delay.h"
 #include "millis.h"
-#include "DataLogger.h"
 #include "st_Euler.h"
 #include "SensorFusion.h"
 
@@ -46,26 +46,18 @@ Logging gpslog;
 Logging imulog;
 Logging ecflog;
 
-//class DataLogging: public DataLogger
-//{
-//public:
-//    void record(void)
-//    {
-//        write(std::ostringstream().flush()
-//              << "Hallo" << "\n"
-//             );
-//    }
-//} mylog;
-
 struct st_options
 {
     string gcs_udp_addr;
+    int logging_rate;
 };
+st_options options;
 
 cDataLink GCSlink;
 
 bool execute = true;
 
+pt::ptime logging_timer= boost::posix_time::microsec_clock::local_time();
 
 void imu_log(void);
 void ecf_imu_update(void);
@@ -141,9 +133,6 @@ void setup()
                  << endl
                 );
 
-//    mylog.begin("Hallo.log");
-//    imu10dof.signal_imudata.connect( boost::bind(&DataLogging::update, &mylog) );
-
     Serial.begin(38400);
     gpslog.begin("logfile_gps-mtk.log");
     gpslog.write(std::ostringstream().flush()
@@ -180,8 +169,6 @@ void setup()
 
     stderr = stdout;
     gps.print_errors = true;
-
-    //Serial.println("GPS MTK library test");
     gps.init();  // GPS Initialization
 }
 
@@ -189,34 +176,43 @@ void setup()
 void imu_log(void)
 {
 
-    //cout << "Main: IMU UPDATE!" << endl;
-    float acc[3] = {0., 0., 9.81};
-    float gyro[3]= {0., 0., 0.};
-    float mag[3] = {0., 0., 0.};
-    pt::ptime time;
+    if(0 < options.logging_rate)
+    {
+        pt::time_duration logging_interval(boost::posix_time::microseconds(1000000 / options.logging_rate));
 
-    imu10dof.getScaledIMU(&acc[0], &acc[1], &acc[2], &gyro[0], &gyro[1], &gyro[2], &time);
-    imu10dof.getScaledMAG(&mag[0], &mag[1], &mag[2]);
+        if(pt::microsec_clock::local_time() > logging_timer)
+        {
+            //cout << "Main: IMU UPDATE!" << endl;
+            float acc[3] = {0., 0., 9.81};
+            float gyro[3]= {0., 0., 0.};
+            float mag[3] = {0., 0., 0.};
+            pt::ptime time;
 
-    pt::time_duration difftime = time - pt::from_time_t(0);
+            imu10dof.getScaledIMU(&acc[0], &acc[1], &acc[2], &gyro[0], &gyro[1], &gyro[2], &time);
+            imu10dof.getScaledMAG(&mag[0], &mag[1], &mag[2]);
 
-    imulog.write(std::ostringstream().flush()
-                 << difftime.total_seconds()       << "\t"
-                 << difftime.fractional_seconds()  << "\t"
-                 << acc[0] << "\t"
-                 << acc[1] << "\t"
-                 << acc[2] << "\t"
-                 << gyro[0] << "\t"
-                 << gyro[1] << "\t"
-                 << gyro[2] << "\t"
-                 << mag[0] << "\t"
-                 << mag[1] << "\t"
-                 << mag[2] << "\t"
-                 << (float)imu10dof.pressure/100. << "\t"
-                 << (float)imu10dof.temp/100. << "\t"
-                 << (float)imu10dof.getTimingAverage() << "\t"
-                 << endl
-                );
+            pt::time_duration difftime = time - pt::from_time_t(0);
+
+            imulog.write(std::ostringstream().flush()
+                         << difftime.total_seconds()       << "\t"
+                         << difftime.fractional_seconds()  << "\t"
+                         << acc[0] << "\t"
+                         << acc[1] << "\t"
+                         << acc[2] << "\t"
+                         << gyro[0] << "\t"
+                         << gyro[1] << "\t"
+                         << gyro[2] << "\t"
+                         << mag[0] << "\t"
+                         << mag[1] << "\t"
+                         << mag[2] << "\t"
+                         << (float)imu10dof.pressure/100. << "\t"
+                         << (float)imu10dof.temp/100. << "\t"
+                         << (float)imu10dof.getTimingAverage() << "\t"
+                         << endl
+                        );
+            logging_timer += logging_interval;
+        } // logging with specified rate
+    } // logging disabled
 }
 
 //***************************************
@@ -224,49 +220,52 @@ void gps_log(void)
 {
     gps.update();
 
-    if (gps.new_data)
+    if(0 < options.logging_rate)
     {
-        pt::time_duration difftime = pt::microsec_clock::local_time() - pt::from_time_t(0);
+        if (gps.new_data)
+        {
+            pt::time_duration difftime = pt::microsec_clock::local_time() - pt::from_time_t(0);
 
-        gpslog.write(std::ostringstream().flush()
-                     << difftime.total_seconds()       << "\t"
-                     << difftime.fractional_seconds()  << "\t"
-                     << gps.latitude << "\t"
-                     << gps.longitude << "\t"
-                     << gps.altitude << "\t"
-                     << gps.ground_speed << "\t"
-                     << gps.ground_course << "\t"
-                     << (int)gps.num_sats << "\t"
-                     << gps.fix << "\t"
-                     << gps.hdop << "\t"
-                     << gps.time  << "\t"
-                     << gps.date << "\t"
-                     << endl
-                    );
-//        std::cout <<"----GPS----"                    << std::endl;
-//        std::cout <<" Lat: "
-//                  << (float)gps.latitude/1.e+7       << std::endl;
-//        std::cout <<" Lon: "
-//                  << (float)gps.longitude/1.e+7      << std::endl;
-//        std::cout <<" Alt: "
-//                  << (float)gps.altitude / 100.0     << std::endl;
-//        std::cout <<" Speed: "
-//                  << (float)gps.ground_speed / 100.0 << std::endl;
-//        std::cout <<" Course: "
-//                  << (float)gps.ground_course / 100.0<< std::endl;
-//        std::cout <<" SAT: "
-//                  << (int)gps.num_sats               << std::endl;
-//        std::cout <<" FIX: "
-//                  << (int)gps.fix                    << std::endl;
-//        std::cout <<" HDOP: "
-//                  << (float)gps.hdop / 100.0         << std::endl;
-//        std::cout <<" TIME: "
-//                  << gps.time                        << std::endl;
-//        std::cout <<" DATE: "
-//                  << gps.date                        << std::endl;
-        gps.new_data = 0; // We have read the data
-        //OutputASCII();
-    }// ...for new data
+            gpslog.write(std::ostringstream().flush()
+                         << difftime.total_seconds()       << "\t"
+                         << difftime.fractional_seconds()  << "\t"
+                         << gps.latitude << "\t"
+                         << gps.longitude << "\t"
+                         << gps.altitude << "\t"
+                         << gps.ground_speed << "\t"
+                         << gps.ground_course << "\t"
+                         << (int)gps.num_sats << "\t"
+                         << gps.fix << "\t"
+                         << gps.hdop << "\t"
+                         << gps.time  << "\t"
+                         << gps.date << "\t"
+                         << endl
+                        );
+    //        std::cout <<"----GPS----"                    << std::endl;
+    //        std::cout <<" Lat: "
+    //                  << (float)gps.latitude/1.e+7       << std::endl;
+    //        std::cout <<" Lon: "
+    //                  << (float)gps.longitude/1.e+7      << std::endl;
+    //        std::cout <<" Alt: "
+    //                  << (float)gps.altitude / 100.0     << std::endl;
+    //        std::cout <<" Speed: "
+    //                  << (float)gps.ground_speed / 100.0 << std::endl;
+    //        std::cout <<" Course: "
+    //                  << (float)gps.ground_course / 100.0<< std::endl;
+    //        std::cout <<" SAT: "
+    //                  << (int)gps.num_sats               << std::endl;
+    //        std::cout <<" FIX: "
+    //                  << (int)gps.fix                    << std::endl;
+    //        std::cout <<" HDOP: "
+    //                  << (float)gps.hdop / 100.0         << std::endl;
+    //        std::cout <<" TIME: "
+    //                  << gps.time                        << std::endl;
+    //        std::cout <<" DATE: "
+    //                  << gps.date                        << std::endl;
+            gps.new_data = 0; // We have read the data
+            //OutputASCII();
+        }// ...for new data
+    } // if logging not disabled
 }
 
 //***************************************
@@ -295,20 +294,23 @@ void ecf_imu_update(void)
 
     difftime = pt::microsec_clock::local_time() - pt::from_time_t(0);
 
-    ecflog.write(std::ostringstream().flush()
-                 << difftime.total_seconds()       << "\t"
-                 << difftime.fractional_seconds()  << "\t"
-                 << ECF.get_euler_angles_rad().toDeg().roll << "\t"
-                 << ECF.get_euler_angles_rad().toDeg().pitch << "\t"
-                 << ECF.get_euler_angles_rad().toDeg().yaw << "\t"
-                 << ECF.get_CorrectedRate_rads(0)*C_RAD2DEG << "\t" //Orientation!!!
-                 << ECF.get_CorrectedRate_rads(1)*C_RAD2DEG << "\t"
-                 << ECF.get_CorrectedRate_rads(2)*C_RAD2DEG << "\t"
-                 << ECF.get_Acceleration_mss(0) << "\t"
-                 << ECF.get_Acceleration_mss(1) << "\t"
-                 << ECF.get_Acceleration_mss(2)  << "\t"
-                 << endl
-                );
+    if(pt::microsec_clock::local_time() > logging_timer && 0 < options.logging_rate)
+    {
+        ecflog.write(std::ostringstream().flush()
+                         << difftime.total_seconds()       << "\t"
+                         << difftime.fractional_seconds()  << "\t"
+                         << ECF.get_euler_angles_rad().toDeg().roll << "\t"
+                         << ECF.get_euler_angles_rad().toDeg().pitch << "\t"
+                         << ECF.get_euler_angles_rad().toDeg().yaw << "\t"
+                         << ECF.get_CorrectedRate_rads(0)*C_RAD2DEG << "\t" //Orientation!!!
+                         << ECF.get_CorrectedRate_rads(1)*C_RAD2DEG << "\t"
+                         << ECF.get_CorrectedRate_rads(2)*C_RAD2DEG << "\t"
+                         << ECF.get_Acceleration_mss(0) << "\t"
+                         << ECF.get_Acceleration_mss(1) << "\t"
+                         << ECF.get_Acceleration_mss(2)  << "\t"
+                         << endl
+                        );
+    } // if logging
 }
 
 //***************************************
@@ -330,6 +332,7 @@ bool parse_options(st_options& opt, int argc, char **argv)
         desc.add_options()
         ("help", "produce help message")
         ("gcs-ip", po::value<string>(&opt.gcs_udp_addr), "IP address for sending data to.")
+        ("lograte", po::value<int>(&opt.logging_rate), "Max. logging data rate in Hz. (set 0 or less to disable it).")
         ;
 
         po::variables_map vm;
@@ -352,16 +355,13 @@ bool parse_options(st_options& opt, int argc, char **argv)
     return true;
 }
 
-//void run_calibration(void)
-//{
-//    imu10dof.run_mag_calibration();
-//}
-
 //***************************************
 int main(int argc, char **argv )
 //***************************************
 {
-    st_options options;
+    options.logging_rate = 1000; // max. default logging rate.
+    options.gcs_udp_addr = "10.10.10.1"; // default GCS-IP address.
+
     if (!parse_options(options, argc, argv))
         return 1;
 
@@ -369,6 +369,14 @@ int main(int argc, char **argv )
     {
         cout << "Trying to send to: "<< options.gcs_udp_addr << endl;
         GCSlink.connect(options.gcs_udp_addr);
+    }
+    if(0 < options.logging_rate)
+    {
+        cout << "Max. logging rate set to: "<< options.logging_rate << " Hz." << endl;
+    }
+    else
+    {
+        cout << "Logging disabled! "<< endl;
     }
     setup();
 
@@ -383,24 +391,17 @@ int main(int argc, char **argv )
     imu10dof.signal_imudata.connect( (boost::function<void (void)>)imu_log ); //2.6ms with logging
 
     /* Bind SensorFusions's update to IMU's update signals*/
-    //imu10dof.signal_imudata.connect( boost::bind(&SensorFusion::update, &ECF) );// signal_imudata() calls ECF.update()
     imu10dof.signal_imudata.connect((boost::function<void (void)>)ecf_imu_update );
     imu10dof.signal_magdata.connect((boost::function<void (void)>)ecf_mag_update );
 
-    /* Bind IMU's logging function to IMU's update signal (just a hack this time)*/
-    //imulog.signal_trigger.connect( (boost::function<void (void)>)imu_log );
-    /* Bind SensorFusions's update/logging to SensorFusions update signal (just a hack this time)*/
-    //ECF.signal_trigger.connect( (boost::function<void (void)>)ecf_imu_update ); //signal_trigger() calls ecf_imu_update()
-
     /* Bind Drotek10dof's calibration function to GCSlink's signal*/
-    //GCSlink.signal_mag_calibration.connect( (boost::function<void (void)>)run_calibration );
     GCSlink.signal_mag_calibration.connect( boost::bind(&Drotek10dof::run_mag_calibration, &imu10dof) );
 
     //start threads
     imu10dof.begin(100,50,SCHED_FIFO);
     imu10dof.getIMUConfigString("# ");
 
-    // set proberties of main thread
+    // set properties of main thread
     struct sched_param thread_param;
     thread_param.sched_priority = 20; //sched_get_priority_max(SCHED_FIFO);
     pthread_setschedparam(pthread_self(), SCHED_FIFO, &thread_param);

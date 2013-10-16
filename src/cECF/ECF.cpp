@@ -19,6 +19,8 @@
 #define TRUE 1
 #endif
 
+using namespace std;
+
 ECFClass::ECFClass(void):f_g_const(9.81)
 {
 
@@ -447,7 +449,7 @@ stEuler_t ECFClass::get_euler_angles_from_acc_rad(void)
 /**************************************************/
 void ECFClass::set_Kp_RollPitch(float k)
 {
-    if(0 < k)
+    if(0 >= k) // only zero and negative values
         Kp_ROLLPITCH = k;
 }
 /**************************************************/
@@ -458,7 +460,7 @@ float ECFClass::get_Kp_RollPitch(void)
 /**************************************************/
 void ECFClass::set_Ki_RollPitch(float k)
 {
-    if(0 < k)
+    if(0 >= k) // only zero and negative values
         Ki_ROLLPITCH = k;
 }
 /**************************************************/
@@ -469,7 +471,7 @@ float ECFClass::get_Ki_RollPitch(void)
 /**************************************************/
 void ECFClass::set_Kp_Yaw(float k)
 {
-    if(0 < k)
+    if(0 >= k) // only zero and negative values
         Kp_YAW = k;
 }
 /**************************************************/
@@ -480,7 +482,7 @@ float ECFClass::get_Kp_Yaw(void)
 /**************************************************/
 void ECFClass::set_Ki_Yaw(float k)
 {
-    if(0 < k)
+    if(0 >= k) // only zero and negative values
         Ki_YAW = k;
 }
 /**************************************************/

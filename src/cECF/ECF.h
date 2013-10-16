@@ -19,10 +19,6 @@
 //OUTPUTMODE=1 will print the corrected data, 0 will print uncorrected data of the gyros (with drift), 2 will print accelerometer only data
 //#define OUTPUTMODE 2
 
-
-using namespace std;
-
-
 class ECFClass
 {
 

@@ -13,6 +13,8 @@
 //!< without modifications of the included classes.
 #define private public
 
+using namespace std;
+
 #include "wiring.h" //constrain macro
 
 #include "st_Euler.h"
@@ -31,6 +33,13 @@ BOOST_AUTO_TEST_CASE( stEulerTest )
 BOOST_AUTO_TEST_CASE( Euler_from_ECF )
 {
     ECFClass ECF;
+
+//    ECF.set_Kp_RollPitch(-0.015); // PPZ values
+//    ECF.set_Ki_RollPitch(-0.00001);
+//    ECF.set_Kp_Yaw(-0.9);
+//    ECF.set_Ki_Yaw(-0.00005);
+//
+//    ECF.G_Dt = 0.02;
 
     //check initialization
     BOOST_CHECK_SMALL(ECF.get_euler_angles_rad().toDeg().pitch,  (float)1e-5);
@@ -301,29 +310,35 @@ BOOST_AUTO_TEST_CASE(ECF_set_parameter_test )
     BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_Yaw(),        (float)-4.0,     (float)1e-6);
     BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_Yaw(),        (float)-4./1.e+6, (float)1e-6);
 
-    ECF.set_Kp_RollPitch(1.0);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_RollPitch(),  (float)1.0, (float)1e-6);
+    ECF.set_Kp_RollPitch(-1.0);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_RollPitch(),  (float)-1.0, (float)1e-6);
     BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_RollPitch(),  (float)-0.00010, (float)1e-6);
     BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_Yaw(),        (float)-4.0,(float)1e-6);
     BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_Yaw(),        (float)-4./1.e+6, (float)1e-6);
 
-    ECF.set_Ki_RollPitch(2.0);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_RollPitch(),  (float)1.0, (float)1e-6);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_RollPitch(),  (float)2.0, (float)1e-6);
+    ECF.set_Ki_RollPitch(-2.0);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_RollPitch(),  (float)-1.0, (float)1e-6);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_RollPitch(),  (float)-2.0, (float)1e-6);
     BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_Yaw(),        (float)-4.0,(float)1e-6);
     BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_Yaw(),        (float)-4./1.e+6, (float)1e-6);
 
-    ECF.set_Kp_Yaw(3.0);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_RollPitch(),  (float)1.0, (float)1e-6);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_RollPitch(),  (float)2.0, (float)1e-6);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_Yaw(),        (float)3.0, (float)1e-6);
+    ECF.set_Kp_Yaw(-3.0);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_RollPitch(),  (float)-1.0, (float)1e-6);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_RollPitch(),  (float)-2.0, (float)1e-6);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_Yaw(),        (float)-3.0, (float)1e-6);
     BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_Yaw(),        (float)-4./1.e+6, (float)1e-6);
 
-    ECF.set_Ki_Yaw(4.0);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_RollPitch(),  (float)1.0, (float)1e-6);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_RollPitch(),  (float)2.0, (float)1e-6);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_Yaw(),        (float)3.0, (float)1e-6);
-    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_Yaw(),        (float)4.0, (float)1e-6);
+    ECF.set_Ki_Yaw(-4.0);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_RollPitch(),  (float)-1.0, (float)1e-6);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_RollPitch(),  (float)-2.0, (float)1e-6);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_Yaw(),        (float)-3.0, (float)1e-6);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_Yaw(),        (float)-4.0, (float)1e-6);
+
+    ECF.set_Ki_Yaw(5.0); // should not be set!
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_RollPitch(),  (float)-1.0, (float)1e-6);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_RollPitch(),  (float)-2.0, (float)1e-6);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Kp_Yaw(),        (float)-3.0, (float)1e-6);
+    BOOST_CHECK_CLOSE_FRACTION(ECF.get_Ki_Yaw(),        (float)-4.0, (float)1e-6);
 }
 
 BOOST_AUTO_TEST_CASE(ECF_tuning_test )
@@ -581,7 +596,6 @@ BOOST_AUTO_TEST_CASE(ECF_heading_update_with_mag )
         int ret = system ("gnuplot -persist plot_result_yaw_mag.gnuplot");
         (void)ret;
     }
-
 }
 
 
