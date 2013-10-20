@@ -1,0 +1,2556 @@
+Model {
+  Name			  "flightgear_sub"
+  Version		  7.8
+  MdlSubVersion		  0
+  GraphicalInterface {
+    NumRootInports	    0
+    NumRootOutports	    0
+    ParameterArgumentNames  ""
+    ComputedModelVersion    "1.1"
+    NumModelReferences	    0
+    NumTestPointedSignals   0
+  }
+  SavedCharacterEncoding  "windows-1252"
+  SaveDefaultBlockParams  on
+  ScopeRefreshTime	  0.035000
+  OverrideScopeRefreshTime on
+  DisableAllScopes	  off
+  DataTypeOverride	  "UseLocalSettings"
+  DataTypeOverrideAppliesTo "AllNumericTypes"
+  MinMaxOverflowLogging	  "UseLocalSettings"
+  MinMaxOverflowArchiveMode "Overwrite"
+  FPTRunName		  "Run 1"
+  MaxMDLFileLineLength	  120
+  Created		  "Sat Oct 19 11:06:00 2013"
+  Creator		  "sven"
+  UpdateHistory		  "UpdateHistoryNever"
+  ModifiedByFormat	  "%<Auto>"
+  LastModifiedBy	  "sven"
+  ModifiedDateFormat	  "%<Auto>"
+  LastModifiedDate	  "Sat Oct 19 11:06:32 2013"
+  RTWModifiedTimeStamp	  304081567
+  ModelVersionFormat	  "1.%<AutoIncrement:1>"
+  ConfigurationManager	  "None"
+  SampleTimeColors	  off
+  SampleTimeAnnotations	  off
+  LibraryLinkDisplay	  "disabled"
+  WideLines		  off
+  ShowLineDimensions	  off
+  ShowPortDataTypes	  off
+  ShowDesignRanges	  off
+  ShowLoopsOnError	  on
+  IgnoreBidirectionalLines off
+  ShowStorageClass	  off
+  ShowTestPointIcons	  on
+  ShowSignalResolutionIcons on
+  ShowViewerIcons	  on
+  SortedOrder		  off
+  ExecutionContextIcon	  off
+  ShowLinearizationAnnotations on
+  BlockNameDataTip	  off
+  BlockParametersDataTip  off
+  BlockDescriptionStringDataTip	off
+  ToolBar		  on
+  StatusBar		  on
+  BrowserShowLibraryLinks off
+  BrowserLookUnderMasks	  off
+  SimulationMode	  "normal"
+  LinearizationMsg	  "none"
+  Profile		  off
+  ParamWorkspaceSource	  "MATLABWorkspace"
+  AccelSystemTargetFile	  "accel.tlc"
+  AccelTemplateMakefile	  "accel_default_tmf"
+  AccelMakeCommand	  "make_rtw"
+  TryForcingSFcnDF	  off
+  Object {
+    $PropName		    "DataLoggingOverride"
+    $ObjectID		    1
+    $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
+    model_		    "flightgear_sub"
+    signals_		    []
+    overrideMode_	    [0U]
+    Array {
+      Type		      "Cell"
+      Dimension		      1
+      Cell		      "flightgear_sub"
+      PropName		      "logAsSpecifiedByModels_"
+    }
+    Array {
+      Type		      "Cell"
+      Dimension		      1
+      Cell		      []
+      PropName		      "logAsSpecifiedByModelsSSIDs_"
+    }
+  }
+  RecordCoverage	  off
+  CovPath		  "/"
+  CovSaveName		  "covdata"
+  CovMetricSettings	  "dw"
+  CovNameIncrementing	  off
+  CovHtmlReporting	  on
+  CovForceBlockReductionOff on
+  covSaveCumulativeToWorkspaceVar on
+  CovSaveSingleToWorkspaceVar on
+  CovCumulativeVarName	  "covCumulativeData"
+  CovCumulativeReport	  off
+  CovReportOnPause	  on
+  CovModelRefEnable	  "Off"
+  CovExternalEMLEnable	  off
+  ExtModeBatchMode	  off
+  ExtModeEnableFloating	  on
+  ExtModeTrigType	  "manual"
+  ExtModeTrigMode	  "normal"
+  ExtModeTrigPort	  "1"
+  ExtModeTrigElement	  "any"
+  ExtModeTrigDuration	  1000
+  ExtModeTrigDurationFloating "auto"
+  ExtModeTrigHoldOff	  0
+  ExtModeTrigDelay	  0
+  ExtModeTrigDirection	  "rising"
+  ExtModeTrigLevel	  0
+  ExtModeArchiveMode	  "off"
+  ExtModeAutoIncOneShot	  off
+  ExtModeIncDirWhenArm	  off
+  ExtModeAddSuffixToVar	  off
+  ExtModeWriteAllDataToWs off
+  ExtModeArmWhenConnect	  on
+  ExtModeSkipDownloadWhenConnect off
+  ExtModeLogAll		  on
+  ExtModeAutoUpdateStatusClock on
+  BufferReuse		  on
+  ShowModelReferenceBlockVersion off
+  ShowModelReferenceBlockIO off
+  Array {
+    Type		    "Handle"
+    Dimension		    1
+    Simulink.ConfigSet {
+      $ObjectID		      2
+      Version		      "1.11.1"
+      Array {
+	Type			"Handle"
+	Dimension		8
+	Simulink.SolverCC {
+	  $ObjectID		  3
+	  Version		  "1.11.1"
+	  StartTime		  "0.0"
+	  StopTime		  "10.0"
+	  AbsTol		  "auto"
+	  FixedStep		  "auto"
+	  InitialStep		  "auto"
+	  MaxNumMinSteps	  "-1"
+	  MaxOrder		  5
+	  ZcThreshold		  "auto"
+	  ConsecutiveZCsStepRelTol "10*128*eps"
+	  MaxConsecutiveZCs	  "1000"
+	  ExtrapolationOrder	  4
+	  NumberNewtonIterations  1
+	  MaxStep		  "auto"
+	  MinStep		  "auto"
+	  MaxConsecutiveMinStep	  "1"
+	  RelTol		  "1e-3"
+	  SolverMode		  "Auto"
+	  ConcurrentTasks	  off
+	  Solver		  "ode45"
+	  SolverName		  "ode45"
+	  SolverJacobianMethodControl "auto"
+	  ShapePreserveControl	  "DisableAll"
+	  ZeroCrossControl	  "UseLocalSettings"
+	  ZeroCrossAlgorithm	  "Nonadaptive"
+	  AlgebraicLoopSolver	  "TrustRegion"
+	  SolverResetMethod	  "Fast"
+	  PositivePriorityOrder	  off
+	  AutoInsertRateTranBlk	  off
+	  SampleTimeConstraint	  "Unconstrained"
+	  InsertRTBMode		  "Whenever possible"
+	}
+	Simulink.DataIOCC {
+	  $ObjectID		  4
+	  Version		  "1.11.1"
+	  Decimation		  "1"
+	  ExternalInput		  "[t, u]"
+	  FinalStateName	  "xFinal"
+	  InitialState		  "xInitial"
+	  LimitDataPoints	  on
+	  MaxDataPoints		  "1000"
+	  LoadExternalInput	  off
+	  LoadInitialState	  off
+	  SaveFinalState	  off
+	  SaveCompleteFinalSimState off
+	  SaveFormat		  "Array"
+	  SignalLoggingSaveFormat "ModelDataLogs"
+	  SaveOutput		  on
+	  SaveState		  off
+	  SignalLogging		  on
+	  DSMLogging		  on
+	  InspectSignalLogs	  off
+	  SaveTime		  on
+	  ReturnWorkspaceOutputs  off
+	  StateSaveName		  "xout"
+	  TimeSaveName		  "tout"
+	  OutputSaveName	  "yout"
+	  SignalLoggingName	  "logsout"
+	  DSMLoggingName	  "dsmout"
+	  OutputOption		  "RefineOutputTimes"
+	  OutputTimes		  "[]"
+	  ReturnWorkspaceOutputsName "out"
+	  Refine		  "1"
+	}
+	Simulink.OptimizationCC {
+	  $ObjectID		  5
+	  Version		  "1.11.1"
+	  Array {
+	    Type		    "Cell"
+	    Dimension		    8
+	    Cell		    "BooleansAsBitfields"
+	    Cell		    "PassReuseOutputArgsAs"
+	    Cell		    "PassReuseOutputArgsThreshold"
+	    Cell		    "ZeroExternalMemoryAtStartup"
+	    Cell		    "ZeroInternalMemoryAtStartup"
+	    Cell		    "OptimizeModelRefInitCode"
+	    Cell		    "NoFixptDivByZeroProtection"
+	    Cell		    "UseSpecifiedMinMax"
+	    PropName		    "DisabledProps"
+	  }
+	  BlockReduction	  on
+	  BooleanDataType	  on
+	  ConditionallyExecuteInputs on
+	  InlineParams		  off
+	  UseIntDivNetSlope	  off
+	  UseFloatMulNetSlope	  off
+	  UseSpecifiedMinMax	  off
+	  InlineInvariantSignals  off
+	  OptimizeBlockIOStorage  on
+	  BufferReuse		  on
+	  EnhancedBackFolding	  off
+	  StrengthReduction	  off
+	  ExpressionFolding	  on
+	  BooleansAsBitfields	  off
+	  BitfieldContainerType	  "uint_T"
+	  EnableMemcpy		  on
+	  MemcpyThreshold	  64
+	  PassReuseOutputArgsAs	  "Structure reference"
+	  ExpressionDepthLimit	  2147483647
+	  FoldNonRolledExpr	  on
+	  LocalBlockOutputs	  on
+	  RollThreshold		  5
+	  SystemCodeInlineAuto	  off
+	  StateBitsets		  off
+	  DataBitsets		  off
+	  UseTempVars		  off
+	  ZeroExternalMemoryAtStartup on
+	  ZeroInternalMemoryAtStartup on
+	  InitFltsAndDblsToZero	  off
+	  NoFixptDivByZeroProtection off
+	  EfficientFloat2IntCast  off
+	  EfficientMapNaN2IntZero on
+	  OptimizeModelRefInitCode off
+	  LifeSpan		  "inf"
+	  MaxStackSize		  "Inherit from target"
+	  BufferReusableBoundary  on
+	  SimCompilerOptimization "Off"
+	  AccelVerboseBuild	  off
+	  AccelParallelForEachSubsystem	on
+	}
+	Simulink.DebuggingCC {
+	  $ObjectID		  6
+	  Version		  "1.11.1"
+	  RTPrefix		  "error"
+	  ConsistencyChecking	  "none"
+	  ArrayBoundsChecking	  "none"
+	  SignalInfNanChecking	  "none"
+	  SignalRangeChecking	  "none"
+	  ReadBeforeWriteMsg	  "UseLocalSettings"
+	  WriteAfterWriteMsg	  "UseLocalSettings"
+	  WriteAfterReadMsg	  "UseLocalSettings"
+	  AlgebraicLoopMsg	  "warning"
+	  ArtificialAlgebraicLoopMsg "warning"
+	  SaveWithDisabledLinksMsg "warning"
+	  SaveWithParameterizedLinksMsg	"warning"
+	  CheckSSInitialOutputMsg on
+	  UnderspecifiedInitializationDetection	"Classic"
+	  MergeDetectMultiDrivingBlocksExec "none"
+	  CheckExecutionContextPreStartOutputMsg off
+	  CheckExecutionContextRuntimeOutputMsg	off
+	  SignalResolutionControl "UseLocalSettings"
+	  BlockPriorityViolationMsg "warning"
+	  MinStepSizeMsg	  "warning"
+	  TimeAdjustmentMsg	  "none"
+	  MaxConsecutiveZCsMsg	  "error"
+	  MaskedZcDiagnostic	  "warning"
+	  IgnoredZcDiagnostic	  "warning"
+	  SolverPrmCheckMsg	  "warning"
+	  InheritedTsInSrcMsg	  "warning"
+	  DiscreteInheritContinuousMsg "warning"
+	  MultiTaskDSMMsg	  "error"
+	  MultiTaskCondExecSysMsg "error"
+	  MultiTaskRateTransMsg	  "error"
+	  SingleTaskRateTransMsg  "none"
+	  TasksWithSamePriorityMsg "warning"
+	  SigSpecEnsureSampleTimeMsg "warning"
+	  CheckMatrixSingularityMsg "none"
+	  IntegerOverflowMsg	  "warning"
+	  Int32ToFloatConvMsg	  "warning"
+	  ParameterDowncastMsg	  "error"
+	  ParameterOverflowMsg	  "error"
+	  ParameterUnderflowMsg	  "none"
+	  ParameterPrecisionLossMsg "warning"
+	  ParameterTunabilityLossMsg "warning"
+	  FixptConstUnderflowMsg  "none"
+	  FixptConstOverflowMsg	  "none"
+	  FixptConstPrecisionLossMsg "none"
+	  UnderSpecifiedDataTypeMsg "none"
+	  UnnecessaryDatatypeConvMsg "none"
+	  VectorMatrixConversionMsg "none"
+	  InvalidFcnCallConnMsg	  "error"
+	  FcnCallInpInsideContextMsg "Enable All"
+	  SignalLabelMismatchMsg  "none"
+	  UnconnectedInputMsg	  "warning"
+	  UnconnectedOutputMsg	  "warning"
+	  UnconnectedLineMsg	  "warning"
+	  SFcnCompatibilityMsg	  "none"
+	  FrameProcessingCompatibilityMsg "warning"
+	  UniqueDataStoreMsg	  "none"
+	  BusObjectLabelMismatch  "warning"
+	  RootOutportRequireBusObject "warning"
+	  AssertControl		  "UseLocalSettings"
+	  EnableOverflowDetection off
+	  ModelReferenceIOMsg	  "none"
+	  ModelReferenceMultiInstanceNormalModeStructChecksumCheck "error"
+	  ModelReferenceVersionMismatchMessage "none"
+	  ModelReferenceIOMismatchMessage "none"
+	  ModelReferenceCSMismatchMessage "none"
+	  UnknownTsInhSupMsg	  "warning"
+	  ModelReferenceDataLoggingMessage "warning"
+	  ModelReferenceSymbolNameMessage "warning"
+	  ModelReferenceExtraNoncontSigs "error"
+	  StateNameClashWarn	  "warning"
+	  SimStateInterfaceChecksumMismatchMsg "warning"
+	  SimStateOlderReleaseMsg "error"
+	  InitInArrayFormatMsg	  "warning"
+	  StrictBusMsg		  "ErrorLevel1"
+	  BusNameAdapt		  "WarnAndRepair"
+	  NonBusSignalsTreatedAsBus "none"
+	  LoggingUnavailableSignals "error"
+	  BlockIODiagnostic	  "none"
+	  SFUnusedDataAndEventsDiag "warning"
+	  SFUnexpectedBacktrackingDiag "warning"
+	  SFInvalidInputDataAccessInChartInitDiag "warning"
+	  SFNoUnconditionalDefaultTransitionDiag "warning"
+	  SFTransitionOutsideNaturalParentDiag "warning"
+	  SFUnconditionalTransitionShadowingDiag "warning"
+	}
+	Simulink.HardwareCC {
+	  $ObjectID		  7
+	  Version		  "1.11.1"
+	  ProdBitPerChar	  8
+	  ProdBitPerShort	  16
+	  ProdBitPerInt		  32
+	  ProdBitPerLong	  32
+	  ProdBitPerFloat	  32
+	  ProdBitPerDouble	  64
+	  ProdBitPerPointer	  32
+	  ProdLargestAtomicInteger "Char"
+	  ProdLargestAtomicFloat  "None"
+	  ProdIntDivRoundTo	  "Undefined"
+	  ProdEndianess		  "Unspecified"
+	  ProdWordSize		  32
+	  ProdShiftRightIntArith  on
+	  ProdHWDeviceType	  "32-bit Generic"
+	  TargetBitPerChar	  8
+	  TargetBitPerShort	  16
+	  TargetBitPerInt	  32
+	  TargetBitPerLong	  32
+	  TargetBitPerFloat	  32
+	  TargetBitPerDouble	  64
+	  TargetBitPerPointer	  32
+	  TargetLargestAtomicInteger "Char"
+	  TargetLargestAtomicFloat "None"
+	  TargetShiftRightIntArith on
+	  TargetIntDivRoundTo	  "Undefined"
+	  TargetEndianess	  "Unspecified"
+	  TargetWordSize	  32
+	  TargetTypeEmulationWarnSuppressLevel 0
+	  TargetPreprocMaxBitsSint 32
+	  TargetPreprocMaxBitsUint 32
+	  TargetHWDeviceType	  "Specified"
+	  TargetUnknown		  off
+	  ProdEqTarget		  on
+	}
+	Simulink.ModelReferenceCC {
+	  $ObjectID		  8
+	  Version		  "1.11.1"
+	  UpdateModelReferenceTargets "IfOutOfDateOrStructuralChange"
+	  CheckModelReferenceTargetMessage "error"
+	  EnableParallelModelReferenceBuilds off
+	  ParallelModelReferenceErrorOnInvalidPool on
+	  ParallelModelReferenceMATLABWorkerInit "None"
+	  ModelReferenceNumInstancesAllowed "Multi"
+	  PropagateVarSize	  "Infer from blocks in model"
+	  ModelReferencePassRootInputsByReference on
+	  ModelReferenceMinAlgLoopOccurrences off
+	  PropagateSignalLabelsOutOfModel off
+	  SupportModelReferenceSimTargetCustomCode off
+	}
+	Simulink.SFSimCC {
+	  $ObjectID		  9
+	  Version		  "1.11.1"
+	  SFSimEnableDebug	  on
+	  SFSimOverflowDetection  on
+	  SFSimEcho		  on
+	  SimBlas		  on
+	  SimCtrlC		  on
+	  SimExtrinsic		  on
+	  SimIntegrity		  on
+	  SimUseLocalCustomCode	  off
+	  SimParseCustomCode	  on
+	  SimBuildMode		  "sf_incremental_build"
+	}
+	Simulink.RTWCC {
+	  $BackupClass		  "Simulink.RTWCC"
+	  $ObjectID		  10
+	  Version		  "1.11.1"
+	  Array {
+	    Type		    "Cell"
+	    Dimension		    8
+	    Cell		    "IncludeHyperlinkInReport"
+	    Cell		    "GenerateTraceInfo"
+	    Cell		    "GenerateTraceReport"
+	    Cell		    "GenerateTraceReportSl"
+	    Cell		    "GenerateTraceReportSf"
+	    Cell		    "GenerateTraceReportEml"
+	    Cell		    "GenerateSLWebview"
+	    Cell		    "GenerateCodeMetricsReport"
+	    PropName		    "DisabledProps"
+	  }
+	  SystemTargetFile	  "grt.tlc"
+	  GenCodeOnly		  off
+	  MakeCommand		  "make_rtw"
+	  GenerateMakefile	  on
+	  TemplateMakefile	  "grt_default_tmf"
+	  GenerateReport	  off
+	  SaveLog		  off
+	  RTWVerbose		  on
+	  RetainRTWFile		  off
+	  ProfileTLC		  off
+	  TLCDebug		  off
+	  TLCCoverage		  off
+	  TLCAssert		  off
+	  ProcessScriptMode	  "Default"
+	  ConfigurationMode	  "Optimized"
+	  ConfigAtBuild		  off
+	  RTWUseLocalCustomCode	  off
+	  RTWUseSimCustomCode	  off
+	  IncludeHyperlinkInReport off
+	  LaunchReport		  off
+	  TargetLang		  "C"
+	  IncludeBusHierarchyInRTWFileBlockHierarchyMap	off
+	  IncludeERTFirstTime	  off
+	  GenerateTraceInfo	  off
+	  GenerateTraceReport	  off
+	  GenerateTraceReportSl	  off
+	  GenerateTraceReportSf	  off
+	  GenerateTraceReportEml  off
+	  GenerateCodeInfo	  off
+	  GenerateSLWebview	  off
+	  GenerateCodeMetricsReport off
+	  RTWCompilerOptimization "Off"
+	  CheckMdlBeforeBuild	  "Off"
+	  CustomRebuildMode	  "OnUpdate"
+	  Array {
+	    Type		    "Handle"
+	    Dimension		    2
+	    Simulink.CodeAppCC {
+	      $ObjectID		      11
+	      Version		      "1.11.1"
+	      Array {
+		Type			"Cell"
+		Dimension		21
+		Cell			"IgnoreCustomStorageClasses"
+		Cell			"IgnoreTestpoints"
+		Cell			"InsertBlockDesc"
+		Cell			"InsertPolySpaceComments"
+		Cell			"SFDataObjDesc"
+		Cell			"MATLABFcnDesc"
+		Cell			"SimulinkDataObjDesc"
+		Cell			"DefineNamingRule"
+		Cell			"SignalNamingRule"
+		Cell			"ParamNamingRule"
+		Cell			"InlinedPrmAccess"
+		Cell			"CustomSymbolStr"
+		Cell			"CustomSymbolStrGlobalVar"
+		Cell			"CustomSymbolStrType"
+		Cell			"CustomSymbolStrField"
+		Cell			"CustomSymbolStrFcn"
+		Cell			"CustomSymbolStrFcnArg"
+		Cell			"CustomSymbolStrBlkIO"
+		Cell			"CustomSymbolStrTmpVar"
+		Cell			"CustomSymbolStrMacro"
+		Cell			"ReqsInCode"
+		PropName		"DisabledProps"
+	      }
+	      ForceParamTrailComments off
+	      GenerateComments	      on
+	      IgnoreCustomStorageClasses on
+	      IgnoreTestpoints	      off
+	      IncHierarchyInIds	      off
+	      MaxIdLength	      31
+	      PreserveName	      off
+	      PreserveNameWithParent  off
+	      ShowEliminatedStatement off
+	      IncAutoGenComments      off
+	      SimulinkDataObjDesc     off
+	      SFDataObjDesc	      off
+	      MATLABFcnDesc	      off
+	      IncDataTypeInIds	      off
+	      MangleLength	      1
+	      CustomSymbolStrGlobalVar "$R$N$M"
+	      CustomSymbolStrType     "$N$R$M"
+	      CustomSymbolStrField    "$N$M"
+	      CustomSymbolStrFcn      "$R$N$M$F"
+	      CustomSymbolStrFcnArg   "rt$I$N$M"
+	      CustomSymbolStrBlkIO    "rtb_$N$M"
+	      CustomSymbolStrTmpVar   "$N$M"
+	      CustomSymbolStrMacro    "$R$N$M"
+	      DefineNamingRule	      "None"
+	      ParamNamingRule	      "None"
+	      SignalNamingRule	      "None"
+	      InsertBlockDesc	      off
+	      InsertPolySpaceComments off
+	      SimulinkBlockComments   on
+	      MATLABSourceComments    off
+	      EnableCustomComments    off
+	      InlinedPrmAccess	      "Literals"
+	      ReqsInCode	      off
+	      UseSimReservedNames     off
+	    }
+	    Simulink.GRTTargetCC {
+	      $BackupClass	      "Simulink.TargetCC"
+	      $ObjectID		      12
+	      Version		      "1.11.1"
+	      Array {
+		Type			"Cell"
+		Dimension		16
+		Cell			"GeneratePreprocessorConditionals"
+		Cell			"IncludeMdlTerminateFcn"
+		Cell			"CombineOutputUpdateFcns"
+		Cell			"SuppressErrorStatus"
+		Cell			"ERTCustomFileBanners"
+		Cell			"GenerateSampleERTMain"
+		Cell			"GenerateTestInterfaces"
+		Cell			"ModelStepFunctionPrototypeControlCompliant"
+		Cell			"CPPClassGenCompliant"
+		Cell			"MultiInstanceERTCode"
+		Cell			"PurelyIntegerCode"
+		Cell			"SupportComplex"
+		Cell			"SupportAbsoluteTime"
+		Cell			"SupportContinuousTime"
+		Cell			"SupportNonInlinedSFcns"
+		Cell			"PortableWordSizes"
+		PropName		"DisabledProps"
+	      }
+	      TargetFcnLib	      "ansi_tfl_table_tmw.mat"
+	      TargetLibSuffix	      ""
+	      TargetPreCompLibLocation ""
+	      TargetFunctionLibrary   "ANSI_C"
+	      UtilityFuncGeneration   "Auto"
+	      ERTMultiwordTypeDef     "System defined"
+	      CodeExecutionProfiling  off
+	      ERTMultiwordLength      256
+	      MultiwordLength	      2048
+	      GenerateFullHeader      on
+	      GenerateSampleERTMain   off
+	      GenerateTestInterfaces  off
+	      IsPILTarget	      off
+	      ModelReferenceCompliant on
+	      ParMdlRefBuildCompliant on
+	      CompOptLevelCompliant   on
+	      ConcurrentExecutionCompliant on
+	      IncludeMdlTerminateFcn  on
+	      GeneratePreprocessorConditionals "Disable all"
+	      CombineOutputUpdateFcns off
+	      CombineSignalStateStructs	off
+	      SuppressErrorStatus     off
+	      ERTFirstTimeCompliant   off
+	      IncludeFileDelimiter    "Auto"
+	      ERTCustomFileBanners    off
+	      SupportAbsoluteTime     on
+	      LogVarNameModifier      "rt_"
+	      MatFileLogging	      on
+	      MultiInstanceERTCode    off
+	      SupportNonFinite	      on
+	      SupportComplex	      on
+	      PurelyIntegerCode	      off
+	      SupportContinuousTime   on
+	      SupportNonInlinedSFcns  on
+	      SupportVariableSizeSignals off
+	      EnableShiftOperators    on
+	      ParenthesesLevel	      "Nominal"
+	      PortableWordSizes	      off
+	      ModelStepFunctionPrototypeControlCompliant off
+	      CPPClassGenCompliant    off
+	      AutosarCompliant	      off
+	      UseMalloc		      off
+	      ExtMode		      off
+	      ExtModeStaticAlloc      off
+	      ExtModeTesting	      off
+	      ExtModeStaticAllocSize  1000000
+	      ExtModeTransport	      0
+	      ExtModeMexFile	      "ext_comm"
+	      ExtModeIntrfLevel	      "Level1"
+	      RTWCAPISignals	      off
+	      RTWCAPIParams	      off
+	      RTWCAPIStates	      off
+	      RTWCAPIRootIO	      off
+	      GenerateASAP2	      off
+	    }
+	    PropName		    "Components"
+	  }
+	}
+	PropName		"Components"
+      }
+      Name		      "Configuration"
+      CurrentDlgPage	      "Solver"
+      ConfigPrmDlgPosition     [ 200, 85, 1080, 715 ] 
+    }
+    PropName		    "ConfigurationSets"
+  }
+  Simulink.ConfigSet {
+    $PropName		    "ActiveConfigurationSet"
+    $ObjectID		    2
+  }
+  BlockDefaults {
+    ForegroundColor	    "black"
+    BackgroundColor	    "white"
+    DropShadow		    off
+    NamePlacement	    "normal"
+    FontName		    "Helvetica"
+    FontSize		    10
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+    ShowName		    on
+    BlockRotation	    0
+    BlockMirror		    off
+  }
+  AnnotationDefaults {
+    HorizontalAlignment	    "center"
+    VerticalAlignment	    "middle"
+    ForegroundColor	    "black"
+    BackgroundColor	    "white"
+    DropShadow		    off
+    FontName		    "Helvetica"
+    FontSize		    10
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+    UseDisplayTextAsClickCallback off
+  }
+  LineDefaults {
+    FontName		    "Helvetica"
+    FontSize		    9
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+  }
+  BlockParameterDefaults {
+    Block {
+      BlockType		      BusSelector
+      OutputAsBus	      off
+    }
+    Block {
+      BlockType		      BusToVector
+    }
+    Block {
+      BlockType		      Constant
+      Value		      "1"
+      VectorParams1D	      on
+      SamplingMode	      "Sample based"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: Inherit from 'Constant value'"
+      LockScale		      off
+      SampleTime	      "inf"
+      FramePeriod	      "inf"
+      PreserveConstantTs      off
+    }
+    Block {
+      BlockType		      DataTypeConversion
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: Inherit via back propagation"
+      LockScale		      off
+      ConvertRealWorld	      "Real World Value (RWV)"
+      RndMeth		      "Zero"
+      SaturateOnIntegerOverflow	on
+      SampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Demux
+      Outputs		      "4"
+      DisplayOption	      "none"
+      BusSelectionMode	      off
+    }
+    Block {
+      BlockType		      Display
+      Format		      "short"
+      Decimation	      "10"
+      Floating		      off
+      SampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Fcn
+      Expr		      "sin(u[1])"
+      SampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Gain
+      Gain		      "1"
+      Multiplication	      "Element-wise(K.*u)"
+      ParamMin		      "[]"
+      ParamMax		      "[]"
+      ParamDataTypeStr	      "Inherit: Same as input"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: Same as input"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+      SampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Inport
+      Port		      "1"
+      OutputFunctionCall      off
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: auto"
+      LockScale		      off
+      BusOutputAsStruct	      off
+      PortDimensions	      "-1"
+      VarSizeSig	      "Inherit"
+      SampleTime	      "-1"
+      SignalType	      "auto"
+      SamplingMode	      "auto"
+      LatchByDelayingOutsideSignal off
+      LatchInputForFeedbackSignals off
+      Interpolate	      on
+    }
+    Block {
+      BlockType		      Logic
+      Operator		      "AND"
+      Inputs		      "2"
+      IconShape		      "rectangular"
+      AllPortsSameDT	      on
+      OutDataTypeStr	      "Inherit: Logical (see Configuration Parameters: Optimization)"
+      SampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Mux
+      Inputs		      "4"
+      DisplayOption	      "none"
+      UseBusObject	      off
+      BusObject		      "BusObject"
+      NonVirtualBus	      off
+    }
+    Block {
+      BlockType		      Outport
+      Port		      "1"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: auto"
+      LockScale		      off
+      BusOutputAsStruct	      off
+      PortDimensions	      "-1"
+      VarSizeSig	      "Inherit"
+      SampleTime	      "-1"
+      SignalType	      "auto"
+      SamplingMode	      "auto"
+      SourceOfInitialOutputValue "Dialog"
+      OutputWhenDisabled      "held"
+      InitialOutput	      "[]"
+    }
+    Block {
+      BlockType		      RateTransition
+      Integrity		      on
+      Deterministic	      on
+      X0		      "0"
+      OutPortSampleTimeOpt    "Specify"
+      OutPortSampleTimeMultiple	"1"
+      OutPortSampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Reshape
+      OutputDimensionality    "1-D array"
+      OutputDimensions	      "[1,1]"
+    }
+    Block {
+      BlockType		      S-Function
+      FunctionName	      "system"
+      SFunctionModules	      "''"
+      PortCounts	      "[]"
+      SFunctionDeploymentMode off
+    }
+    Block {
+      BlockType		      SubSystem
+      ShowPortLabels	      "FromPortIcon"
+      Permissions	      "ReadWrite"
+      PermitHierarchicalResolution "All"
+      TreatAsAtomicUnit	      off
+      CheckFcnCallInpInsideContextMsg off
+      SystemSampleTime	      "-1"
+      RTWFcnNameOpts	      "Auto"
+      RTWFileNameOpts	      "Auto"
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      SimViewingDevice	      off
+      DataTypeOverride	      "UseLocalSettings"
+      DataTypeOverrideAppliesTo	"AllNumericTypes"
+      MinMaxOverflowLogging   "UseLocalSettings"
+      SFBlockType	      "NONE"
+      Variant		      off
+      GeneratePreprocessorConditionals off
+    }
+  }
+  System {
+    Name		    "flightgear_sub"
+    Location		    [70, 222, 1034, 705]
+    Open		    on
+    ModelBrowserVisibility  off
+    ModelBrowserWidth	    200
+    ScreenColor		    "white"
+    PaperOrientation	    "landscape"
+    PaperPositionMode	    "auto"
+    PaperType		    "A4"
+    PaperUnits		    "centimeters"
+    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+    TiledPageScale	    1
+    ShowPageBoundaries	    off
+    ZoomFactor		    "145"
+    ReportName		    "simulink-default.rpt"
+    SIDHighWatermark	    "99"
+    Block {
+      BlockType		      BusSelector
+      Name		      "Bus\nSelector10"
+      SID		      "1"
+      Ports		      [1, 1]
+      Position		      [180, 240, 185, 280]
+      ShowName		      off
+      OutputSignals	      "pos.x,pos.y,pos.z"
+      OutputAsBus	      on
+    }
+    Block {
+      BlockType		      BusSelector
+      Name		      "Bus\nSelector4"
+      SID		      "2"
+      Ports		      [1, 6]
+      Position		      [225, 64, 235, 221]
+      ShowName		      off
+      OutputSignals	      "pos.x,pos.y,pos.z,attitude.phi,attitude.theta,attitude.psi"
+      Port {
+	PortNumber		1
+	Name			"<x>"
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+      Port {
+	PortNumber		2
+	Name			"<y>"
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+      Port {
+	PortNumber		3
+	Name			"<z>"
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+      Port {
+	PortNumber		4
+	Name			"<phi>"
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+      Port {
+	PortNumber		5
+	Name			"<theta>"
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+      Port {
+	PortNumber		6
+	Name			"<psi>"
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+    }
+    Block {
+      BlockType		      BusSelector
+      Name		      "Bus\nSelector9"
+      SID		      "3"
+      Ports		      [1, 1]
+      Position		      [180, 285, 185, 325]
+      ShowName		      off
+      OutputSignals	      "attitude.phi,attitude.theta,attitude.psi"
+      OutputAsBus	      on
+    }
+    Block {
+      BlockType		      BusToVector
+      Name		      "Bus to Vector3"
+      SID		      "4"
+      Position		      [220, 295, 245, 315]
+      ZOrder		      -1
+    }
+    Block {
+      BlockType		      BusToVector
+      Name		      "Bus to Vector4"
+      SID		      "5"
+      Position		      [220, 250, 245, 270]
+      ZOrder		      -1
+    }
+    Block {
+      BlockType		      Display
+      Name		      "Display"
+      SID		      "6"
+      Ports		      [1]
+      Position		      [675, 65, 765, 95]
+      ZOrder		      -1
+      Decimation	      "1"
+      Lockdown		      off
+    }
+    Block {
+      BlockType		      Display
+      Name		      "Display1"
+      SID		      "7"
+      Ports		      [1]
+      Position		      [570, 90, 660, 120]
+      ZOrder		      -1
+      Decimation	      "1"
+      Lockdown		      off
+    }
+    Block {
+      BlockType		      Display
+      Name		      "Display2"
+      SID		      "8"
+      Ports		      [1]
+      Position		      [440, 115, 530, 145]
+      ZOrder		      -1
+      Decimation	      "1"
+      Lockdown		      off
+    }
+    Block {
+      BlockType		      Display
+      Name		      "Display3"
+      SID		      "9"
+      Ports		      [1]
+      Position		      [675, 140, 765, 170]
+      ZOrder		      -1
+      Decimation	      "1"
+      Lockdown		      off
+    }
+    Block {
+      BlockType		      Display
+      Name		      "Display4"
+      SID		      "10"
+      Ports		      [1]
+      Position		      [585, 165, 675, 195]
+      ZOrder		      -1
+      Decimation	      "1"
+      Lockdown		      off
+    }
+    Block {
+      BlockType		      Display
+      Name		      "Display5"
+      SID		      "11"
+      Ports		      [1]
+      Position		      [470, 190, 560, 220]
+      ZOrder		      -1
+      Decimation	      "1"
+      Lockdown		      off
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Flightgear Output\n(UDP)"
+      SID		      "12"
+      Ports		      [2]
+      Position		      [295, 236, 395, 329]
+      TreatAsAtomicUnit	      on
+      MinAlgLoopOccurrences   off
+      PropExecContextOutsideSubsystem off
+      RTWSystemCode	      "Auto"
+      FunctionWithSeparateData off
+      Opaque		      off
+      RequestExecContextInheritance off
+      MaskHideContents	      off
+      System {
+	Name			"Flightgear Output\n(UDP)"
+	Location		[319, 74, 1678, 990]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"A4"
+	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "x,y,z"
+	  SID			  "13"
+	  Position		  [35, 78, 65, 92]
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Inport
+	  Name			  "Phi,Theta,Psi"
+	  SID			  "14"
+	  Position		  [135, 188, 165, 202]
+	  Port			  "2"
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "Constant"
+	  SID			  "15"
+	  Position		  [45, 225, 75, 255]
+	  Value			  "0"
+	}
+	Block {
+	  BlockType		  Demux
+	  Name			  "Demux1"
+	  SID			  "16"
+	  Ports			  [1, 3]
+	  Position		  [110, 15, 120, 155]
+	  BackgroundColor	  "black"
+	  ShowName		  off
+	  Outputs		  "3"
+	}
+	Block {
+	  BlockType		  SubSystem
+	  Name			  "FlightGear\nInterface"
+	  SID			  "17"
+	  Ports			  [3]
+	  Position		  [780, 129, 915, 261]
+	  MinAlgLoopOccurrences	  off
+	  PropExecContextOutsideSubsystem off
+	  RTWSystemCode		  "Auto"
+	  FunctionWithSeparateData off
+	  Opaque		  off
+	  RequestExecContextInheritance	off
+	  MaskHideContents	  off
+	  MaskType		  "FlightGear interface"
+	  MaskDescription	  "FlightGear Flight Simulator Interface that provides a visual output of the aircraft position and"
+	  " attitude."
+	  MaskHelp		  "The block provides position and attitude information to FlightGear Flight Simulator for visual output "
+	  "of the aircraft behavior.\n<P><B>Parameters:</B>\n<LI>Sample time: the sample time at which data is sent to FlightG"
+	  "ear;</LI>\n<LI>Host name: the name or IP address of the machine on which FlightGear is running.</LI></P>\n<P><B>Inp"
+	  "uts:</B> \n<LI> the 3x1 vector of geographic position;</LI>\n<LI> the 3x1 vector of Euler angles;</LI>\n<LI> scalar"
+	  " number representing airspeed.</LI></P>"
+	  MaskPromptString	  "Host name:|Port:|Sample time:"
+	  MaskStyleString	  "edit,edit,edit"
+	  MaskVariables		  "hostname=@1;port=@2;tsamp=@3;"
+	  MaskTunableValueString  "on,on,on"
+	  MaskCallbackString	  "||"
+	  MaskEnableString	  "on,on,on"
+	  MaskVisibilityString	  "on,on,on"
+	  MaskToolTipString	  "on,on,on"
+	  MaskIconFrame		  on
+	  MaskIconOpaque	  on
+	  MaskIconRotate	  "none"
+	  MaskPortRotate	  "default"
+	  MaskIconUnits		  "autoscale"
+	  MaskValueString	  "vis.IP_fg|vis.PORT_fg|vis.dt_vis"
+	  System {
+	    Name		    "FlightGear\nInterface"
+	    Location		    [319, 74, 1678, 990]
+	    Open		    off
+	    ModelBrowserVisibility  off
+	    ModelBrowserWidth	    200
+	    ScreenColor		    "white"
+	    PaperOrientation	    "landscape"
+	    PaperPositionMode	    "auto"
+	    PaperType		    "A4"
+	    PaperUnits		    "centimeters"
+	    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+	    TiledPageScale	    1
+	    ShowPageBoundaries	    off
+	    ZoomFactor		    "100"
+	    Block {
+	      BlockType		      Inport
+	      Name		      "Position"
+	      SID		      "18"
+	      Position		      [20, 73, 50, 87]
+	      IconDisplay	      "Port number"
+	      OutDataTypeStr	      "double"
+	      PortDimensions	      "[3 1]"
+	    }
+	    Block {
+	      BlockType		      Inport
+	      Name		      "Euler"
+	      SID		      "19"
+	      Position		      [20, 128, 50, 142]
+	      Port		      "2"
+	      IconDisplay	      "Port number"
+	      OutDataTypeStr	      "double"
+	      PortDimensions	      "[3 1]"
+	    }
+	    Block {
+	      BlockType		      Inport
+	      Name		      "Airspeed"
+	      SID		      "20"
+	      Position		      [15, 183, 45, 197]
+	      Port		      "3"
+	      IconDisplay	      "Port number"
+	      OutDataTypeStr	      "double"
+	      PortDimensions	      "1"
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "Accelerations"
+	      SID		      "21"
+	      Position		      [460, 450, 495, 480]
+	      Value		      "[0 0 0]"
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "Alt above ground"
+	      SID		      "22"
+	      Position		      [420, 285, 450, 315]
+	      Value		      "0"
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "Angular Rates (rad)"
+	      SID		      "23"
+	      Position		      [410, 395, 450, 425]
+	      Value		      "[0 0 0]"
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "Engine Speed"
+	      SID		      "24"
+	      Position		      [405, 504, 435, 536]
+	      Value		      "0"
+	    }
+	    Block {
+	      BlockType		      SubSystem
+	      Name		      "FlightGear 0.9.8 \nInterface"
+	      SID		      "25"
+	      Ports		      [12]
+	      Position		      [645, 61, 750, 704]
+	      MinAlgLoopOccurrences   off
+	      PropExecContextOutsideSubsystem off
+	      RTWSystemCode	      "Auto"
+	      FunctionWithSeparateData off
+	      Opaque		      off
+	      RequestExecContextInheritance off
+	      MaskHideContents	      off
+	      MaskType		      "FlightGear 0.9.8 interface"
+	      MaskDescription	      "FlightGear Flight Simulator Interface that provides a visual output of the aircraft posi"
+	      "tion and attitude. \nThis driver can be used with FlightGear 0.9.8 only."
+	      MaskHelp		      "The block provides position and attitude information to FlightGear Flight Simulator 0.9.8 for "
+	      "visual output of the aircraft behavior.\n<P><B>Parameters:</B>\n<LI>Sample time: the sample time at which data "
+	      "is sent to FlightGear;</LI>\n<LI>Host name: the name or IP address of the machine on which FlightGear is runnin"
+	      "g.</LI>\n<LI>Port: the port number on the host machine.</LI>\n</P>\n<P><B>Inputs:</B> \n<LI>Position =  the 3x1"
+	      " vector of geographic position in [rad rad m];</LI>\n<LI>Euler =  the 3x1 vector of Euler angles in radians;</L"
+	      "I>\n<LI>Airspeed =  scalar number representing airspeed, in m/s;</LI>\n<LI>VClimb = the climb rate, in m/s;</LI"
+	      ">\n<LI>AGL = the altitude above ground, in meters;</LI>\n<LI>VelNED = the 3x1 vector of groundspeed, in m/s;</L"
+	      "I>\n<LI>Rates = the 3x1 vector of angular rates, in rad/s;</LI>\n<LI>Acc = the 3x1 vector of body accelerations"
+	      ", in m/s^2;</LI>\n<LI>Omega = the engine speed,in rad/s;</LI>\n<LI>FuelFlow = the instananeous fuel flow, in gr"
+	      "ams per hour;</LI>\n<LI>OutofFuel = set it to 1 to disable engine noise in FlightGear, otherwise set it to 0;</"
+	      "LI>\n<LI>Controls = the 7x1 vector of aircraft controls [flap elevator aileron rudder throttle mixture ignition"
+	      "]; the first 4 aerodynamic controls should be normalized to [-1, 1].</LI>\n</P>"
+	      MaskPromptString	      "Host name:|Port:|Sample time:"
+	      MaskStyleString	      "edit,edit,edit"
+	      MaskVariables	      "hostname=@1;port=@2;tsamp=@3;"
+	      MaskTunableValueString  "on,on,on"
+	      MaskCallbackString      "||"
+	      MaskEnableString	      "on,on,on"
+	      MaskVisibilityString    "on,on,on"
+	      MaskToolTipString	      "on,on,on"
+	      MaskIconFrame	      on
+	      MaskIconOpaque	      on
+	      MaskIconRotate	      "none"
+	      MaskPortRotate	      "default"
+	      MaskIconUnits	      "autoscale"
+	      MaskValueString	      "hostname|port|tsamp"
+	      System {
+		Name			"FlightGear 0.9.8 \nInterface"
+		Location		[673, 240, 1512, 957]
+		Open			off
+		ModelBrowserVisibility	off
+		ModelBrowserWidth	200
+		ScreenColor		"white"
+		PaperOrientation	"landscape"
+		PaperPositionMode	"auto"
+		PaperType		"A4"
+		PaperUnits		"centimeters"
+		TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+		TiledPageScale		1
+		ShowPageBoundaries	off
+		ZoomFactor		"100"
+		Block {
+		  BlockType		  Inport
+		  Name			  "Position"
+		  SID			  "26"
+		  Position		  [20, 48, 50, 62]
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "[3 1]"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "Euler"
+		  SID			  "27"
+		  Position		  [20, 83, 50, 97]
+		  Port			  "2"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "[3 1]"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "Airspeed"
+		  SID			  "28"
+		  Position		  [20, 118, 50, 132]
+		  Port			  "3"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "1"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "VClimb"
+		  SID			  "29"
+		  Position		  [20, 148, 50, 162]
+		  Port			  "4"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "1"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "AGL"
+		  SID			  "30"
+		  Position		  [20, 378, 50, 392]
+		  Port			  "5"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "1"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "VelNED"
+		  SID			  "31"
+		  Position		  [20, 413, 50, 427]
+		  Port			  "6"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "[3 1]"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "Rates"
+		  SID			  "32"
+		  Position		  [20, 448, 50, 462]
+		  Port			  "7"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "[3 1]"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "Acc"
+		  SID			  "33"
+		  Position		  [20, 483, 50, 497]
+		  Port			  "8"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "[3 1]"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "Omega"
+		  SID			  "34"
+		  Position		  [20, 218, 50, 232]
+		  Port			  "9"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "1"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "FuelFlow"
+		  SID			  "35"
+		  Position		  [20, 268, 50, 282]
+		  Port			  "10"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "1"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "OutofFuel"
+		  SID			  "36"
+		  Position		  [20, 318, 50, 332]
+		  Port			  "11"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "1"
+		}
+		Block {
+		  BlockType		  Inport
+		  Name			  "Controls"
+		  SID			  "37"
+		  Position		  [20, 183, 50, 197]
+		  Port			  "12"
+		  IconDisplay		  "Port number"
+		  OutDataTypeStr	  "double"
+		  PortDimensions	  "[7 1]"
+		}
+		Block {
+		  BlockType		  DataTypeConversion
+		  Name			  "Data Type Conversion"
+		  SID			  "38"
+		  Position		  [245, 311, 300, 339]
+		  OutDataTypeStr	  "double"
+		}
+		Block {
+		  BlockType		  DataTypeConversion
+		  Name			  "Data Type Conversion1"
+		  SID			  "39"
+		  Position		  [90, 311, 145, 339]
+		  OutDataTypeStr	  "boolean"
+		}
+		Block {
+		  BlockType		  Logic
+		  Name			  "Logical\nOperator"
+		  SID			  "40"
+		  Ports			  [1, 1]
+		  Position		  [185, 309, 215, 341]
+		  Operator		  "NOT"
+		}
+		Block {
+		  BlockType		  Mux
+		  Name			  "Mux1"
+		  SID			  "41"
+		  Ports			  [3, 1]
+		  Position		  [335, 206, 340, 274]
+		  ShowName		  off
+		  Inputs		  "3"
+		  DisplayOption		  "bar"
+		}
+		Block {
+		  BlockType		  Mux
+		  Name			  "Mux2"
+		  SID			  "42"
+		  Ports			  [2, 1]
+		  Position		  [245, 108, 250, 172]
+		  ShowName		  off
+		  Inputs		  "2"
+		  DisplayOption		  "bar"
+		}
+		Block {
+		  BlockType		  Reshape
+		  Name			  "Reshape"
+		  SID			  "43"
+		  Ports			  [1, 1]
+		  Position		  [460, 43, 490, 67]
+		}
+		Block {
+		  BlockType		  Reshape
+		  Name			  "Reshape1"
+		  SID			  "44"
+		  Ports			  [1, 1]
+		  Position		  [415, 78, 445, 102]
+		}
+		Block {
+		  BlockType		  Reshape
+		  Name			  "Reshape2"
+		  SID			  "45"
+		  Ports			  [1, 1]
+		  Position		  [460, 128, 490, 152]
+		}
+		Block {
+		  BlockType		  Reshape
+		  Name			  "Reshape3"
+		  SID			  "46"
+		  Ports			  [1, 1]
+		  Position		  [415, 178, 445, 202]
+		}
+		Block {
+		  BlockType		  Reshape
+		  Name			  "Reshape4"
+		  SID			  "47"
+		  Ports			  [1, 1]
+		  Position		  [460, 263, 490, 287]
+		}
+		Block {
+		  BlockType		  Reshape
+		  Name			  "Reshape5"
+		  SID			  "48"
+		  Ports			  [1, 1]
+		  Position		  [420, 318, 450, 342]
+		}
+		Block {
+		  BlockType		  Reshape
+		  Name			  "Reshape6"
+		  SID			  "49"
+		  Ports			  [1, 1]
+		  Position		  [465, 373, 495, 397]
+		}
+		Block {
+		  BlockType		  Reshape
+		  Name			  "Reshape7"
+		  SID			  "50"
+		  Ports			  [1, 1]
+		  Position		  [420, 428, 450, 452]
+		}
+		Block {
+		  BlockType		  Reshape
+		  Name			  "Reshape8"
+		  SID			  "51"
+		  Ports			  [1, 1]
+		  Position		  [470, 478, 500, 502]
+		}
+		Block {
+		  BlockType		  S-Function
+		  Name			  "S-Function"
+		  SID			  "52"
+		  Ports			  [9]
+		  Position		  [560, 35, 645, 515]
+		  FunctionName		  "sfunflightgear"
+		  Parameters		  "tsamp,hostname,port"
+		  EnableBusSupport	  off
+		}
+		Block {
+		  BlockType		  Gain
+		  Name			  "g/hr to gal/hr"
+		  SID			  "53"
+		  Position		  [75, 260, 105, 290]
+		  Gain			  "0.0002641720"
+		}
+		Block {
+		  BlockType		  SubSystem
+		  Name			  "m 2 ft"
+		  SID			  "54"
+		  Ports			  [1, 1]
+		  Position		  [110, 474, 160, 506]
+		  MinAlgLoopOccurrences	  off
+		  PropExecContextOutsideSubsystem off
+		  RTWSystemCode		  "Auto"
+		  FunctionWithSeparateData off
+		  Opaque		  off
+		  RequestExecContextInheritance	off
+		  MaskHideContents	  off
+		  MaskType		  "Meters to feet"
+		  MaskDescription	  "Convert meters to feet."
+		  MaskHelp		  "Meters to feet conversion.\n<P><B>Input:</B> distance in meters;</P>\n<P><B>Output:</B> distance in f"
+		  "eet.</P>"
+		  MaskDisplay		  "disp('M       FT');"
+		  MaskIconFrame		  on
+		  MaskIconOpaque	  on
+		  MaskIconRotate	  "none"
+		  MaskPortRotate	  "default"
+		  MaskIconUnits		  "autoscale"
+		  System {
+		    Name		    "m 2 ft"
+		    Location		    [690, 638, 891, 749]
+		    Open		    off
+		    ModelBrowserVisibility  off
+		    ModelBrowserWidth	    200
+		    ScreenColor		    "white"
+		    PaperOrientation	    "landscape"
+		    PaperPositionMode	    "auto"
+		    PaperType		    "A4"
+		    PaperUnits		    "centimeters"
+		    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+		    TiledPageScale	    1
+		    ShowPageBoundaries	    off
+		    ZoomFactor		    "100"
+		    Block {
+		    BlockType		    Inport
+		    Name		    "In"
+		    SID			    "55"
+		    Position		    [20, 33, 50, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Block {
+		    BlockType		    Gain
+		    Name		    "Gain"
+		    SID			    "56"
+		    Position		    [75, 25, 105, 55]
+		    Gain		    "1/0.3048"
+		    }
+		    Block {
+		    BlockType		    Outport
+		    Name		    "Out"
+		    SID			    "57"
+		    Position		    [130, 33, 160, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Line {
+		    SrcBlock		    "Gain"
+		    SrcPort		    1
+		    DstBlock		    "Out"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "In"
+		    SrcPort		    1
+		    DstBlock		    "Gain"
+		    DstPort		    1
+		    }
+		  }
+		}
+		Block {
+		  BlockType		  SubSystem
+		  Name			  "m 2 ft1"
+		  SID			  "58"
+		  Ports			  [1, 1]
+		  Position		  [110, 404, 160, 436]
+		  MinAlgLoopOccurrences	  off
+		  PropExecContextOutsideSubsystem off
+		  RTWSystemCode		  "Auto"
+		  FunctionWithSeparateData off
+		  Opaque		  off
+		  RequestExecContextInheritance	off
+		  MaskHideContents	  off
+		  MaskType		  "Meters to feet"
+		  MaskDescription	  "Convert meters to feet."
+		  MaskHelp		  "Meters to feet conversion.\n<P><B>Input:</B> distance in meters;</P>\n<P><B>Output:</B> distance in f"
+		  "eet.</P>"
+		  MaskDisplay		  "disp('M       FT');"
+		  MaskIconFrame		  on
+		  MaskIconOpaque	  on
+		  MaskIconRotate	  "none"
+		  MaskPortRotate	  "default"
+		  MaskIconUnits		  "autoscale"
+		  System {
+		    Name		    "m 2 ft1"
+		    Location		    [690, 638, 891, 749]
+		    Open		    off
+		    ModelBrowserVisibility  off
+		    ModelBrowserWidth	    200
+		    ScreenColor		    "white"
+		    PaperOrientation	    "landscape"
+		    PaperPositionMode	    "auto"
+		    PaperType		    "A4"
+		    PaperUnits		    "centimeters"
+		    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+		    TiledPageScale	    1
+		    ShowPageBoundaries	    off
+		    ZoomFactor		    "100"
+		    Block {
+		    BlockType		    Inport
+		    Name		    "In"
+		    SID			    "59"
+		    Position		    [20, 33, 50, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Block {
+		    BlockType		    Gain
+		    Name		    "Gain"
+		    SID			    "60"
+		    Position		    [75, 25, 105, 55]
+		    Gain		    "1/0.3048"
+		    }
+		    Block {
+		    BlockType		    Outport
+		    Name		    "Out"
+		    SID			    "61"
+		    Position		    [130, 33, 160, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Line {
+		    SrcBlock		    "Gain"
+		    SrcPort		    1
+		    DstBlock		    "Out"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "In"
+		    SrcPort		    1
+		    DstBlock		    "Gain"
+		    DstPort		    1
+		    }
+		  }
+		}
+		Block {
+		  BlockType		  SubSystem
+		  Name			  "m 2 ft2"
+		  SID			  "62"
+		  Ports			  [1, 1]
+		  Position		  [90, 139, 140, 171]
+		  MinAlgLoopOccurrences	  off
+		  PropExecContextOutsideSubsystem off
+		  RTWSystemCode		  "Auto"
+		  FunctionWithSeparateData off
+		  Opaque		  off
+		  RequestExecContextInheritance	off
+		  MaskHideContents	  off
+		  MaskType		  "Meters to feet"
+		  MaskDescription	  "Convert meters to feet."
+		  MaskHelp		  "Meters to feet conversion.\n<P><B>Input:</B> distance in meters;</P>\n<P><B>Output:</B> distance in f"
+		  "eet.</P>"
+		  MaskDisplay		  "disp('M       FT');"
+		  MaskIconFrame		  on
+		  MaskIconOpaque	  on
+		  MaskIconRotate	  "none"
+		  MaskPortRotate	  "default"
+		  MaskIconUnits		  "autoscale"
+		  System {
+		    Name		    "m 2 ft2"
+		    Location		    [690, 638, 891, 749]
+		    Open		    off
+		    ModelBrowserVisibility  off
+		    ModelBrowserWidth	    200
+		    ScreenColor		    "white"
+		    PaperOrientation	    "landscape"
+		    PaperPositionMode	    "auto"
+		    PaperType		    "A4"
+		    PaperUnits		    "centimeters"
+		    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+		    TiledPageScale	    1
+		    ShowPageBoundaries	    off
+		    ZoomFactor		    "100"
+		    Block {
+		    BlockType		    Inport
+		    Name		    "In"
+		    SID			    "63"
+		    Position		    [20, 33, 50, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Block {
+		    BlockType		    Gain
+		    Name		    "Gain"
+		    SID			    "64"
+		    Position		    [75, 25, 105, 55]
+		    Gain		    "1/0.3048"
+		    }
+		    Block {
+		    BlockType		    Outport
+		    Name		    "Out"
+		    SID			    "65"
+		    Position		    [130, 33, 160, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Line {
+		    SrcBlock		    "Gain"
+		    SrcPort		    1
+		    DstBlock		    "Out"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "In"
+		    SrcPort		    1
+		    DstBlock		    "Gain"
+		    DstPort		    1
+		    }
+		  }
+		}
+		Block {
+		  BlockType		  SubSystem
+		  Name			  "m/s 2 kts"
+		  SID			  "66"
+		  Ports			  [1, 1]
+		  Position		  [160, 109, 210, 141]
+		  MinAlgLoopOccurrences	  off
+		  PropExecContextOutsideSubsystem off
+		  RTWSystemCode		  "Auto"
+		  FunctionWithSeparateData off
+		  Opaque		  off
+		  RequestExecContextInheritance	off
+		  MaskHideContents	  off
+		  MaskType		  "Meters per second to knots"
+		  MaskDescription	  "Convert meters per second to knots."
+		  MaskHelp		  "Meters per second to knots conversion.\n<P><B>Input:</B> speed in meters per second;</P>\n<P><B>Outpu"
+		  "t:</B> speed in knots.</P>"
+		  MaskDisplay		  "disp('M/S  KTS');"
+		  MaskIconFrame		  on
+		  MaskIconOpaque	  on
+		  MaskIconRotate	  "none"
+		  MaskPortRotate	  "default"
+		  MaskIconUnits		  "autoscale"
+		  System {
+		    Name		    "m/s 2 kts"
+		    Location		    [694, 630, 895, 741]
+		    Open		    off
+		    ModelBrowserVisibility  off
+		    ModelBrowserWidth	    200
+		    ScreenColor		    "white"
+		    PaperOrientation	    "landscape"
+		    PaperPositionMode	    "auto"
+		    PaperType		    "A4"
+		    PaperUnits		    "centimeters"
+		    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+		    TiledPageScale	    1
+		    ShowPageBoundaries	    off
+		    ZoomFactor		    "100"
+		    Block {
+		    BlockType		    Inport
+		    Name		    "In"
+		    SID			    "67"
+		    Position		    [20, 33, 50, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Block {
+		    BlockType		    Gain
+		    Name		    "Gain"
+		    SID			    "68"
+		    Position		    [75, 25, 105, 55]
+		    Gain		    "1.9425386701"
+		    }
+		    Block {
+		    BlockType		    Outport
+		    Name		    "Out"
+		    SID			    "69"
+		    Position		    [130, 33, 160, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Line {
+		    SrcBlock		    "In"
+		    SrcPort		    1
+		    DstBlock		    "Gain"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "Gain"
+		    SrcPort		    1
+		    DstBlock		    "Out"
+		    DstPort		    1
+		    }
+		  }
+		}
+		Block {
+		  BlockType		  SubSystem
+		  Name			  "rad/s 2 RPM"
+		  SID			  "70"
+		  Ports			  [1, 1]
+		  Position		  [75, 209, 125, 241]
+		  MinAlgLoopOccurrences	  off
+		  PropExecContextOutsideSubsystem off
+		  RTWSystemCode		  "Auto"
+		  FunctionWithSeparateData off
+		  Opaque		  off
+		  RequestExecContextInheritance	off
+		  MaskHideContents	  off
+		  MaskType		  "rad/s to RPM"
+		  MaskDescription	  "Convert radians-per-second to rotations-per-minute."
+		  MaskHelp		  "Radians per second to rotations per minute conversion.\n<P><B>Input:</B> angular speed in radians per"
+		  " second;</P>\n<P><B>Output:</B> angular speed in rotations per minute.</P>"
+		  MaskIconFrame		  on
+		  MaskIconOpaque	  on
+		  MaskIconRotate	  "none"
+		  MaskPortRotate	  "default"
+		  MaskIconUnits		  "autoscale"
+		  System {
+		    Name		    "rad/s 2 RPM"
+		    Location		    [696, 628, 897, 739]
+		    Open		    off
+		    ModelBrowserVisibility  off
+		    ModelBrowserWidth	    200
+		    ScreenColor		    "white"
+		    PaperOrientation	    "landscape"
+		    PaperPositionMode	    "auto"
+		    PaperType		    "A4"
+		    PaperUnits		    "centimeters"
+		    TiledPaperMargins	    [1.270000, 1.270000, 1.270000, 1.270000]
+		    TiledPageScale	    1
+		    ShowPageBoundaries	    off
+		    ZoomFactor		    "100"
+		    Block {
+		    BlockType		    Inport
+		    Name		    "In"
+		    SID			    "71"
+		    Position		    [20, 33, 50, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Block {
+		    BlockType		    Gain
+		    Name		    "Gain"
+		    SID			    "72"
+		    Position		    [75, 25, 105, 55]
+		    Gain		    "30/pi"
+		    }
+		    Block {
+		    BlockType		    Outport
+		    Name		    "Out"
+		    SID			    "73"
+		    Position		    [130, 33, 160, 47]
+		    IconDisplay		    "Port number"
+		    }
+		    Line {
+		    SrcBlock		    "Gain"
+		    SrcPort		    1
+		    DstBlock		    "Out"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "In"
+		    SrcPort		    1
+		    DstBlock		    "Gain"
+		    DstPort		    1
+		    }
+		  }
+		}
+		Line {
+		  SrcBlock		  "Reshape8"
+		  SrcPort		  1
+		  Points		  [40, 0]
+		  DstBlock		  "S-Function"
+		  DstPort		  9
+		}
+		Line {
+		  SrcBlock		  "Reshape7"
+		  SrcPort		  1
+		  DstBlock		  "S-Function"
+		  DstPort		  8
+		}
+		Line {
+		  SrcBlock		  "Reshape6"
+		  SrcPort		  1
+		  DstBlock		  "S-Function"
+		  DstPort		  7
+		}
+		Line {
+		  SrcBlock		  "Reshape5"
+		  SrcPort		  1
+		  DstBlock		  "S-Function"
+		  DstPort		  6
+		}
+		Line {
+		  SrcBlock		  "Reshape4"
+		  SrcPort		  1
+		  DstBlock		  "S-Function"
+		  DstPort		  5
+		}
+		Line {
+		  SrcBlock		  "Reshape3"
+		  SrcPort		  1
+		  Points		  [95, 0]
+		  DstBlock		  "S-Function"
+		  DstPort		  4
+		}
+		Line {
+		  SrcBlock		  "Reshape2"
+		  SrcPort		  1
+		  Points		  [50, 0]
+		  DstBlock		  "S-Function"
+		  DstPort		  3
+		}
+		Line {
+		  SrcBlock		  "Reshape1"
+		  SrcPort		  1
+		  Points		  [95, 0]
+		  DstBlock		  "S-Function"
+		  DstPort		  2
+		}
+		Line {
+		  SrcBlock		  "Reshape"
+		  SrcPort		  1
+		  DstBlock		  "S-Function"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Data Type Conversion1"
+		  SrcPort		  1
+		  DstBlock		  "Logical\nOperator"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "VClimb"
+		  SrcPort		  1
+		  DstBlock		  "m 2 ft2"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Airspeed"
+		  SrcPort		  1
+		  DstBlock		  "m/s 2 kts"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Euler"
+		  SrcPort		  1
+		  DstBlock		  "Reshape1"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Position"
+		  SrcPort		  1
+		  DstBlock		  "Reshape"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Mux2"
+		  SrcPort		  1
+		  DstBlock		  "Reshape2"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Controls"
+		  SrcPort		  1
+		  DstBlock		  "Reshape3"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Omega"
+		  SrcPort		  1
+		  DstBlock		  "rad/s 2 RPM"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "OutofFuel"
+		  SrcPort		  1
+		  DstBlock		  "Data Type Conversion1"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "rad/s 2 RPM"
+		  SrcPort		  1
+		  Points		  [10, 0; 0, 15]
+		  DstBlock		  "Mux1"
+		  DstPort		  2
+		}
+		Line {
+		  SrcBlock		  "FuelFlow"
+		  SrcPort		  1
+		  DstBlock		  "g/hr to gal/hr"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "g/hr to gal/hr"
+		  SrcPort		  1
+		  Points		  [20, 0; 0, -15]
+		  DstBlock		  "Mux1"
+		  DstPort		  3
+		}
+		Line {
+		  SrcBlock		  "Mux1"
+		  SrcPort		  1
+		  Points		  [5, 0; 0, 35]
+		  DstBlock		  "Reshape4"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Logical\nOperator"
+		  SrcPort		  1
+		  DstBlock		  "Data Type Conversion"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Data Type Conversion"
+		  SrcPort		  1
+		  Points		  [10, 0; 0, -105]
+		  DstBlock		  "Mux1"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "AGL"
+		  SrcPort		  1
+		  Points		  [305, 0; 0, -55]
+		  DstBlock		  "Reshape5"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "VelNED"
+		  SrcPort		  1
+		  DstBlock		  "m 2 ft1"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Rates"
+		  SrcPort		  1
+		  Points		  [325, 0; 0, -15]
+		  DstBlock		  "Reshape7"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Acc"
+		  SrcPort		  1
+		  DstBlock		  "m 2 ft"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "m 2 ft"
+		  SrcPort		  1
+		  DstBlock		  "Reshape8"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "m 2 ft1"
+		  SrcPort		  1
+		  Points		  [205, 0; 0, -35]
+		  DstBlock		  "Reshape6"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "m 2 ft2"
+		  SrcPort		  1
+		  DstBlock		  "Mux2"
+		  DstPort		  2
+		}
+		Line {
+		  SrcBlock		  "m/s 2 kts"
+		  SrcPort		  1
+		  DstBlock		  "Mux2"
+		  DstPort		  1
+		}
+		Annotation {
+		  Name			  "FGFS Interface Function"
+		  Position		  [511, 23]
+		}
+		Annotation {
+		  Name			  "Inputs"
+		  Position		  [37, 20]
+		}
+	      }
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "Flow"
+	      SID		      "74"
+	      Position		      [465, 560, 495, 590]
+	      Value		      "0"
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "FuelWarning"
+	      SID		      "75"
+	      Position		      [415, 615, 445, 645]
+	      Value		      "0"
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "Ground speed"
+	      SID		      "76"
+	      Position		      [460, 340, 495, 370]
+	      Value		      "[0 0 0]"
+	    }
+	    Block {
+	      BlockType		      Reshape
+	      Name		      "Reshape3"
+	      SID		      "77"
+	      Ports		      [1, 1]
+	      Position		      [555, 68, 585, 92]
+	      OutputDimensionality    "Column vector (2-D)"
+	    }
+	    Block {
+	      BlockType		      Reshape
+	      Name		      "Reshape4"
+	      SID		      "78"
+	      Ports		      [1, 1]
+	      Position		      [555, 123, 585, 147]
+	      OutputDimensionality    "Column vector (2-D)"
+	    }
+	    Block {
+	      BlockType		      Reshape
+	      Name		      "Reshape6"
+	      SID		      "79"
+	      Ports		      [1, 1]
+	      Position		      [555, 343, 585, 367]
+	      OutputDimensionality    "Column vector (2-D)"
+	    }
+	    Block {
+	      BlockType		      Reshape
+	      Name		      "Reshape7"
+	      SID		      "80"
+	      Ports		      [1, 1]
+	      Position		      [555, 398, 585, 422]
+	      OutputDimensionality    "Column vector (2-D)"
+	    }
+	    Block {
+	      BlockType		      Reshape
+	      Name		      "Reshape8"
+	      SID		      "81"
+	      Ports		      [1, 1]
+	      Position		      [555, 453, 585, 477]
+	      OutputDimensionality    "Column vector (2-D)"
+	    }
+	    Block {
+	      BlockType		      Reshape
+	      Name		      "Reshape9"
+	      SID		      "82"
+	      Ports		      [1, 1]
+	      Position		      [555, 673, 585, 697]
+	      OutputDimensionality    "Column vector (2-D)"
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "[flap elevator aileron rudder throttle mixture ignition]"
+	      SID		      "83"
+	      Position		      [395, 670, 495, 700]
+	      Value		      "[0 0 0 0 0 0 0]"
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "climb rate"
+	      SID		      "84"
+	      Position		      [465, 230, 495, 260]
+	      Value		      "0"
+	    }
+	    Line {
+	      SrcBlock		      "Reshape9"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      12
+	    }
+	    Line {
+	      SrcBlock		      "Reshape8"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      8
+	    }
+	    Line {
+	      SrcBlock		      "Reshape7"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      7
+	    }
+	    Line {
+	      SrcBlock		      "Reshape6"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      6
+	    }
+	    Line {
+	      SrcBlock		      "Reshape4"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      2
+	    }
+	    Line {
+	      SrcBlock		      "Reshape3"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      "[flap elevator aileron rudder throttle mixture ignition]"
+	      SrcPort		      1
+	      DstBlock		      "Reshape9"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      "FuelWarning"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      11
+	    }
+	    Line {
+	      SrcBlock		      "Flow"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      10
+	    }
+	    Line {
+	      SrcBlock		      "Engine Speed"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      9
+	    }
+	    Line {
+	      SrcBlock		      "Accelerations"
+	      SrcPort		      1
+	      DstBlock		      "Reshape8"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      "Angular Rates (rad)"
+	      SrcPort		      1
+	      DstBlock		      "Reshape7"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      "Ground speed"
+	      SrcPort		      1
+	      DstBlock		      "Reshape6"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      "Alt above ground"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      5
+	    }
+	    Line {
+	      SrcBlock		      "climb rate"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      4
+	    }
+	    Line {
+	      SrcBlock		      "Position"
+	      SrcPort		      1
+	      DstBlock		      "Reshape3"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      "Euler"
+	      SrcPort		      1
+	      DstBlock		      "Reshape4"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      "Airspeed"
+	      SrcPort		      1
+	      DstBlock		      "FlightGear 0.9.8 \nInterface"
+	      DstPort		      3
+	    }
+	    Annotation {
+	      Name		      "Inputs"
+	      Position		      [77, 25]
+	    }
+	    Annotation {
+	      Name		      "Flight Simulator Interface Function"
+	      Position		      [366, 28]
+	    }
+	  }
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain"
+	  SID			  "85"
+	  Position		  [150, 25, 180, 55]
+	  Gain			  "1.5"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain1"
+	  SID			  "86"
+	  Position		  [150, 70, 180, 100]
+	  Gain			  "1.5"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain2"
+	  SID			  "87"
+	  Position		  [150, 115, 180, 145]
+	  Gain			  "1.5"
+	}
+	Block {
+	  BlockType		  Mux
+	  Name			  "Mux2"
+	  SID			  "88"
+	  Ports			  [3, 1]
+	  Position		  [285, 14, 295, 156]
+	  NamePlacement		  "alternate"
+	  ShowName		  off
+	  Inputs		  "3"
+	  DisplayOption		  "bar"
+	}
+	Block {
+	  BlockType		  RateTransition
+	  Name			  "Rate Transition"
+	  SID			  "89"
+	  Position		  [595, 129, 650, 171]
+	}
+	Block {
+	  BlockType		  RateTransition
+	  Name			  "Rate Transition1"
+	  SID			  "90"
+	  Position		  [480, 174, 535, 216]
+	}
+	Block {
+	  BlockType		  RateTransition
+	  Name			  "Rate Transition2"
+	  SID			  "91"
+	  Position		  [595, 219, 650, 261]
+	}
+	Block {
+	  BlockType		  Reshape
+	  Name			  "Reshape"
+	  SID			  "92"
+	  Ports			  [1, 1]
+	  Position		  [700, 138, 730, 162]
+	  OutputDimensionality	  "Column vector (2-D)"
+	}
+	Block {
+	  BlockType		  Reshape
+	  Name			  "Reshape1"
+	  SID			  "93"
+	  Ports			  [1, 1]
+	  Position		  [700, 183, 730, 207]
+	  OutputDimensionality	  "Column vector (2-D)"
+	}
+	Block {
+	  BlockType		  Fcn
+	  Name			  "altitude"
+	  SID			  "94"
+	  Position		  [220, 115, 250, 145]
+	  Expr			  "(-u+87)"
+	}
+	Block {
+	  BlockType		  Fcn
+	  Name			  "latitude"
+	  SID			  "95"
+	  Position		  [220, 25, 250, 55]
+	  Expr			  "(u+10)*(0.00000015707)+0.913143"
+	}
+	Block {
+	  BlockType		  Fcn
+	  Name			  "longitude1"
+	  SID			  "96"
+	  Position		  [220, 70, 250, 100]
+	  Expr			  "(u)*(0.000000255)+0.184224"
+	}
+	Line {
+	  SrcBlock		  "Rate Transition1"
+	  SrcPort		  1
+	  DstBlock		  "Reshape1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Reshape1"
+	  SrcPort		  1
+	  DstBlock		  "FlightGear\nInterface"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "Reshape"
+	  SrcPort		  1
+	  DstBlock		  "FlightGear\nInterface"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Rate Transition2"
+	  SrcPort		  1
+	  DstBlock		  "FlightGear\nInterface"
+	  DstPort		  3
+	}
+	Line {
+	  SrcBlock		  "Rate Transition"
+	  SrcPort		  1
+	  DstBlock		  "Reshape"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Gain2"
+	  SrcPort		  1
+	  DstBlock		  "altitude"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Gain1"
+	  SrcPort		  1
+	  DstBlock		  "longitude1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Gain"
+	  SrcPort		  1
+	  DstBlock		  "latitude"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Demux1"
+	  SrcPort		  2
+	  DstBlock		  "Gain1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Demux1"
+	  SrcPort		  1
+	  DstBlock		  "Gain"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Constant"
+	  SrcPort		  1
+	  DstBlock		  "Rate Transition2"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Mux2"
+	  SrcPort		  1
+	  Points		  [0, 65]
+	  DstBlock		  "Rate Transition"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "altitude"
+	  SrcPort		  1
+	  DstBlock		  "Mux2"
+	  DstPort		  3
+	}
+	Line {
+	  SrcBlock		  "longitude1"
+	  SrcPort		  1
+	  DstBlock		  "Mux2"
+	  DstPort		  2
+	}
+	Line {
+	  SrcBlock		  "latitude"
+	  SrcPort		  1
+	  DstBlock		  "Mux2"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Demux1"
+	  SrcPort		  3
+	  DstBlock		  "Gain2"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Phi,Theta,Psi"
+	  SrcPort		  1
+	  DstBlock		  "Rate Transition1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "x,y,z"
+	  SrcPort		  1
+	  DstBlock		  "Demux1"
+	  DstPort		  1
+	}
+      }
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Gain"
+      SID		      "97"
+      Position		      [365, 140, 395, 170]
+      ZOrder		      -11
+      Gain		      "180/pi"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Gain1"
+      SID		      "98"
+      Position		      [320, 165, 350, 195]
+      ZOrder		      -11
+      Gain		      "180/pi"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Gain2"
+      SID		      "99"
+      Position		      [365, 190, 395, 220]
+      ZOrder		      -11
+      Gain		      "180/pi"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Line {
+      Points		      [155, 35; 0, 105]
+      Branch {
+	Points			[0, 5]
+	DstBlock		"Bus\nSelector4"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, 120]
+	Branch {
+	  Points		  [0, 45]
+	  DstBlock		  "Bus\nSelector9"
+	  DstPort		  1
+	}
+	Branch {
+	  DstBlock		  "Bus\nSelector10"
+	  DstPort		  1
+	}
+      }
+    }
+    Line {
+      Name		      "<x>"
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector4"
+      SrcPort		      1
+      DstBlock		      "Display"
+      DstPort		      1
+    }
+    Line {
+      Name		      "<y>"
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector4"
+      SrcPort		      2
+      DstBlock		      "Display1"
+      DstPort		      1
+    }
+    Line {
+      Name		      "<z>"
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector4"
+      SrcPort		      3
+      DstBlock		      "Display2"
+      DstPort		      1
+    }
+    Line {
+      Name		      "<phi>"
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector4"
+      SrcPort		      4
+      DstBlock		      "Gain"
+      DstPort		      1
+    }
+    Line {
+      Name		      "<theta>"
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector4"
+      SrcPort		      5
+      DstBlock		      "Gain1"
+      DstPort		      1
+    }
+    Line {
+      Name		      "<psi>"
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector4"
+      SrcPort		      6
+      DstBlock		      "Gain2"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Gain"
+      SrcPort		      1
+      DstBlock		      "Display3"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Gain1"
+      SrcPort		      1
+      DstBlock		      "Display4"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Gain2"
+      SrcPort		      1
+      DstBlock		      "Display5"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Bus to Vector4"
+      SrcPort		      1
+      DstBlock		      "Flightgear Output\n(UDP)"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Bus\nSelector9"
+      SrcPort		      1
+      DstBlock		      "Bus to Vector3"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Bus to Vector3"
+      SrcPort		      1
+      DstBlock		      "Flightgear Output\n(UDP)"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Bus\nSelector10"
+      SrcPort		      1
+      DstBlock		      "Bus to Vector4"
+      DstPort		      1
+    }
+  }
+}

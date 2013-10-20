@@ -1,4 +1,7 @@
 
+dt_sim = 0.005;
+
+
 % %Näherung für Auftrieb nach Strahltheorie
 % %FA[N] = -0.8*rho*lb*Rb*omega^2*Caalpha*alpha
 % %Dichte der Luft
@@ -58,8 +61,6 @@ KK = [Klat 0     Kped;...
         0  Klon -Kped;...
      -Klat 0     Kped;...
         0  -Klon -Kped];
-
-dt_sim = 0.001;
     
 %------------------------------------
 % Reference Position (ScenarioWorld)
