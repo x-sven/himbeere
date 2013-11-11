@@ -1,6 +1,18 @@
 
+%------------------------------------
+% Simulation Proberties
+%------------------------------------
 dt_sim = 0.005;
 
+%------------------------------------
+% Actuator Proberties
+%------------------------------------
+act_latency = 1*dt_sim; % one step delay = minimum
+
+
+%------------------------------------
+% Thrust Proberties
+%------------------------------------
 
 % %Näherung für Auftrieb nach Strahltheorie
 % %FA[N] = -0.8*rho*lb*Rb*omega^2*Caalpha*alpha

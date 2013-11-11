@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.168"
+    ComputedModelVersion    "1.225"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -28,9 +28,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "sven"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sun Oct 20 12:27:39 2013"
-  RTWModifiedTimeStamp	  304119693
-  ModelVersionFormat	  "1.%<AutoIncrement:168>"
+  LastModifiedDate	  "Sun Nov 10 17:01:20 2013"
+  RTWModifiedTimeStamp	  306003576
+  ModelVersionFormat	  "1.%<AutoIncrement:225>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -1139,7 +1139,7 @@ Model {
   }
   System {
     Name		    "tricopter_simulation"
-    Location		    [2, 193, 1278, 755]
+    Location		    [13, 96, 1292, 755]
     Open		    on
     ModelBrowserVisibility  on
     ModelBrowserWidth	    212
@@ -1153,7 +1153,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "1168"
+    SIDHighWatermark	    "1187"
     Block {
       BlockType		      Reference
       Name		      "6DoF Animation"
@@ -1161,7 +1161,7 @@ Model {
       Ports		      [2]
       Position		      [1130, 394, 1210, 476]
       ZOrder		      -2
-      LibraryVersion	      "1.60"
+      LibraryVersion	      "1.61"
       SourceBlock	      "animation_lib/6DoF Animation"
       SourceType	      "6DoF_Animation"
       u1		      "[0 40 -20 20 -50 -30]"
@@ -1205,6 +1205,16 @@ Model {
       OutputAsBus	      on
     }
     Block {
+      BlockType		      BusSelector
+      Name		      "Bus\nSelector3"
+      SID		      "1178"
+      Ports		      [1, 1]
+      Position		      [370, 501, 375, 529]
+      ShowName		      off
+      OutputSignals	      "rate.p,rate.q,rate.r"
+      OutputAsBus	      on
+    }
+    Block {
       BlockType		      BusToVector
       Name		      "Bus to Vector"
       SID		      "1119"
@@ -1226,6 +1236,13 @@ Model {
       ZOrder		      -1
     }
     Block {
+      BlockType		      BusToVector
+      Name		      "Bus to Vector3"
+      SID		      "1187"
+      Position		      [400, 503, 430, 527]
+      ZOrder		      -1
+    }
+    Block {
       BlockType		      Clock
       Name		      "Clock"
       SID		      "1122"
@@ -1239,6 +1256,25 @@ Model {
       Position		      [475, 259, 550, 291]
       ZOrder		      -5
       Value		      "1500"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant2"
+      SID		      "1175"
+      Position		      [15, 38, 40, 72]
+      ZOrder		      -5
+      Value		      "0"
+    }
+    Block {
+      BlockType		      Demux
+      Name		      "Demux"
+      SID		      "1186"
+      Ports		      [1, 3]
+      Position		      [610, 486, 615, 524]
+      ZOrder		      -7
+      ShowName		      off
+      Outputs		      "3"
+      DisplayOption	      "bar"
     }
     Block {
       BlockType		      SubSystem
@@ -1255,8 +1291,8 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"EQM"
-	Location		[232, 226, 1201, 909]
-	Open			on
+	Location		[225, 197, 1194, 880]
+	Open			off
 	ModelBrowserVisibility	on
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -1341,14 +1377,14 @@ Model {
 	  "ctor containing the angular accelerations in body-fixed axes, in radians per second. The eighth output is a three-e"
 	  "lement vector containing the accelerations in body-fixed axes."
 	  MaskPromptString	  "Inertial position in inertial axes [Xe, Ye Ze]|Inertial velocity in body axes [u, v, w]|Inertia"
-	  "l Euler orientation [roll, pitch, yaw]|Inertial body rotation rates[p, q, r]|Sample Time"
-	  MaskStyleString	  "edit,edit,edit,edit,edit"
-	  MaskVariables		  "xme_0=@1;Vm_0=@2;eul_0=@3;pm_0=@4;dt_sim=@5;"
-	  MaskTunableValueString  "on,on,on,on,on"
-	  MaskCallbackString	  "||||"
-	  MaskEnableString	  "on,on,on,on,on"
-	  MaskVisibilityString	  "on,on,on,on,on"
-	  MaskToolTipString	  "on,on,on,on,on"
+	  "l Euler orientation [roll, pitch, yaw]|Inertial body rotation rates[p, q, r]|Sample Time|Run Translational Motion"
+	  MaskStyleString	  "edit,edit,edit,edit,edit,checkbox"
+	  MaskVariables		  "xme_0=@1;Vm_0=@2;eul_0=@3;pm_0=@4;dt_sim=@5;run_translation=@6;"
+	  MaskTunableValueString  "on,on,on,on,on,on"
+	  MaskCallbackString	  "|||||"
+	  MaskEnableString	  "on,on,on,on,on,on"
+	  MaskVisibilityString	  "on,on,on,on,on,on"
+	  MaskToolTipString	  "on,on,on,on,on,on"
 	  MaskDisplay		  "port_label('input',1,'Fb_xyz (N)')\nport_label('input',2,'Mb_xyz (Nm)')\nport_label('input',3,'dm/d"
 	  "t (kg/s)')\nport_label('input',4,'m (kg)')\nport_label('input',5,'dI/dt (kgm^2/s)')\nport_label('input',6,'I (kgm^2"
 	  ")')\nport_label('output',1,'Vb (m/s)')\nport_label('output',2,'Ve (m/s)')\nport_label('output',3,'pqrdot')\nport_la"
@@ -1359,7 +1395,7 @@ Model {
 	  MaskIconRotate	  "none"
 	  MaskPortRotate	  "default"
 	  MaskIconUnits		  "autoscale"
-	  MaskValueString	  "[0 0 0]|[0 0 0]|[0 0 0]|[0 0 0]|dt_sim"
+	  MaskValueString	  "[0 0 0]|[0 0 0]|[0 0 0]|[10 0 0]*pi/180|dt_sim|off"
 	  Port {
 	    PortNumber		    7
 	    Name		    "DCM_(geo->body)"
@@ -1368,8 +1404,8 @@ Model {
 	  }
 	  System {
 	    Name		    "Variable Mass 6DoF (Quaternion)"
-	    Location		    [86, 231, 997, 716]
-	    Open		    on
+	    Location		    [214, 125, 1249, 653]
+	    Open		    off
 	    ModelBrowserVisibility  on
 	    ModelBrowserWidth	    200
 	    ScreenColor		    "white"
@@ -2412,7 +2448,7 @@ Model {
 	      Name		      "Position"
 	      SID		      "1124"
 	      Ports		      [1, 1]
-	      Position		      [745, 169, 780, 201]
+	      Position		      [795, 164, 830, 196]
 	      ZOrder		      -10
 	      IntegratorMethod	      "Integration: Forward Euler"
 	      ExternalReset	      "none"
@@ -2427,7 +2463,7 @@ Model {
 	      Name		      "Product"
 	      SID		      "160"
 	      Ports		      [2, 1]
-	      Position		      [305, 64, 350, 166]
+	      Position		      [250, 64, 295, 166]
 	      Inputs		      "*/"
 	      InputSameDT	      off
 	      RndMeth		      "Floor"
@@ -2437,16 +2473,31 @@ Model {
 	      Name		      "Product "
 	      SID		      "161"
 	      Ports		      [2, 1]
-	      Position		      [655, 165, 700, 200]
+	      Position		      [650, 165, 695, 200]
 	      Multiplication	      "Matrix(*)"
 	      InputSameDT	      off
 	      RndMeth		      "Floor"
 	    }
 	    Block {
+	      BlockType		      DiscreteIntegrator
+	      Name		      "Rates"
+	      SID		      "1126"
+	      Ports		      [1, 1]
+	      Position		      [425, 304, 460, 336]
+	      ZOrder		      -10
+	      IntegratorMethod	      "Integration: Forward Euler"
+	      ExternalReset	      "none"
+	      InitialConditionSource  "internal"
+	      InitialCondition	      "pm_0"
+	      SampleTime	      "dt_sim"
+	      ICPrevOutput	      "DiscIntNeverNeededParam"
+	      ICPrevScaledInput	      "DiscIntNeverNeededParam"
+	    }
+	    Block {
 	      BlockType		      SignalSpecification
 	      Name		      "Signal Specification"
 	      SID		      "598"
-	      Position		      [810, 173, 890, 197]
+	      Position		      [860, 168, 940, 192]
 	      OutDataTypeStr	      "double"
 	    }
 	    Block {
@@ -2464,7 +2515,7 @@ Model {
 	      MaskHideContents	      off
 	      System {
 		Name			"Subsystem"
-		Location		[143, 226, 943, 619]
+		Location		[143, 248, 943, 641]
 		Open			off
 		ModelBrowserVisibility	on
 		ModelBrowserWidth	200
@@ -5655,7 +5706,7 @@ Model {
 	      Name		      "Sum"
 	      SID		      "266"
 	      Ports		      [2, 1]
-	      Position		      [420, 105, 440, 125]
+	      Position		      [420, 100, 440, 120]
 	      ShowName		      off
 	      IconShape		      "round"
 	      Inputs		      "|++"
@@ -5667,7 +5718,7 @@ Model {
 	      Name		      "Velocity"
 	      SID		      "1125"
 	      Ports		      [1, 1]
-	      Position		      [470, 99, 505, 131]
+	      Position		      [535, 89, 570, 121]
 	      ZOrder		      -10
 	      IntegratorMethod	      "Integration: Forward Euler"
 	      ExternalReset	      "none"
@@ -5678,31 +5729,70 @@ Model {
 	      ICPrevScaledInput	      "DiscIntNeverNeededParam"
 	    }
 	    Block {
-	      BlockType		      DiscreteIntegrator
-	      Name		      "Velocity1"
-	      SID		      "1126"
-	      Ports		      [1, 1]
-	      Position		      [425, 304, 460, 336]
-	      ZOrder		      -10
-	      IntegratorMethod	      "Integration: Forward Euler"
-	      ExternalReset	      "none"
-	      InitialConditionSource  "internal"
-	      SampleTime	      "dt_sim"
-	      ICPrevOutput	      "DiscIntNeverNeededParam"
-	      ICPrevScaledInput	      "DiscIntNeverNeededParam"
+	      BlockType		      Product
+	      Name		      "enable_acc"
+	      SID		      "1173"
+	      Ports		      [2, 1]
+	      Position		      [475, 87, 505, 118]
+	      ZOrder		      -19
+	      InputSameDT	      off
+	      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+	      SaturateOnIntegerOverflow	off
+	    }
+	    Block {
+	      BlockType		      Product
+	      Name		      "enable_acc "
+	      SID		      "1171"
+	      Ports		      [2, 1]
+	      Position		      [360, 92, 390, 123]
+	      ZOrder		      -19
+	      InputSameDT	      off
+	      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+	      SaturateOnIntegerOverflow	off
+	    }
+	    Block {
+	      BlockType		      Product
+	      Name		      "enable_vel"
+	      SID		      "1170"
+	      Ports		      [2, 1]
+	      Position		      [725, 162, 755, 193]
+	      ZOrder		      -19
+	      InputSameDT	      off
+	      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+	      SaturateOnIntegerOverflow	off
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "run_pos"
+	      SID		      "1169"
+	      Position		      [650, 85, 680, 115]
+	      ZOrder		      -5
+	      Value		      "run_translation"
+	      OutMin		      "0"
+	      OutMax		      "1"
+	    }
+	    Block {
+	      BlockType		      Constant
+	      Name		      "run_vel"
+	      SID		      "1172"
+	      Position		      [305, 45, 335, 75]
+	      ZOrder		      -5
+	      Value		      "run_translation"
+	      OutMin		      "0"
+	      OutMax		      "1"
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "Vb"
 	      SID		      "268"
-	      Position		      [915, 33, 945, 47]
+	      Position		      [965, 13, 995, 27]
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "Ve"
 	      SID		      "269"
-	      Position		      [915, 108, 945, 122]
+	      Position		      [965, 103, 995, 117]
 	      Port		      "2"
 	      IconDisplay	      "Port number"
 	    }
@@ -5718,7 +5808,7 @@ Model {
 	      BlockType		      Outport
 	      Name		      "Xe"
 	      SID		      "271"
-	      Position		      [915, 178, 945, 192]
+	      Position		      [965, 173, 995, 187]
 	      Port		      "4"
 	      IconDisplay	      "Port number"
 	    }
@@ -5758,7 +5848,7 @@ Model {
 	      BlockType		      Outport
 	      Name		      "Ab"
 	      SID		      "276"
-	      Position		      [430, 58, 460, 72]
+	      Position		      [455, 33, 485, 47]
 	      Port		      "9"
 	      IconDisplay	      "Port number"
 	    }
@@ -5775,9 +5865,9 @@ Model {
 	      DstPort		      1
 	    }
 	    Line {
-	      SrcBlock		      "Product "
+	      SrcBlock		      "enable_vel"
 	      SrcPort		      1
-	      Points		      [15, 0]
+	      Points		      [10, 0]
 	      Branch {
 		Points			[0, -70]
 		DstBlock		"Ve"
@@ -5811,12 +5901,12 @@ Model {
 		DstPort			1
 	      }
 	      Branch {
-		DstBlock		"Velocity1"
+		DstBlock		"Rates"
 		DstPort			1
 	      }
 	    }
 	    Line {
-	      SrcBlock		      "Velocity1"
+	      SrcBlock		      "Rates"
 	      SrcPort		      1
 	      Points		      [50, 0]
 	      Branch {
@@ -5859,7 +5949,6 @@ Model {
 	    Line {
 	      SrcBlock		      "Math\nFunction"
 	      SrcPort		      1
-	      Points		      [0, -25]
 	      DstBlock		      "Product "
 	      DstPort		      2
 	    }
@@ -5873,49 +5962,35 @@ Model {
 	    Line {
 	      SrcBlock		      "Sum"
 	      SrcPort		      1
-	      DstBlock		      "Velocity"
-	      DstPort		      1
+	      DstBlock		      "enable_acc"
+	      DstPort		      2
 	    }
 	    Line {
 	      SrcBlock		      "Velocity"
 	      SrcPort		      1
-	      Points		      [45, 0]
+	      Points		      [20, 0]
 	      Branch {
-		Points			[0, -75]
+		Points			[0, -85]
 		Branch {
 		  DstBlock		  "Vb"
 		  DstPort		  1
 		}
 		Branch {
-		  Points		  [-440, 0; 0, 35]
+		  Points		  [-480, 0; 0, 55]
 		  DstBlock		  "Detremine Force,\n Mass & Inertia"
 		  DstPort		  1
 		}
 	      }
 	      Branch {
-		Points			[0, 60]
-		Branch {
-		  DstBlock		  "Product "
-		  DstPort		  1
-		}
+		Points			[0, 70]
 		Branch {
 		  DstBlock		  "Cross"
 		  DstPort		  1
 		}
-	      }
-	    }
-	    Line {
-	      SrcBlock		      "Product"
-	      SrcPort		      1
-	      Points		      [25, 0]
-	      Branch {
-		DstBlock		"Sum"
-		DstPort			1
-	      }
-	      Branch {
-		Points			[0, -50]
-		DstBlock		"Ab"
-		DstPort			1
+		Branch {
+		  DstBlock		  "Product "
+		  DstPort		  1
+		}
 	      }
 	    }
 	    Line {
@@ -5970,6 +6045,59 @@ Model {
 	      SrcBlock		      "Signal Specification"
 	      SrcPort		      1
 	      DstBlock		      "Xe"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      "run_pos"
+	      SrcPort		      1
+	      Points		      [25, 0]
+	      DstBlock		      "enable_vel"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      "Product "
+	      SrcPort		      1
+	      DstBlock		      "enable_vel"
+	      DstPort		      2
+	    }
+	    Line {
+	      SrcBlock		      "run_vel"
+	      SrcPort		      1
+	      Points		      [5, 0]
+	      Branch {
+		DstBlock		"enable_acc "
+		DstPort			1
+	      }
+	      Branch {
+		Points			[100, 0; 0, 35]
+		DstBlock		"enable_acc"
+		DstPort			1
+	      }
+	    }
+	    Line {
+	      SrcBlock		      "enable_acc "
+	      SrcPort		      1
+	      Points		      [5, 0]
+	      Branch {
+		Points			[0, -70]
+		DstBlock		"Ab"
+		DstPort			1
+	      }
+	      Branch {
+		DstBlock		"Sum"
+		DstPort			1
+	      }
+	    }
+	    Line {
+	      SrcBlock		      "Product"
+	      SrcPort		      1
+	      DstBlock		      "enable_acc "
+	      DstPort		      2
+	    }
+	    Line {
+	      SrcBlock		      "enable_acc"
+	      SrcPort		      1
+	      DstBlock		      "Velocity"
 	      DstPort		      1
 	    }
 	  }
@@ -7107,6 +7235,17 @@ Model {
       }
     }
     Block {
+      BlockType		      Gain
+      Name		      "Gain"
+      SID		      "1181"
+      Position		      [460, 500, 490, 530]
+      ZOrder		      -11
+      Gain		      "180/pi"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
       BlockType		      SubSystem
       Name		      "Interface"
       SID		      "1090"
@@ -7381,433 +7520,6 @@ Model {
     }
     Block {
       BlockType		      SubSystem
-      Name		      "Joystick"
-      SID		      "1137"
-      Ports		      [0, 4]
-      Position		      [30, 42, 70, 158]
-      MinAlgLoopOccurrences   off
-      PropExecContextOutsideSubsystem off
-      RTWSystemCode	      "Auto"
-      FunctionWithSeparateData off
-      Opaque		      off
-      RequestExecContextInheritance off
-      MaskHideContents	      off
-      System {
-	Name			"Joystick"
-	Location		[6, 248, 1109, 854]
-	Open			off
-	ModelBrowserVisibility	on
-	ModelBrowserWidth	200
-	ScreenColor		"white"
-	PaperOrientation	"landscape"
-	PaperPositionMode	"auto"
-	PaperType		"A4"
-	PaperUnits		"centimeters"
-	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
-	TiledPageScale		1
-	ShowPageBoundaries	off
-	ZoomFactor		"100"
-	Block {
-	  BlockType		  BusCreator
-	  Name			  "Bus\nCreator1"
-	  SID			  "1138"
-	  Ports			  [8, 1]
-	  Position		  [470, 38, 475, 582]
-	  ShowName		  off
-	  Inputs		  "8"
-	  DisplayOption		  "bar"
-	}
-	Block {
-	  BlockType		  BusSelector
-	  Name			  "Bus\nSelector3"
-	  SID			  "1136"
-	  Ports			  [1, 4]
-	  Position		  [530, 257, 535, 358]
-	  ZOrder		  -3
-	  ShowName		  off
-	  OutputSignals		  "channel_1,channel_2,channel_3,channel_4"
-	  Port {
-	    PortNumber		    1
-	    Name		    "<channel_1>"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    2
-	    Name		    "<channel_2>"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    3
-	    Name		    "<channel_3>"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    4
-	    Name		    "<channel_4>"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	}
-	Block {
-	  BlockType		  Demux
-	  Name			  "Demux1"
-	  SID			  "1139"
-	  Ports			  [1, 6]
-	  Position		  [300, 28, 305, 452]
-	  BackgroundColor	  "black"
-	  ShowName		  off
-	  Outputs		  "6"
-	  DisplayOption		  "bar"
-	  Port {
-	    PortNumber		    1
-	    Name		    "channel_3"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    2
-	    Name		    "channel_2"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    3
-	    Name		    "channel_1"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    4
-	    Name		    "channel_4"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    5
-	    Name		    "channel_5"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    6
-	    Name		    "channel_8"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	}
-	Block {
-	  BlockType		  RateTransition
-	  Name			  "Rate Transition"
-	  SID			  "1156"
-	  Position		  [165, 219, 205, 261]
-	  ZOrder		  -10
-	  OutPortSampleTime	  "dt_sim"
-	}
-	Block {
-	  BlockType		  S-Function
-	  Name			  "S-Function"
-	  SID			  "1140"
-	  Ports			  [0, 3]
-	  Position		  [30, 204, 95, 416]
-	  ZOrder		  -5
-	  FunctionName		  "sdl_joystick"
-	  Parameters		  "0"
-	  EnableBusSupport	  off
-	  Port {
-	    PortNumber		    1
-	    Name		    "channel"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    2
-	    Name		    "buttons"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	  Port {
-	    PortNumber		    3
-	    Name		    "hats"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	}
-	Block {
-	  BlockType		  Terminator
-	  Name			  "Terminator1"
-	  SID			  "1141"
-	  Position		  [185, 300, 205, 320]
-	}
-	Block {
-	  BlockType		  Terminator
-	  Name			  "Terminator4"
-	  SID			  "1142"
-	  Position		  [185, 370, 205, 390]
-	}
-	Block {
-	  BlockType		  Constant
-	  Name			  "dummy"
-	  SID			  "1143"
-	  Position		  [360, 397, 395, 433]
-	  Value			  "0"
-	  SampleTime		  "dt_sim"
-	  Port {
-	    PortNumber		    1
-	    Name		    "channel_6"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	}
-	Block {
-	  BlockType		  Constant
-	  Name			  "dummy1"
-	  SID			  "1144"
-	  Position		  [360, 467, 395, 503]
-	  Value			  "0"
-	  SampleTime		  "dt_sim"
-	  Port {
-	    PortNumber		    1
-	    Name		    "channel_7"
-	    RTWStorageClass	    "Auto"
-	    DataLoggingNameMode	    "SignalName"
-	  }
-	}
-	Block {
-	  BlockType		  Gain
-	  Name			  "rad2deg_s1"
-	  SID			  "1146"
-	  Position		  [590, 255, 620, 285]
-	  ZOrder		  -11
-	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
-	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
-	  SaturateOnIntegerOverflow off
-	}
-	Block {
-	  BlockType		  Gain
-	  Name			  "rad2deg_s2"
-	  SID			  "1147"
-	  Position		  [560, 280, 590, 310]
-	  ZOrder		  -11
-	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
-	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
-	  SaturateOnIntegerOverflow off
-	}
-	Block {
-	  BlockType		  Gain
-	  Name			  "rad2deg_s3"
-	  SID			  "1148"
-	  Position		  [595, 305, 625, 335]
-	  ZOrder		  -11
-	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
-	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
-	  SaturateOnIntegerOverflow off
-	}
-	Block {
-	  BlockType		  Gain
-	  Name			  "rad2deg_s4"
-	  SID			  "1149"
-	  Position		  [560, 330, 590, 360]
-	  ZOrder		  -11
-	  Gain			  "-1"
-	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
-	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
-	  SaturateOnIntegerOverflow off
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "lat"
-	  SID			  "1145"
-	  Position		  [740, 263, 770, 277]
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "lon"
-	  SID			  "1150"
-	  Position		  [700, 288, 730, 302]
-	  Port			  "2"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "ped"
-	  SID			  "1151"
-	  Position		  [740, 313, 770, 327]
-	  Port			  "3"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "col"
-	  SID			  "1152"
-	  Position		  [700, 338, 730, 352]
-	  Port			  "4"
-	  IconDisplay		  "Port number"
-	}
-	Line {
-	  Name			  "channel_7"
-	  Labels		  [-1, 1]
-	  SrcBlock		  "dummy1"
-	  SrcPort		  1
-	  DstBlock		  "Bus\nCreator1"
-	  DstPort		  7
-	}
-	Line {
-	  Name			  "channel_6"
-	  Labels		  [-1, 1]
-	  SrcBlock		  "dummy"
-	  SrcPort		  1
-	  DstBlock		  "Bus\nCreator1"
-	  DstPort		  6
-	}
-	Line {
-	  Name			  "channel"
-	  Labels		  [0, 0]
-	  SrcBlock		  "S-Function"
-	  SrcPort		  1
-	  DstBlock		  "Rate Transition"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "channel_3"
-	  Labels		  [-1, 1]
-	  SrcBlock		  "Demux1"
-	  SrcPort		  1
-	  DstBlock		  "Bus\nCreator1"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "channel_2"
-	  Labels		  [-1, 1]
-	  SrcBlock		  "Demux1"
-	  SrcPort		  2
-	  DstBlock		  "Bus\nCreator1"
-	  DstPort		  2
-	}
-	Line {
-	  Name			  "channel_1"
-	  Labels		  [-1, 1]
-	  SrcBlock		  "Demux1"
-	  SrcPort		  3
-	  DstBlock		  "Bus\nCreator1"
-	  DstPort		  3
-	}
-	Line {
-	  Name			  "channel_4"
-	  Labels		  [-1, 1]
-	  SrcBlock		  "Demux1"
-	  SrcPort		  4
-	  DstBlock		  "Bus\nCreator1"
-	  DstPort		  4
-	}
-	Line {
-	  Name			  "channel_5"
-	  Labels		  [-1, 1]
-	  SrcBlock		  "Demux1"
-	  SrcPort		  5
-	  DstBlock		  "Bus\nCreator1"
-	  DstPort		  5
-	}
-	Line {
-	  Name			  "channel_8"
-	  Labels		  [-1, 1]
-	  SrcBlock		  "Demux1"
-	  SrcPort		  6
-	  Points		  [20, 0; 0, 140]
-	  DstBlock		  "Bus\nCreator1"
-	  DstPort		  8
-	}
-	Line {
-	  Name			  "buttons"
-	  Labels		  [0, 0]
-	  SrcBlock		  "S-Function"
-	  SrcPort		  2
-	  DstBlock		  "Terminator1"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "hats"
-	  Labels		  [0, 0]
-	  SrcBlock		  "S-Function"
-	  SrcPort		  3
-	  DstBlock		  "Terminator4"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "Bus\nCreator1"
-	  SrcPort		  1
-	  DstBlock		  "Bus\nSelector3"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "<channel_1>"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Bus\nSelector3"
-	  SrcPort		  1
-	  DstBlock		  "rad2deg_s1"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "<channel_2>"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Bus\nSelector3"
-	  SrcPort		  2
-	  DstBlock		  "rad2deg_s2"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "rad2deg_s2"
-	  SrcPort		  1
-	  DstBlock		  "lon"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "rad2deg_s4"
-	  SrcPort		  1
-	  DstBlock		  "col"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "<channel_3>"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Bus\nSelector3"
-	  SrcPort		  3
-	  DstBlock		  "rad2deg_s3"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "<channel_4>"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Bus\nSelector3"
-	  SrcPort		  4
-	  DstBlock		  "rad2deg_s4"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "rad2deg_s1"
-	  SrcPort		  1
-	  DstBlock		  "lat"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "rad2deg_s3"
-	  SrcPort		  1
-	  DstBlock		  "ped"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "Rate Transition"
-	  SrcPort		  1
-	  DstBlock		  "Demux1"
-	  DstPort		  1
-	}
-      }
-    }
-    Block {
-      BlockType		      SubSystem
       Name		      "KK-Controller"
       SID		      "1083"
       Ports		      [2, 4]
@@ -7821,7 +7533,7 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"KK-Controller"
-	Location		[0, 50, 1280, 774]
+	Location		[10, 224, 1290, 948]
 	Open			off
 	ModelBrowserVisibility	on
 	ModelBrowserWidth	200
@@ -7997,7 +7709,23 @@ Model {
 	  BlockType		  Constant
 	  Name			  "Gain-Poti"
 	  SID			  "824"
-	  Position		  [220, 324, 295, 356]
+	  Position		  [100, 294, 175, 326]
+	  ZOrder		  -5
+	  Value			  "0.005"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "Gain-Poti1"
+	  SID			  "1179"
+	  Position		  [185, 324, 260, 356]
+	  ZOrder		  -5
+	  Value			  "0.005"
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "Gain-Poti2"
+	  SID			  "1180"
+	  Position		  [100, 354, 175, 386]
 	  ZOrder		  -5
 	  Value			  "0.005"
 	}
@@ -8496,6 +8224,39 @@ Model {
 	  LowerLimit		  "1000"
 	}
 	Block {
+	  BlockType		  Scope
+	  Name			  "error_out"
+	  SID			  "1183"
+	  Ports			  [1]
+	  Position		  [550, 379, 580, 411]
+	  ZOrder		  -3
+	  Floating		  off
+	  Location		  [674, 213, 1231, 583]
+	  Open			  off
+	  NumInputPorts		  "1"
+	  ZoomMode		  "yonly"
+	  List {
+	    ListType		    AxesTitles
+	    axes1		    "%<SignalLabel>"
+	  }
+	  List {
+	    ListType		    ScopeGraphics
+	    FigureColor		    "[0.501960784313725 0.501960784313725 0.501960784313725]"
+	    AxesColor		    "[0 0 0]"
+	    AxesTickColor	    "[1 1 1]"
+	    LineColors		    "[1 1 0;1 0 1;0 1 1;1 0 0;0 1 0;0 0 1]"
+	    LineStyles		    "-|-|-|-|-|-"
+	    LineWidths		    "[0.5 0.5 0.5 0.5 0.5 0.5]"
+	    MarkerStyles	    "none|none|none|none|none|none"
+	  }
+	  YMin			  "-5.5"
+	  YMax			  "1"
+	  SaveName		  "ScopeData3"
+	  DataFormat		  "StructureWithTime"
+	  LimitDataPoints	  off
+	  SampleTime		  "0"
+	}
+	Block {
 	  BlockType		  Display
 	  Name			  "integral"
 	  SID			  "885"
@@ -8504,6 +8265,40 @@ Model {
 	  ZOrder		  -1
 	  Decimation		  "1"
 	  Lockdown		  off
+	}
+	Block {
+	  BlockType		  Scope
+	  Name			  "integral_out"
+	  SID			  "1182"
+	  Ports			  [1]
+	  Position		  [570, 314, 600, 346]
+	  ZOrder		  -3
+	  Floating		  off
+	  Location		  [649, 220, 1206, 590]
+	  Open			  off
+	  NumInputPorts		  "1"
+	  ZoomMode		  "yonly"
+	  List {
+	    ListType		    AxesTitles
+	    axes1		    "%<SignalLabel>"
+	  }
+	  List {
+	    ListType		    ScopeGraphics
+	    FigureColor		    "[0.501960784313725 0.501960784313725 0.501960784313725]"
+	    AxesColor		    "[0 0 0]"
+	    AxesTickColor	    "[1 1 1]"
+	    LineColors		    "[1 1 0;1 0 1;0 1 1;1 0 0;0 1 0;0 0 1]"
+	    LineStyles		    "-|-|-|-|-|-"
+	    LineWidths		    "[0.5 0.5 0.5 0.5 0.5 0.5]"
+	    MarkerStyles	    "none|none|none|none|none|none"
+	  }
+	  TimeRange		  "10"
+	  YMin			  "-50"
+	  YMax			  "50"
+	  SaveName		  "ScopeData2"
+	  DataFormat		  "StructureWithTime"
+	  LimitDataPoints	  off
+	  SampleTime		  "0"
 	}
 	Block {
 	  BlockType		  Display
@@ -8785,28 +8580,44 @@ Model {
 	Line {
 	  SrcBlock		  "MATLAB Function"
 	  SrcPort		  6
-	  Points		  [20, 0]
+	  Points		  [5, 0]
 	  Branch {
-	    DstBlock		    "last_error"
-	    DstPort		    1
+	    Points		    [15, 0]
+	    Branch {
+	      DstBlock		      "last_error"
+	      DstPort		      1
+	    }
+	    Branch {
+	      Points		      [0, 65]
+	      DstBlock		      "Memory"
+	      DstPort		      1
+	    }
 	  }
 	  Branch {
-	    Points		    [0, 65]
-	    DstBlock		    "Memory"
+	    Points		    [0, -35]
+	    DstBlock		    "error_out"
 	    DstPort		    1
 	  }
 	}
 	Line {
 	  SrcBlock		  "MATLAB Function"
 	  SrcPort		  5
-	  Points		  [50, 0]
+	  Points		  [15, 0]
 	  Branch {
-	    DstBlock		    "integral"
-	    DstPort		    1
+	    Points		    [35, 0]
+	    Branch {
+	      DstBlock		      "integral"
+	      DstPort		      1
+	    }
+	    Branch {
+	      Points		      [0, 170]
+	      DstBlock		      "Memory1"
+	      DstPort		      1
+	    }
 	  }
 	  Branch {
-	    Points		    [0, 170]
-	    DstBlock		    "Memory1"
+	    Points		    [0, -35]
+	    DstBlock		    "integral_out"
 	    DstPort		    1
 	  }
 	}
@@ -8839,21 +8650,24 @@ Model {
 	Line {
 	  SrcBlock		  "Gain-Poti"
 	  SrcPort		  1
-	  Points		  [15, 0]
-	  Branch {
-	    Points		    [0, -30]
-	    DstBlock		    "MATLAB Function"
-	    DstPort		    8
-	  }
-	  Branch {
-	    DstBlock		    "MATLAB Function"
-	    DstPort		    9
-	  }
-	  Branch {
-	    Points		    [0, 30]
-	    DstBlock		    "MATLAB Function"
-	    DstPort		    10
-	  }
+	  DstBlock		  "MATLAB Function"
+	  DstPort		  8
+	}
+	Line {
+	  SrcBlock		  "Gain-Poti1"
+	  SrcPort		  1
+	  DstBlock		  "MATLAB Function"
+	  DstPort		  9
+	}
+	Line {
+	  SrcBlock		  "Gain-Poti2"
+	  SrcPort		  1
+	  DstBlock		  "MATLAB Function"
+	  DstPort		  10
+	}
+	Annotation {
+	  Name			  "P only: oscillation: 0.02"
+	  Position		  [76, 238]
 	}
       }
     }
@@ -8896,6 +8710,28 @@ Model {
       ZOrder		      -1
       Decimation	      "1"
       Lockdown		      off
+    }
+    Block {
+      BlockType		      Mux
+      Name		      "Mux"
+      SID		      "1177"
+      Ports		      [2, 1]
+      Position		      [520, 486, 525, 524]
+      ZOrder		      -16
+      ShowName		      off
+      Inputs		      "2"
+      DisplayOption	      "bar"
+    }
+    Block {
+      BlockType		      Mux
+      Name		      "Mux1"
+      SID		      "1184"
+      Ports		      [3, 1]
+      Position		      [325, 476, 330, 514]
+      ZOrder		      -16
+      ShowName		      off
+      Inputs		      "3"
+      DisplayOption	      "bar"
     }
     Block {
       BlockType		      Display
@@ -8982,6 +8818,18 @@ Model {
       }
     }
     Block {
+      BlockType		      Selector
+      Name		      "Selector"
+      SID		      "1185"
+      Ports		      [1, 1]
+      Position		      [550, 486, 590, 524]
+      ZOrder		      -17
+      InputPortWidth	      "6"
+      IndexOptions	      "Index vector (dialog)"
+      Indices		      "[1 4 2 5 3 6]"
+      OutputSizes	      "1"
+    }
+    Block {
       BlockType		      Display
       Name		      "Time"
       SID		      "1121"
@@ -9006,7 +8854,7 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"Tricopter"
-	Location		[1, 246, 1281, 970]
+	Location		[41, 156, 1321, 880]
 	Open			off
 	ModelBrowserVisibility	on
 	ModelBrowserWidth	200
@@ -9584,7 +9432,7 @@ Model {
 	  MaskHideContents	  off
 	  System {
 	    Name		    "Motordynamics 1"
-	    Location		    [244, 163, 909, 758]
+	    Location		    [244, 251, 909, 846]
 	    Open		    off
 	    ModelBrowserVisibility  on
 	    ModelBrowserWidth	    200
@@ -9623,7 +9471,7 @@ Model {
 	      Ports		      [1, 1]
 	      Position		      [295, 173, 330, 207]
 	      InputPortMap	      "u0"
-	      DelayLength	      "0.05/dt_sim"
+	      DelayLength	      "act_latency/dt_sim"
 	      InitialCondition	      "1"
 	      ExternalReset	      "None"
 	    }
@@ -10126,7 +9974,7 @@ Model {
 	  MaskHideContents	  off
 	  System {
 	    Name		    "Motordynamics 2"
-	    Location		    [214, 144, 1494, 894]
+	    Location		    [214, 166, 1494, 916]
 	    Open		    off
 	    ModelBrowserVisibility  on
 	    ModelBrowserWidth	    200
@@ -10165,7 +10013,7 @@ Model {
 	      Ports		      [1, 1]
 	      Position		      [295, 173, 330, 207]
 	      InputPortMap	      "u0"
-	      DelayLength	      "0.05/dt_sim"
+	      DelayLength	      "act_latency/dt_sim"
 	      InitialCondition	      "1"
 	      ExternalReset	      "None"
 	    }
@@ -10607,7 +10455,7 @@ Model {
 	  MaskHideContents	  off
 	  System {
 	    Name		    "Motordynamics 3"
-	    Location		    [214, 166, 1494, 916]
+	    Location		    [214, 188, 1494, 938]
 	    Open		    off
 	    ModelBrowserVisibility  on
 	    ModelBrowserWidth	    200
@@ -10646,7 +10494,7 @@ Model {
 	      Ports		      [1, 1]
 	      Position		      [295, 173, 330, 207]
 	      InputPortMap	      "u0"
-	      DelayLength	      "0.05/dt_sim"
+	      DelayLength	      "act_latency/dt_sim"
 	      InitialCondition	      "1"
 	      ExternalReset	      "None"
 	    }
@@ -11113,7 +10961,7 @@ Model {
 	  }
 	  System {
 	    Name		    "Thrust 1"
-	    Location		    [244, 97, 909, 692]
+	    Location		    [244, 119, 909, 714]
 	    Open		    off
 	    ModelBrowserVisibility  on
 	    ModelBrowserWidth	    200
@@ -12065,7 +11913,7 @@ Model {
 	  MaskHideContents	  off
 	  System {
 	    Name		    "Yaw-Servodynamics"
-	    Location		    [295, 222, 1566, 972]
+	    Location		    [295, 244, 1566, 994]
 	    Open		    off
 	    ModelBrowserVisibility  on
 	    ModelBrowserWidth	    200
@@ -12858,6 +12706,41 @@ Model {
 	}
       }
     }
+    Block {
+      BlockType		      Scope
+      Name		      "pqr"
+      SID		      "1176"
+      Ports		      [3]
+      Position		      [640, 489, 670, 521]
+      ZOrder		      -3
+      Floating		      off
+      Location		      [649, 220, 1206, 590]
+      Open		      off
+      NumInputPorts	      "3"
+      ZoomMode		      "yonly"
+      List {
+	ListType		AxesTitles
+	axes1			"%<SignalLabel>"
+	axes2			"%<SignalLabel>"
+	axes3			"%<SignalLabel>"
+      }
+      List {
+	ListType		ScopeGraphics
+	FigureColor		"[0.501960784313725 0.501960784313725 0.501960784313725]"
+	AxesColor		"[0 0 0]"
+	AxesTickColor		"[1 1 1]"
+	LineColors		"[1 1 0;1 0 1;0 1 1;1 0 0;0 1 0;0 0 1]"
+	LineStyles		"-|-|-|-|-|-"
+	LineWidths		"[0.5 0.5 0.5 0.5 0.5 0.5]"
+	MarkerStyles		"none|none|none|none|none|none"
+      }
+      YMin		      "-5~-4~-5"
+      YMax		      "10~0~5"
+      SaveName		      "ScopeData1"
+      DataFormat	      "StructureWithTime"
+      LimitDataPoints	      off
+      SampleTime	      "0"
+    }
     Line {
       SrcBlock		      "Tricopter"
       SrcPort		      2
@@ -12890,14 +12773,22 @@ Model {
 	  Branch {
 	    Points		    [0, 10; -370, 0]
 	    Branch {
-	      Points		      [-410, 0; 0, -215]
-	      DstBlock		      "KK-Controller"
-	      DstPort		      2
-	    }
-	    Branch {
 	      Points		      [0, -115]
 	      DstBlock		      "Tricopter"
 	      DstPort		      5
+	    }
+	    Branch {
+	      Points		      [-220, 0]
+	      Branch {
+		Points			[-190, 0; 0, -215]
+		DstBlock		"KK-Controller"
+		DstPort			2
+	      }
+	      Branch {
+		Points			[0, 55]
+		DstBlock		"Bus\nSelector3"
+		DstPort			1
+	      }
 	    }
 	  }
 	  Branch {
@@ -12991,28 +12882,56 @@ Model {
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Joystick"
+      SrcBlock		      "Constant2"
       SrcPort		      1
-      DstBlock		      "Interface"
-      DstPort		      1
-    }
-    Line {
-      SrcBlock		      "Joystick"
-      SrcPort		      2
-      DstBlock		      "Interface"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "Joystick"
-      SrcPort		      3
-      DstBlock		      "Interface"
-      DstPort		      3
-    }
-    Line {
-      SrcBlock		      "Joystick"
-      SrcPort		      4
-      DstBlock		      "Interface"
-      DstPort		      4
+      Points		      [20, 0]
+      Branch {
+	Points			[0, 25]
+	Branch {
+	  Points		  [0, 35]
+	  Branch {
+	    DstBlock		    "Interface"
+	    DstPort		    3
+	  }
+	  Branch {
+	    Points		    [0, 0]
+	    Branch {
+	      Points		      [0, 30]
+	      DstBlock		      "Interface"
+	      DstPort		      4
+	    }
+	    Branch {
+	      Points		      [0, 390]
+	      DstBlock		      "Mux1"
+	      DstPort		      3
+	    }
+	  }
+	}
+	Branch {
+	  Points		  [0, 5; 10, 0]
+	  Branch {
+	    DstBlock		    "Interface"
+	    DstPort		    2
+	  }
+	  Branch {
+	    Points		    [0, 410]
+	    DstBlock		    "Mux1"
+	    DstPort		    2
+	  }
+	}
+      }
+      Branch {
+	Points			[20, 0]
+	Branch {
+	  DstBlock		  "Interface"
+	  DstPort		  1
+	}
+	Branch {
+	  Points		  [0, 430]
+	  DstBlock		  "Mux1"
+	  DstPort		  1
+	}
+      }
     }
     Line {
       SrcBlock		      "Bus\nSelector1"
@@ -13049,6 +12968,60 @@ Model {
       SrcPort		      1
       DstBlock		      "6DoF Animation"
       DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Mux"
+      SrcPort		      1
+      DstBlock		      "Selector"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Bus\nSelector3"
+      SrcPort		      1
+      DstBlock		      "Bus to Vector3"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Gain"
+      SrcPort		      1
+      DstBlock		      "Mux"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Mux1"
+      SrcPort		      1
+      DstBlock		      "Mux"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Selector"
+      SrcPort		      1
+      DstBlock		      "Demux"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Demux"
+      SrcPort		      1
+      DstBlock		      "pqr"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Demux"
+      SrcPort		      2
+      DstBlock		      "pqr"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Demux"
+      SrcPort		      3
+      DstBlock		      "pqr"
+      DstPort		      3
+    }
+    Line {
+      SrcBlock		      "Bus to Vector3"
+      SrcPort		      1
+      DstBlock		      "Gain"
+      DstPort		      1
     }
     Annotation {
       Position		      [1594, 537]
@@ -13115,36 +13088,36 @@ Stateflow {
       "tart mixing by setting collective to motor outputs\n%-------------------------------------------------------\nRx"
       "InCollective = (RxInCollective * 10) /8;	% 0-800 -> 0-1000\nMotorOut1 = RxInCollective;\nMotorOut2 = RxInCollect"
       "ive;\nMotorOut3 = RxInCollective;\nMotorOut4 = 500;\n\n%-------------------------------------------------------\n"
-      "% Roll control loop\n%-------------------------------------------------------\nerror = RxInRoll - KProll*p;\nif "
-      "(error > emax)\n    error = emax;\nelseif (error < -emax)\n        error = -emax;\nend\n    \nintegral(ROLL) = i"
-      "ntegral(ROLL) + error;\n\nimax = RxInCollective;\nif (imax < 0)\n    imax = 0;\nend   \nimax = imax/10;	% 1000 -"
-      "> 200\n\nif (integral(ROLL) > imax)\n    integral(ROLL) = imax;\nelseif (integral(ROLL) < -imax)\n        integr"
-      "al(ROLL) = -imax;\nend\n\nderivative = error - last_error(ROLL);\nlast_error(ROLL) = error;\nRxInRoll = RxInRoll"
-      " + error;% + (integral(ROLL) / 4) + (derivative / 4);\n\n% [Tricopter]\nRxInRoll = RxInRoll * 0.875; \n% (RxInRo"
-      "ll * 7) >> 3 = RxInRoll*0.875 Approximation of sin(60)=(.875 versus .86602540) without div\nMotorOut1 = MotorOut"
-      "1 + RxInRoll;\nMotorOut2 = MotorOut2 - RxInRoll;\n\n%-------------------------------------------------------\n% "
-      "Pitch control loop\n%-------------------------------------------------------\nerror = RxInPitch  - KPpitch*q;\ni"
-      "f (error > emax)\n    error = emax;\nelseif (error < -emax)\n        error = -emax;\nend\n    \nintegral(PITCH) "
-      "= integral(PITCH) + error;\n\nif (integral(PITCH) > imax)\n    integral(PITCH) = imax;\nelseif (integral(PITCH) "
-      "< -imax)\n        integral(PITCH) = -imax;\nend\n\nderivative = error - last_error(PITCH);\nlast_error(PITCH) = "
-      "error;\nRxInPitch = RxInPitch + error;% + (integral(PITCH) / 4) + (derivative / 4);\n\n% [Tricopter]\nMotorOut3 "
-      "= MotorOut3 - RxInPitch;\nRxInPitch = RxInPitch /2;   % cosine of 60\nMotorOut1 = MotorOut1 + RxInPitch;\nMotorO"
-      "ut2 = MotorOut2 + RxInPitch;\n\n%-------------------------------------------------------\n% Yaw control loop\n%-"
-      "------------------------------------------------------\nerror = RxInYaw  - KPyaw*r;\nif (error > emax)\n    erro"
-      "r = emax;\nelseif (error < -emax)\n        error = -emax;\nend\n    \nintegral(YAW) = integral(YAW) + error;\n\n"
-      "if (integral(YAW) > imax)\n    integral(YAW) = imax;\nelseif (integral(YAW) < -imax)\n        integral(YAW) = -i"
-      "max;\nend\n\nderivative = error - last_error(YAW);\nlast_error(YAW) = error;\nRxInYaw = RxInYaw + error;% + (int"
-      "egral(YAW) / 4) + (derivative / 4);\n\n% [Tricopter]\nMotorOut4 = MotorOut4 + RxInYaw;\n\n\n% [Tricopter]\n% Rat"
-      "her than clipping the motor outputs and causing instability\n% at throttle saturation, we pull down the throttle"
-      " of the other\n% motors. This gives priority to stabilization without a fixed\n% collective limit.\n\nimax = Mot"
-      "orOut1;\nif (MotorOut2 > imax)\n    imax = MotorOut2;\nend\nif (MotorOut3 > imax)\n    imax = MotorOut3;\nend\ni"
-      "max = imax - 1000;\nif (imax > 0) \n    MotorOut1 = MotorOut1 - imax;\n    MotorOut2 = MotorOut2 - imax;\n    Mo"
-      "torOut3 = MotorOut3 - imax;\nend\n\n%--- Limit the lowest value to avoid stopping of motor if motor value is und"
-      "er-saturated ---\nimax = 114;             % this is the motor idle level\nif (MotorOut1 < imax)\n    MotorOut1 ="
-      " imax;	\nend\nif (MotorOut2 < imax)\n    MotorOut2 = imax;\nend\n\n%#if defined(TRI_COPTER) || defined(QUAD_COPT"
-      "ER) || defined(QUAD_X_COPTER) || defined(Y4_COPTER)\nif (MotorOut3 < imax)\n    MotorOut3 = imax;\nend\n\n% Boun"
-      "d pulse length to 1ms <= pulse <= 2ms\nMotorOut1 = MotorOut1 +1000;\nMotorOut2 = MotorOut2 +1000;\nMotorOut3 = M"
-      "otorOut3 +1000;\nMotorOut4 = MotorOut4 +1000;\n\nintegral_out = integral;\nlast_error_out = last_error;\n"
+      "% Roll control loop\n%-------------------------------------------------------\nerror = KProll*(RxInRoll - p);\ni"
+      "f (error > emax)\n    error = emax;\nelseif (error < -emax)\n        error = -emax;\nend\n    \nintegral(ROLL) ="
+      " integral(ROLL) + error;\n\nimax = RxInCollective;\nif (imax < 0)\n    imax = 0;\nend\n\nimax = imax/10;	% 1000 "
+      "-> 200\nif (integral(ROLL) > imax)\n    integral(ROLL) = imax;\nelseif (integral(ROLL) < -imax)\n        integra"
+      "l(ROLL) = -imax;\nend\n\nderivative = error - last_error(ROLL);\nlast_error(ROLL) = error;\nRxInRoll = RxInRoll "
+      "+ error;% + (integral(ROLL) / 4) + (derivative / 4);\n\n% [Tricopter]\nRxInRoll = RxInRoll * 0.875; \n% (RxInRol"
+      "l * 7) >> 3 = RxInRoll*0.875 Approximation of sin(60)=(.875 versus .86602540) without div\nMotorOut1 = MotorOut1"
+      " + RxInRoll;\nMotorOut2 = MotorOut2 - RxInRoll;\n\n%-------------------------------------------------------\n% P"
+      "itch control loop\n%-------------------------------------------------------\nerror = KPpitch*(RxInPitch  - q);\n"
+      "if (error > emax)\n    error = emax;\nelseif (error < -emax)\n        error = -emax;\nend\n    \nintegral(PITCH)"
+      " = integral(PITCH) + error;\n\nif (integral(PITCH) > imax)\n    integral(PITCH) = imax;\nelseif (integral(PITCH)"
+      " < -imax)\n        integral(PITCH) = -imax;\nend\n\nderivative = error - last_error(PITCH);\nlast_error(PITCH) ="
+      " error;\nRxInPitch = RxInPitch + error;% + (integral(PITCH) / 4) + (derivative / 4);\n\n% [Tricopter]\nMotorOut3"
+      " = MotorOut3 - RxInPitch;\nRxInPitch = RxInPitch /2;   % cosine of 60\nMotorOut1 = MotorOut1 + RxInPitch;\nMotor"
+      "Out2 = MotorOut2 + RxInPitch;\n\n%-------------------------------------------------------\n% Yaw control loop\n%"
+      "-------------------------------------------------------\nerror = KPyaw*(RxInYaw  - r);\nif (error > emax)\n    e"
+      "rror = emax;\nelseif (error < -emax)\n        error = -emax;\nend\n    \nintegral(YAW) = integral(YAW) + error;\n"
+      "\nif (integral(YAW) > imax)\n    integral(YAW) = imax;\nelseif (integral(YAW) < -imax)\n        integral(YAW) = "
+      "-imax;\nend\n\nderivative = error - last_error(YAW);\nlast_error(YAW) = error;\nRxInYaw = RxInYaw + error;% + (i"
+      "ntegral(YAW) / 4) + (derivative / 4);\n\n% [Tricopter]\nMotorOut4 = MotorOut4 + RxInYaw;\n\n\n% [Tricopter]\n% R"
+      "ather than clipping the motor outputs and causing instability\n% at throttle saturation, we pull down the thrott"
+      "le of the other\n% motors. This gives priority to stabilization without a fixed\n% collective limit.\n\nimax = M"
+      "otorOut1;\nif (MotorOut2 > imax)\n    imax = MotorOut2;\nend\nif (MotorOut3 > imax)\n    imax = MotorOut3;\nend\n"
+      "imax = imax - 1000;\nif (imax > 0) \n    MotorOut1 = MotorOut1 - imax;\n    MotorOut2 = MotorOut2 - imax;\n    M"
+      "otorOut3 = MotorOut3 - imax;\nend\n\n%--- Limit the lowest value to avoid stopping of motor if motor value is un"
+      "der-saturated ---\nimax = 114;             % this is the motor idle level\nif (MotorOut1 < imax)\n    MotorOut1 "
+      "= imax;	\nend\nif (MotorOut2 < imax)\n    MotorOut2 = imax;\nend\n\n%#if defined(TRI_COPTER) || defined(QUAD_COP"
+      "TER) || defined(QUAD_X_COPTER) || defined(Y4_COPTER)\nif (MotorOut3 < imax)\n    MotorOut3 = imax;\nend\n\n% Bou"
+      "nd pulse length to 1ms <= pulse <= 2ms\nMotorOut1 = MotorOut1 +1000;\nMotorOut2 = MotorOut2 +1000;\nMotorOut3 = "
+      "MotorOut3 +1000;\nMotorOut4 = MotorOut4 +1000;\n\nintegral_out = integral;\nlast_error_out = last_error;\n"
       editorLayout	      "100 M4x1[48 22 1280 774]"
     }
   }

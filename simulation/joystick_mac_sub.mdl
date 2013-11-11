@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.7"
+    ComputedModelVersion    "1.8"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -27,9 +27,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "sven"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sun Oct 20 11:47:16 2013"
-  RTWModifiedTimeStamp	  304169685
-  ModelVersionFormat	  "1.%<AutoIncrement:7>"
+  LastModifiedDate	  "Thu Nov 07 08:03:26 2013"
+  RTWModifiedTimeStamp	  305712204
+  ModelVersionFormat	  "1.%<AutoIncrement:8>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -67,7 +67,6 @@ Model {
     $ObjectID		    1
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
     model_		    "joystick_mac_sub"
-    signals_		    []
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
@@ -762,6 +761,15 @@ Model {
       InitialOutput	      "[]"
     }
     Block {
+      BlockType		      RateTransition
+      Integrity		      on
+      Deterministic	      on
+      X0		      "0"
+      OutPortSampleTimeOpt    "Specify"
+      OutPortSampleTimeMultiple	"1"
+      OutPortSampleTime	      "-1"
+    }
+    Block {
       BlockType		      S-Function
       FunctionName	      "system"
       SFunctionModules	      "''"
@@ -813,7 +821,7 @@ Model {
   }
   System {
     Name		    "joystick_mac_sub"
-    Location		    [455, 253, 1392, 705]
+    Location		    [124, 140, 1061, 592]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -827,7 +835,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "40"
+    SIDHighWatermark	    "58"
     Block {
       BlockType		      BusSelector
       Name		      "Bus\nSelector3"
@@ -1152,6 +1160,433 @@ Model {
       }
     }
     Block {
+      BlockType		      SubSystem
+      Name		      "Joystick"
+      SID		      "41"
+      Ports		      [0, 4]
+      Position		      [30, 232, 70, 348]
+      MinAlgLoopOccurrences   off
+      PropExecContextOutsideSubsystem off
+      RTWSystemCode	      "Auto"
+      FunctionWithSeparateData off
+      Opaque		      off
+      RequestExecContextInheritance off
+      MaskHideContents	      off
+      System {
+	Name			"Joystick"
+	Location		[45, 184, 1148, 790]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"A4"
+	PaperUnits		"centimeters"
+	TiledPaperMargins	[1.270000, 1.270000, 1.270000, 1.270000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  BusCreator
+	  Name			  "Bus\nCreator1"
+	  SID			  "42"
+	  Ports			  [8, 1]
+	  Position		  [470, 38, 475, 582]
+	  ShowName		  off
+	  Inputs		  "8"
+	  DisplayOption		  "bar"
+	}
+	Block {
+	  BlockType		  BusSelector
+	  Name			  "Bus\nSelector3"
+	  SID			  "43"
+	  Ports			  [1, 4]
+	  Position		  [530, 257, 535, 358]
+	  ZOrder		  -3
+	  ShowName		  off
+	  OutputSignals		  "channel_1,channel_2,channel_3,channel_4"
+	  Port {
+	    PortNumber		    1
+	    Name		    "<channel_1>"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    2
+	    Name		    "<channel_2>"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    3
+	    Name		    "<channel_3>"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    4
+	    Name		    "<channel_4>"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	}
+	Block {
+	  BlockType		  Demux
+	  Name			  "Demux1"
+	  SID			  "44"
+	  Ports			  [1, 6]
+	  Position		  [300, 28, 305, 452]
+	  BackgroundColor	  "black"
+	  ShowName		  off
+	  Outputs		  "6"
+	  DisplayOption		  "bar"
+	  Port {
+	    PortNumber		    1
+	    Name		    "channel_3"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    2
+	    Name		    "channel_2"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    3
+	    Name		    "channel_1"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    4
+	    Name		    "channel_4"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    5
+	    Name		    "channel_5"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    6
+	    Name		    "channel_8"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	}
+	Block {
+	  BlockType		  RateTransition
+	  Name			  "Rate Transition"
+	  SID			  "45"
+	  Position		  [165, 219, 205, 261]
+	  ZOrder		  -10
+	  OutPortSampleTime	  "dt_sim"
+	}
+	Block {
+	  BlockType		  S-Function
+	  Name			  "S-Function"
+	  SID			  "46"
+	  Ports			  [0, 3]
+	  Position		  [30, 204, 95, 416]
+	  ZOrder		  -5
+	  FunctionName		  "sdl_joystick"
+	  Parameters		  "0"
+	  EnableBusSupport	  off
+	  Port {
+	    PortNumber		    1
+	    Name		    "channel"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    2
+	    Name		    "buttons"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    3
+	    Name		    "hats"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	}
+	Block {
+	  BlockType		  Terminator
+	  Name			  "Terminator1"
+	  SID			  "47"
+	  Position		  [185, 300, 205, 320]
+	}
+	Block {
+	  BlockType		  Terminator
+	  Name			  "Terminator4"
+	  SID			  "48"
+	  Position		  [185, 370, 205, 390]
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "dummy"
+	  SID			  "49"
+	  Position		  [360, 397, 395, 433]
+	  Value			  "0"
+	  SampleTime		  "dt_sim"
+	  Port {
+	    PortNumber		    1
+	    Name		    "channel_6"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	}
+	Block {
+	  BlockType		  Constant
+	  Name			  "dummy1"
+	  SID			  "50"
+	  Position		  [360, 467, 395, 503]
+	  Value			  "0"
+	  SampleTime		  "dt_sim"
+	  Port {
+	    PortNumber		    1
+	    Name		    "channel_7"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "rad2deg_s1"
+	  SID			  "51"
+	  Position		  [590, 255, 620, 285]
+	  ZOrder		  -11
+	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "rad2deg_s2"
+	  SID			  "52"
+	  Position		  [560, 280, 590, 310]
+	  ZOrder		  -11
+	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "rad2deg_s3"
+	  SID			  "53"
+	  Position		  [595, 305, 625, 335]
+	  ZOrder		  -11
+	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "rad2deg_s4"
+	  SID			  "54"
+	  Position		  [560, 330, 590, 360]
+	  ZOrder		  -11
+	  Gain			  "-1"
+	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "lat"
+	  SID			  "55"
+	  Position		  [740, 263, 770, 277]
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "lon"
+	  SID			  "56"
+	  Position		  [700, 288, 730, 302]
+	  Port			  "2"
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "ped"
+	  SID			  "57"
+	  Position		  [740, 313, 770, 327]
+	  Port			  "3"
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "col"
+	  SID			  "58"
+	  Position		  [700, 338, 730, 352]
+	  Port			  "4"
+	  IconDisplay		  "Port number"
+	}
+	Line {
+	  Name			  "channel_7"
+	  Labels		  [-1, 1]
+	  SrcBlock		  "dummy1"
+	  SrcPort		  1
+	  DstBlock		  "Bus\nCreator1"
+	  DstPort		  7
+	}
+	Line {
+	  Name			  "channel_6"
+	  Labels		  [-1, 1]
+	  SrcBlock		  "dummy"
+	  SrcPort		  1
+	  DstBlock		  "Bus\nCreator1"
+	  DstPort		  6
+	}
+	Line {
+	  Name			  "channel"
+	  Labels		  [0, 0]
+	  SrcBlock		  "S-Function"
+	  SrcPort		  1
+	  DstBlock		  "Rate Transition"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "channel_3"
+	  Labels		  [-1, 1]
+	  SrcBlock		  "Demux1"
+	  SrcPort		  1
+	  DstBlock		  "Bus\nCreator1"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "channel_2"
+	  Labels		  [-1, 1]
+	  SrcBlock		  "Demux1"
+	  SrcPort		  2
+	  DstBlock		  "Bus\nCreator1"
+	  DstPort		  2
+	}
+	Line {
+	  Name			  "channel_1"
+	  Labels		  [-1, 1]
+	  SrcBlock		  "Demux1"
+	  SrcPort		  3
+	  DstBlock		  "Bus\nCreator1"
+	  DstPort		  3
+	}
+	Line {
+	  Name			  "channel_4"
+	  Labels		  [-1, 1]
+	  SrcBlock		  "Demux1"
+	  SrcPort		  4
+	  DstBlock		  "Bus\nCreator1"
+	  DstPort		  4
+	}
+	Line {
+	  Name			  "channel_5"
+	  Labels		  [-1, 1]
+	  SrcBlock		  "Demux1"
+	  SrcPort		  5
+	  DstBlock		  "Bus\nCreator1"
+	  DstPort		  5
+	}
+	Line {
+	  Name			  "channel_8"
+	  Labels		  [-1, 1]
+	  SrcBlock		  "Demux1"
+	  SrcPort		  6
+	  Points		  [20, 0; 0, 140]
+	  DstBlock		  "Bus\nCreator1"
+	  DstPort		  8
+	}
+	Line {
+	  Name			  "buttons"
+	  Labels		  [0, 0]
+	  SrcBlock		  "S-Function"
+	  SrcPort		  2
+	  DstBlock		  "Terminator1"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "hats"
+	  Labels		  [0, 0]
+	  SrcBlock		  "S-Function"
+	  SrcPort		  3
+	  DstBlock		  "Terminator4"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Bus\nCreator1"
+	  SrcPort		  1
+	  DstBlock		  "Bus\nSelector3"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "<channel_1>"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Bus\nSelector3"
+	  SrcPort		  1
+	  DstBlock		  "rad2deg_s1"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "<channel_2>"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Bus\nSelector3"
+	  SrcPort		  2
+	  DstBlock		  "rad2deg_s2"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "rad2deg_s2"
+	  SrcPort		  1
+	  DstBlock		  "lon"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "rad2deg_s4"
+	  SrcPort		  1
+	  DstBlock		  "col"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "<channel_3>"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Bus\nSelector3"
+	  SrcPort		  3
+	  DstBlock		  "rad2deg_s3"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "<channel_4>"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Bus\nSelector3"
+	  SrcPort		  4
+	  DstBlock		  "rad2deg_s4"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "rad2deg_s1"
+	  SrcPort		  1
+	  DstBlock		  "lat"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "rad2deg_s3"
+	  SrcPort		  1
+	  DstBlock		  "ped"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Rate Transition"
+	  SrcPort		  1
+	  DstBlock		  "Demux1"
+	  DstPort		  1
+	}
+      }
+    }
+    Block {
       BlockType		      Display
       Name		      "RC Input"
       SID		      "17"
@@ -1244,8 +1679,8 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"Subsystem"
-	Location		[6, 50, 1109, 656]
-	Open			on
+	Location		[6, 94, 1109, 700]
+	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
