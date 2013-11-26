@@ -17,6 +17,7 @@
 					<Add option="-DDEBUG" />
 					<Add option="-DGPS_DEBUGGING" />
 					<Add option="-DWITH_STDIO" />
+					<Add directory="src/linux/sdl_joystick" />
 				</Compiler>
 			</Target>
 			<Target title="release_linux32_x86_gcc">
@@ -27,6 +28,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="src/linux/sdl_joystick" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -41,6 +43,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-D_STDC_PREDEF_H" />
+					<Add directory="src/linux/sdl_joystick" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -65,6 +68,7 @@
 			<Add directory="../../src/linux/SensorFusion" />
 			<Add directory="../../src/linux/BackgroundAction" />
 			<Add directory="../../src/linux/Wiring" />
+			<Add directory="../../src/linux/sdl_joystick" />
 		</Compiler>
 		<Linker>
 			<Add library="boost_thread" />
@@ -74,53 +78,10 @@
 			<Add library="boost_program_options" />
 			<Add library="boost_chrono" />
 			<Add library="boost_timer" />
+			<Add library="SDL" />
 		</Linker>
-		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
-		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />
-		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.h" />
-		<Unit filename="../../src/AP_GPS/GPS.cpp" />
-		<Unit filename="../../src/AP_GPS/GPS.h" />
-		<Unit filename="../../src/ARDUINO/Print.cpp" />
-		<Unit filename="../../src/ARDUINO/Print.h" />
-		<Unit filename="../../src/ARDUINO/Printable.h" />
-		<Unit filename="../../src/ARDUINO/Stream.cpp" />
-		<Unit filename="../../src/ARDUINO/Stream.h" />
-		<Unit filename="../../src/ARDUINO/WString.cpp" />
-		<Unit filename="../../src/ARDUINO/WString.h" />
-		<Unit filename="../../src/cECF/ECF.cpp" />
-		<Unit filename="../../src/cECF/ECF.h" />
-		<Unit filename="../../src/cECF/MatrixMath.cpp" />
-		<Unit filename="../../src/cECF/MatrixMath.h" />
-		<Unit filename="../../src/cECF/VectorMath.cpp" />
-		<Unit filename="../../src/cECF/VectorMath.h" />
-		<Unit filename="../../src/cECF/boost_test/wiring.h" />
-		<Unit filename="../../src/cECF/st_Euler.h" />
-		<Unit filename="../../src/i2cdevlib/HMC5883L/HMC5883L.cpp" />
-		<Unit filename="../../src/i2cdevlib/HMC5883L/HMC5883L.h" />
-		<Unit filename="../../src/i2cdevlib/MPU6050/MPU6050.cpp" />
-		<Unit filename="../../src/i2cdevlib/MPU6050/MPU6050.h" />
-		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.cpp" />
-		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.h" />
-		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.cpp" />
-		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.h" />
-		<Unit filename="../../src/linux/DataLink/cDataLink.cpp" />
-		<Unit filename="../../src/linux/DataLink/cDataLink.h" />
-		<Unit filename="../../src/linux/Delay/Delay.cpp" />
-		<Unit filename="../../src/linux/Delay/Delay.h" />
-		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.cpp" />
-		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.h" />
-		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.cpp" />
-		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.h" />
-		<Unit filename="../../src/linux/I2Cdev/I2Cdev.cpp" />
-		<Unit filename="../../src/linux/I2Cdev/I2Cdev.h" />
-		<Unit filename="../../src/linux/Logging/Logging.cpp" />
-		<Unit filename="../../src/linux/Logging/Logging.h" />
-		<Unit filename="../../src/linux/Millis/millis.cpp" />
-		<Unit filename="../../src/linux/Millis/millis.h" />
-		<Unit filename="../../src/linux/SensorFusion/SensorFusion.cpp" />
-		<Unit filename="../../src/linux/SensorFusion/SensorFusion.h" />
-		<Unit filename="../../src/linux/Sensors/i_IMU.h" />
-		<Unit filename="../../src/linux/Wiring/wiring.h" />
+		<Unit filename="../../src/linux/sdl_joystick/c_joystick.cpp" />
+		<Unit filename="../../src/linux/sdl_joystick/c_joystick.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
