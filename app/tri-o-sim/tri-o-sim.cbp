@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="app/tri-o-sim" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="debug_linux32_x86_gcc">
+				<Option output="../../bin/tri-o-sim_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/tri-o-sim/debug/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add option="-DGPS_DEBUGGING" />
+					<Add option="-DWITH_STDIO" />
+				</Compiler>
+			</Target>
+			<Target title="release_linux32_x86_gcc">
+				<Option output="../../bin/tri-o-sim_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/tri-o-sim/release/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="release_linux32_arm_gcc">
+				<Option output="../../bin/tri-o-sim_linux32_arm_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/tri-o-sim/debug/linux32/arm/" />
+				<Option type="1" />
+				<Option compiler="armunknownlinuxgnueabigcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-D_STDC_PREDEF_H" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="../../src/ARDUINO" />
+			<Add directory="../../src/AP_GPS" />
+			<Add directory="../../src/i2cdevlib" />
+			<Add directory="../../src/linux/I2Cdev" />
+			<Add directory="../../src/linux/Logging" />
+			<Add directory="../../src/linux/Delay" />
+			<Add directory="../../src/linux/Millis" />
+			<Add directory="../../src/linux/HardwareSerial" />
+			<Add directory="../../src/linux/Drotek10dof" />
+			<Add directory="../../src/cECF" />
+			<Add directory="../../src/mavlink/include/common" />
+			<Add directory="../../src/linux/DataLink" />
+			<Add directory="../../src/linux/SensorFusion" />
+			<Add directory="../../src/linux/BackgroundAction" />
+			<Add directory="../../src/linux/Wiring" />
+		</Compiler>
+		<Linker>
+			<Add library="boost_thread" />
+			<Add library="boost_system" />
+			<Add library="boost_filesystem" />
+			<Add library="boost_signals" />
+			<Add library="boost_program_options" />
+			<Add library="boost_chrono" />
+			<Add library="boost_timer" />
+		</Linker>
+		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
+		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />
+		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.h" />
+		<Unit filename="../../src/AP_GPS/GPS.cpp" />
+		<Unit filename="../../src/AP_GPS/GPS.h" />
+		<Unit filename="../../src/ARDUINO/Print.cpp" />
+		<Unit filename="../../src/ARDUINO/Print.h" />
+		<Unit filename="../../src/ARDUINO/Printable.h" />
+		<Unit filename="../../src/ARDUINO/Stream.cpp" />
+		<Unit filename="../../src/ARDUINO/Stream.h" />
+		<Unit filename="../../src/ARDUINO/WString.cpp" />
+		<Unit filename="../../src/ARDUINO/WString.h" />
+		<Unit filename="../../src/cECF/ECF.cpp" />
+		<Unit filename="../../src/cECF/ECF.h" />
+		<Unit filename="../../src/cECF/MatrixMath.cpp" />
+		<Unit filename="../../src/cECF/MatrixMath.h" />
+		<Unit filename="../../src/cECF/VectorMath.cpp" />
+		<Unit filename="../../src/cECF/VectorMath.h" />
+		<Unit filename="../../src/cECF/boost_test/wiring.h" />
+		<Unit filename="../../src/cECF/st_Euler.h" />
+		<Unit filename="../../src/i2cdevlib/HMC5883L/HMC5883L.cpp" />
+		<Unit filename="../../src/i2cdevlib/HMC5883L/HMC5883L.h" />
+		<Unit filename="../../src/i2cdevlib/MPU6050/MPU6050.cpp" />
+		<Unit filename="../../src/i2cdevlib/MPU6050/MPU6050.h" />
+		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.cpp" />
+		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.h" />
+		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.cpp" />
+		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.h" />
+		<Unit filename="../../src/linux/DataLink/cDataLink.cpp" />
+		<Unit filename="../../src/linux/DataLink/cDataLink.h" />
+		<Unit filename="../../src/linux/Delay/Delay.cpp" />
+		<Unit filename="../../src/linux/Delay/Delay.h" />
+		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.cpp" />
+		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.h" />
+		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.cpp" />
+		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.h" />
+		<Unit filename="../../src/linux/I2Cdev/I2Cdev.cpp" />
+		<Unit filename="../../src/linux/I2Cdev/I2Cdev.h" />
+		<Unit filename="../../src/linux/Logging/Logging.cpp" />
+		<Unit filename="../../src/linux/Logging/Logging.h" />
+		<Unit filename="../../src/linux/Millis/millis.cpp" />
+		<Unit filename="../../src/linux/Millis/millis.h" />
+		<Unit filename="../../src/linux/SensorFusion/SensorFusion.cpp" />
+		<Unit filename="../../src/linux/SensorFusion/SensorFusion.h" />
+		<Unit filename="../../src/linux/Sensors/i_IMU.h" />
+		<Unit filename="../../src/linux/Wiring/wiring.h" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
