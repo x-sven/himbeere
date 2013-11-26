@@ -19,7 +19,7 @@ cJoystick::cJoystick(int num_joy)
     int num_hats    = -1;        /* Number of hats */
 
     /* SDL initialization */
-    if (SDL_Init(SDL_INIT_JOYSTICK) < 0)
+    if (SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_VIDEO) < 0) // without video, the joystick events wont work *grrr*
     {
         cerr << "Could not initialize SDL: " <<  SDL_GetError() << endl;
         return;
@@ -42,12 +42,12 @@ cJoystick::cJoystick(int num_joy)
     }
 
     SDL_JoystickEventState(SDL_ENABLE);
-    m_pJoystick = SDL_JoystickOpen (joy_index);
+    m_pJoystick = SDL_JoystickOpen(joy_index);
 
     /* Collect joystick data. */
-    num_axes = SDL_JoystickNumAxes(m_pJoystick);
+    num_axes    = SDL_JoystickNumAxes(m_pJoystick);
     num_buttons = SDL_JoystickNumButtons(m_pJoystick);
-    num_hats = SDL_JoystickNumHats(m_pJoystick);
+    num_hats    = SDL_JoystickNumHats(m_pJoystick);
 
     vf_axis.resize(num_axes);
     vf_button.resize(num_buttons);
@@ -69,23 +69,16 @@ void cJoystick::loop(void)
 
         while(SDL_PollEvent(&event))
         {
-            cout << " ----  event -----" << endl;
-
             switch(event.type)
             {
             case SDL_JOYAXISMOTION:  /* Handle Joystick Motion */
-                //if ( ( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 ) )
+                if ( ( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 ) )
                 {
-                    cout << " SDL_JOYAXISMOTION " << endl;
-
-
                     for (ii = 0; ii < vf_axis.size(); ii++)
                     {
                         if( ii == event.jaxis.axis)
                         {
                             vf_axis[ii] = SDL_JoystickGetAxis(m_pJoystick, ii) / 32768.0;
-                            cout << " A(" << ii << "): " << vf_axis[ii] << endl;
-
                             signal_axis(getJoystick(), event.jaxis.axis);
                         }// if
                     }// for
