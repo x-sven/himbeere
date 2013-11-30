@@ -8,6 +8,7 @@
 class cJoystick
 {
 public:
+
     cJoystick(int joy_index = 0);
     virtual ~cJoystick();
 

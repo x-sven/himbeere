@@ -19,10 +19,12 @@ cJoystick::cJoystick(int num_joy)
     int num_hats    = -1;        /* Number of hats */
 
     /* SDL initialization */
-    if (SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_VIDEO) < 0) // without video, the joystick events wont work *grrr*
+    // without video (or everything), the joystick events wont work *grrr*
+    // without eventthread, no events on my mac deteced *grrr*
+    if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_NOPARACHUTE | SDL_INIT_EVENTTHREAD) < 0)
     {
         cerr << "Could not initialize SDL: " <<  SDL_GetError() << endl;
-        return;
+        exit(1);
     }
     num_joys = SDL_NumJoysticks();
     if (num_joys <= 0)
@@ -65,12 +67,13 @@ void cJoystick::loop(void)
 
     while(m_thread_running)
     {
-//        cout << "m_thread_running" << endl;
-
         while(SDL_PollEvent(&event))
         {
             switch(event.type)
             {
+
+            cout << "Event.Type: " << event.type << endl;
+
             case SDL_JOYAXISMOTION:  /* Handle Joystick Motion */
                 if ( ( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 ) )
                 {
@@ -96,8 +99,6 @@ void cJoystick::loop(void)
                 }// for
                 break;
             case SDL_QUIT:
-                /* Set whatever flags are necessary to */
-                /* end the main game loop here */
                 m_thread_running = false;
                 break;
             } // switch
