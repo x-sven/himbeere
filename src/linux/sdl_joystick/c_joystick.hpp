@@ -9,7 +9,7 @@ class cJoystick
 {
 public:
 
-    cJoystick(int joy_index = 0);
+    cJoystick(int selected_joystick = 0);
     virtual ~cJoystick();
 
     int getNumberOfButtons ();

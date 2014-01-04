@@ -8,11 +8,11 @@
 using namespace std;
 namespace pt = boost::posix_time;
 
-cJoystick::cJoystick(int num_joy)
+cJoystick::cJoystick(int selected_joystick)
 {
 
-    joy_index   = num_joy;   /* Joystick number. */
-    num_joys    = -1;        /* number of joysticks. */
+    joy_index   = selected_joystick;   /* Joystick number. */
+    num_joys    = -1;            /* number of joysticks. */
 
     int num_axes    = -1;        /* Number of axes. */
     int num_buttons = -1;        /* Number of buttons. */
