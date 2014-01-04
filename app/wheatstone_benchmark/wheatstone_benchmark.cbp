@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="wheatstone_benchmark" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="ReleaseWin32">
+				<Option platforms="Windows;" />
+				<Option output="wheatstone_benchmark" prefix_auto="1" extension_auto="1" />
+				<Option object_output=".objs/win32" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="ReleaseQNX">
+				<Option platforms="Windows;" />
+				<Option output="wheatstone_benchmark" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs/qnx" />
+				<Option type="1" />
+				<Option compiler="qcc_compiler" />
+				<Linker>
+					<Add library="m" />
+				</Linker>
+			</Target>
+			<Target title="ReleaseLinux32">
+				<Option platforms="Unix;" />
+				<Option output="wheatstone_benchmark" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs/linux32" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-DUNIX" />
+				</Compiler>
+				<Linker>
+					<Add library="m" />
+				</Linker>
+			</Target>
+			<Target title="ReleaseLinuxARM">
+				<Option platforms="Unix;" />
+				<Option output="wheatstone_benchmark_arm" prefix_auto="0" extension_auto="0" />
+				<Option object_output=".objs/linuxARM" />
+				<Option type="1" />
+				<Option compiler="arm-unknown-linux-gnueabi-gcc" />
+				<Compiler>
+					<Add option="-D_STDC_PREDEF_H" />
+					<Add option="-DUNIX" />
+				</Compiler>
+				<Linker>
+					<Add library="m" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="ReleaseWin32;ReleaseQNX;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="whets.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

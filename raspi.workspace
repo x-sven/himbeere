@@ -12,5 +12,6 @@
 		<Project filename="test/event_timer/boost_test/boost_test.cbp" />
 		<Project filename="test/logging/boost_test/boost_test.cbp" />
 		<Project filename="app/tri-o-sim/tri-o-sim.cbp" />
+		<Project filename="app/wheatstone_benchmark/wheatstone_benchmark.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
