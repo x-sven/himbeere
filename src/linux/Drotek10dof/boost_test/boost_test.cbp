@@ -34,7 +34,7 @@
 				<Option output="../../../../bin/test_drotek_linux32_arm_release" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../../../../tmp/bin/test/drotek/debug/linux32/arm/" />
 				<Option type="1" />
-				<Option compiler="armunknownlinuxgnueabigcc" />
+				<Option compiler="armlinuxgnueabihfgcc" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-g" />
@@ -45,6 +45,9 @@
 				</Linker>
 			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="all" targets="debug_linux32_x86_gcc;release_linux32_x86_gcc;release_linux32_arm_gcc;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />

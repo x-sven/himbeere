@@ -60,11 +60,11 @@
  * @see MS561101BA_DEFAULT_ADDRESS
  * @see MS561101BA_OSR_1024
  */
-MS561101BA::MS561101BA(uint8_t address)
-{
-    devAddr = address;
-    defaultOsr = MS561101BA_OSR_1024;
-}
+//MS561101BA::MS561101BA(uint8_t address)
+//{
+//    devAddr = address;
+//    defaultOsr = MS561101BA_OSR_1024;
+//}
 
 /** Specific address and oversample rate constructor.
  * @param address I2C address

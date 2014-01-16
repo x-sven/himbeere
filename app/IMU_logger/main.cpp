@@ -20,9 +20,11 @@ using namespace std;
 // AD0 low = 0x68 (default for InvenSense evaluation board)
 // AD0 high = 0x69
 
+std::string I2Cdev::i2c_device_str; //Definition of static variable
+
 MPU6050 imu(MPU6050_ADDRESS_AD0_HIGH);
-HMC5883L mag(0x1E);
-MS561101BA baro(0x77);
+HMC5883L mag((uint8_t)(0x1E));
+MS561101BA baro((uint8_t)(0x77));
 
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
@@ -62,7 +64,7 @@ void setup() {
 void loop() {
 
     // read raw measurements from device
-    mag.getHeading(&mx, &my, &mz);
+    mag.getMeasurments(&mx, &my, &mz);
     baro.read(&pressure, &temp);
     imu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 

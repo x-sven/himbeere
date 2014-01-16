@@ -7,6 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="debug_linux32_x86_gcc">
+				<Option platforms="Unix;" />
 				<Option output="../../bin/tri-o-sim_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin" />
 				<Option object_output="../../tmp/bin/tri-o-sim/debug/linux32/x86/" />
@@ -30,6 +31,7 @@
 				</Linker>
 			</Target>
 			<Target title="release_linux32_x86_gcc">
+				<Option platforms="Unix;" />
 				<Option output="../../bin/tri-o-sim_linux32_x86_release" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin" />
 				<Option object_output="../../tmp/bin/tri-o-sim/release/linux32/x86/" />
@@ -50,28 +52,8 @@
 					<Add library="boost_thread" />
 				</Linker>
 			</Target>
-			<Target title="release_linux32_arm_gcc">
-				<Option output="../../bin/tri-o-sim_linux32_arm_release" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../bin" />
-				<Option object_output="../../tmp/bin/tri-o-sim/debug/linux32/arm/" />
-				<Option type="1" />
-				<Option compiler="armunknownlinuxgnueabigcc" />
-				<Compiler>
-					<Add option="-O2" />
-					<Add option="-D_STDC_PREDEF_H" />
-					<Add directory="src/linux/sdl_joystick" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-					<Add library="boost_system" />
-					<Add library="boost_filesystem" />
-					<Add library="boost_signals" />
-					<Add library="boost_program_options" />
-					<Add library="boost_chrono" />
-					<Add library="boost_timer" />
-				</Linker>
-			</Target>
 			<Target title="release_mac64_x86_gcc">
+				<Option platforms="Mac;" />
 				<Option output="../../bin/tri-o-sim_mac64_x86_release" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin" />
 				<Option object_output="../../tmp/bin/tri-o-sim/release/mac64/x86/" />
@@ -99,6 +81,9 @@
 				</Linker>
 			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="all" targets="debug_linux32_x86_gcc;release_linux32_x86_gcc;release_mac64_x86_gcc;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />

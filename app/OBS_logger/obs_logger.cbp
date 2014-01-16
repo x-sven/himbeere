@@ -37,7 +37,7 @@
 				<Option working_dir="../../bin" />
 				<Option object_output="../../tmp/bin/obs/debug/linux32/arm/" />
 				<Option type="1" />
-				<Option compiler="armunknownlinuxgnueabigcc" />
+				<Option compiler="armlinuxgnueabihfgcc" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-D_STDC_PREDEF_H" />
@@ -47,6 +47,9 @@
 				</Linker>
 			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="all" targets="debug_linux32_x86_gcc;release_linux32_x86_gcc;release_linux32_arm_gcc;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
@@ -74,6 +77,7 @@
 			<Add library="boost_program_options" />
 			<Add library="boost_chrono" />
 			<Add library="boost_timer" />
+			<Add library="pthread" />
 		</Linker>
 		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
 		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />

@@ -34,9 +34,6 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     if(system("rm -rf *timing_testlog.log"))
     {;}
 
-    // Current logging implementation
-    framework::master_test_suite().add( BOOST_TEST_CASE( &test_case_logging_timing ));
-
 //    // examples: logging_tests.cpp
 //    framework::master_test_suite().add( BOOST_TEST_CASE( &test_case_mmap_logging ));
 //    framework::master_test_suite().add( BOOST_TEST_CASE( &test_case_mmap2_logging ));
@@ -57,6 +54,9 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     // implementations with threads: logging_thread_tests.cpp
     framework::master_test_suite().add( BOOST_TEST_CASE( &test_case_logging_fwrite_with_thread));
     framework::master_test_suite().add( BOOST_TEST_CASE( &test_case_logging_stream_with_thread));
+
+    // Current logging implementation
+    framework::master_test_suite().add( BOOST_TEST_CASE( &test_case_logging_timing ));
 
     return 0;
 }

@@ -52,14 +52,8 @@ THE SOFTWARE.
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <linux/i2c-dev.h>
+
 #include "I2Cdev.h"
-
-#define I2C_DEVICE_STR "/dev/i2c-1"
-
-/** Default constructor.
- */
-I2Cdev::I2Cdev() {
-}
 
 /** Read a single bit from an 8-bit device register.
  * @param devAddr I2C slave device address
@@ -74,6 +68,10 @@ int8_t I2Cdev::readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t
     uint8_t count = readByte(devAddr, regAddr, &b, timeout);
     *data = b & (1 << bitNum);
     return count;
+}
+int8_t I2Cdev::readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data)
+{
+    return( readBit(devAddr, regAddr, bitNum, data, I2Cdev::readTimeout) );
 }
 
 /** Read a single bit from a 16-bit device register.
@@ -90,6 +88,10 @@ int8_t I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16
     *data = b & (1 << bitNum);
     return count;
 }
+int8_t I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data)
+{
+    return( readBitW(devAddr, regAddr, bitNum, data, I2Cdev::readTimeout) );
+}
 
 /** Read multiple bits from an 8-bit device register.
  * @param devAddr I2C slave device address
@@ -97,7 +99,7 @@ int8_t I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16
  * @param bitStart First bit position to read (0-7)
  * @param length Number of bits to read (not more than 8)
  * @param data Container for right-aligned value (i.e. '101' read from any bitStart position will equal 0x05)
- * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
+ * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::I2Cdev::readTimeout)
  * @return Status of read operation (true = success)
  */
 int8_t I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data, uint16_t timeout) {
@@ -115,14 +117,17 @@ int8_t I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint
     }
     return count;
 }
-
+int8_t I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data)
+{
+    return( readBits(devAddr, regAddr, bitStart, length, data, I2Cdev::readTimeout) );
+}
 /** Read multiple bits from a 16-bit device register.
  * @param devAddr I2C slave device address
  * @param regAddr Register regAddr to read from
  * @param bitStart First bit position to read (0-15)
  * @param length Number of bits to read (not more than 16)
  * @param data Container for right-aligned value (i.e. '101' read from any bitStart position will equal 0x05)
- * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
+ * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::I2Cdev::readTimeout)
  * @return Status of read operation (1 = success, 0 = failure, -1 = timeout)
  */
 int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data, uint16_t timeout) {
@@ -141,6 +146,10 @@ int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uin
     }
     return count;
 }
+int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data)
+{
+    return( readBitsW(devAddr, regAddr, bitStart, length, data, I2Cdev::readTimeout) );
+}
 
 /** Read single byte from an 8-bit device register.
  * @param devAddr I2C slave device address
@@ -152,7 +161,10 @@ int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uin
 int8_t I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_t timeout) {
     return readBytes(devAddr, regAddr, 1, data, timeout);
 }
-
+int8_t I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data)
+{
+    return( readByte(devAddr, regAddr, data, I2Cdev::readTimeout) );
+}
 /** Read single word from a 16-bit device register.
  * @param devAddr I2C slave device address
  * @param regAddr Register regAddr to read from
@@ -163,7 +175,10 @@ int8_t I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_
 int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint16_t timeout) {
     return readWords(devAddr, regAddr, 1, data, timeout);
 }
-
+int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data)
+{
+    return( readWord(devAddr, regAddr, data, I2Cdev::readTimeout) );
+}
 /** Read multiple bytes from an 8-bit device register.
  * @param devAddr I2C slave device address
  * @param regAddr First register regAddr to read from
@@ -176,30 +191,30 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
     int8_t count = 0;
 
     memset(data, 0, length);
-    char device_str[] = I2C_DEVICE_STR;
-    int fd = open(device_str, O_RDWR);
+    const char *device = i2c_device_str.c_str();
+    int fd = open(device, O_RDWR);
 
     if (fd < 0) {
-        fprintf(stderr, "Failed to open device for reading: %s (%s)\n", device_str, strerror(errno));
+        fprintf(stderr, "Failed to open device for reading: %s (%s)\n", device, strerror(errno));
         return(-1);
     }
     if (ioctl(fd, I2C_SLAVE, devAddr) < 0) {
-        fprintf(stderr, "Failed to select device for reading: %s (%s)\n", device_str, strerror(errno));
+        fprintf(stderr, "Failed to select device for reading: %s (%s)\n", device, strerror(errno));
         close(fd);
         return(-1);
     }
     if (write(fd, &regAddr, 1) != 1) {
-        fprintf(stderr, "Failed to write reg: %s (%s)\n", device_str, strerror(errno));
+        fprintf(stderr, "Failed to write reg: %s (%s)\n", device, strerror(errno));
         close(fd);
         return(-1);
     }
     count = read(fd, data, length);
     if (count < 0) {
-        fprintf(stderr, "Failed to read device(%d): %s (%s)\n", count, device_str, ::strerror(errno));
+        fprintf(stderr, "Failed to read device(%d): %s (%s)\n", count, device, ::strerror(errno));
         close(fd);
         return(-1);
     } else if (count != length) {
-        fprintf(stderr, "Short read from device: %s, expected %d, got %d\n", device_str, length, count);
+        fprintf(stderr, "Short read from device: %s, expected %d, got %d\n", device, length, count);
         close(fd);
         return(-1);
     }
@@ -207,6 +222,11 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
 
     return count;
 }
+int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data)
+{
+    return( readBytes(devAddr, regAddr, length, data, I2Cdev::readTimeout) );
+}
+
 
 /** Read multiple words from a 16-bit device register.
  * @param devAddr I2C slave device address
@@ -224,6 +244,10 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
     *data = 0; // keep the compiler quiet
 
     return count;
+}
+int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data)
+{
+    return( readWords(devAddr, regAddr, length, data, I2Cdev::readTimeout) );
 }
 
 /** write a single bit in an 8-bit device register.
@@ -349,14 +373,14 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
         return(FALSE);
     }
 
-    char device_str[] = I2C_DEVICE_STR;
-    fd = open(device_str, O_RDWR);
+    const char *device = i2c_device_str.c_str();
+    fd = open(device, O_RDWR);
     if (fd < 0) {
-        fprintf(stderr, "Failed to open device for writing: %s (%s)\n", device_str, strerror(errno));
+        fprintf(stderr, "Failed to open device for writing: %s (%s)\n", device, strerror(errno));
         return(FALSE);
     }
     if (ioctl(fd, I2C_SLAVE, devAddr) < 0) {
-        fprintf(stderr, "Failed to select device for writing: %s (%s)\n", device_str, strerror(errno));
+        fprintf(stderr, "Failed to select device for writing: %s (%s)\n", device, strerror(errno));
         close(fd);
         return(FALSE);
     }
@@ -364,7 +388,7 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
     memcpy(buf+1,data,length);
     count = write(fd, buf, length+1);
     if (count < 0) {
-        fprintf(stderr, "Failed to write device(%d): %s (%s)\n", count, device_str,::strerror(errno));
+        fprintf(stderr, "Failed to write device(%d): %s (%s)\n", count, device,::strerror(errno));
         close(fd);
         return(FALSE);
     } else if (count != length+1) {
@@ -397,14 +421,14 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         return(FALSE);
     }
 
-    char device_str[] = I2C_DEVICE_STR;
-    fd = open(device_str, O_RDWR);
+    const char *device = i2c_device_str.c_str();
+    fd = open(device, O_RDWR);
     if (fd < 0) {
-        fprintf(stderr, "Failed to open device for writing: %s (%s)\n", device_str, strerror(errno));
+        fprintf(stderr, "Failed to open device for writing: %s (%s)\n", device, strerror(errno));
         return(FALSE);
     }
     if (ioctl(fd, I2C_SLAVE, devAddr) < 0) {
-        fprintf(stderr, "Failed to select device for writing: %s (%s) \n", device_str, strerror(errno));
+        fprintf(stderr, "Failed to select device for writing: %s (%s) \n", device, strerror(errno));
         close(fd);
         return(FALSE);
     }
@@ -415,7 +439,7 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
     }
     count = write(fd, buf, length*2+1);
     if (count < 0) {
-        fprintf(stderr, "Failed to write device(%d): %s (%s)\n", count, device_str, ::strerror(errno));
+        fprintf(stderr, "Failed to write device(%d): %s (%s)\n", count, device, ::strerror(errno));
         close(fd);
         return(FALSE);
     } else if (count != length*2+1) {

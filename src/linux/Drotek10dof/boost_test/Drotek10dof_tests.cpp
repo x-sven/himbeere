@@ -55,6 +55,34 @@ void while_function(void)
 
 }
 
+BOOST_AUTO_TEST_CASE( i2cdev_device_setup_default )
+{
+    BOOST_REQUIRE_EQUAL(I2Cdev::i2c_device_str, "/dev/i2c-1");
+}
+
+BOOST_AUTO_TEST_CASE( i2cdev_device_setup_0 )
+{
+    I2Cdev::i2c_device_str = "/dev/i2c-0";
+    BOOST_REQUIRE_EQUAL(I2Cdev::i2c_device_str, "/dev/i2c-0");
+}
+
+BOOST_AUTO_TEST_CASE( i2cdev_device_setup_1 )
+{
+    I2Cdev::i2c_device_str = "/dev/i2c-1";
+    BOOST_REQUIRE_EQUAL(I2Cdev::i2c_device_str, "/dev/i2c-1");
+}
+
+BOOST_AUTO_TEST_CASE( imu_device_setup_0 )
+{
+    Drotek10dof imu10dof("/dev/i2c-0");
+    BOOST_REQUIRE_EQUAL(I2Cdev::i2c_device_str, "/dev/i2c-0");
+}
+
+BOOST_AUTO_TEST_CASE( imu_device_setup_1 )
+{
+    Drotek10dof imu10dof("/dev/i2c-1");
+    BOOST_REQUIRE_EQUAL(I2Cdev::i2c_device_str, "/dev/i2c-1");
+}
 
 BOOST_AUTO_TEST_CASE( call_back_timing )
 {

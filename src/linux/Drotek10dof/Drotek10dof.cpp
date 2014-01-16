@@ -15,9 +15,12 @@
 
 using namespace std;
 
+std::string I2Cdev::i2c_device_str; //Definition of static variable
 
-Drotek10dof::Drotek10dof()
+Drotek10dof::Drotek10dof(std::string _device)
 {
+    I2Cdev::i2c_device_str = _device;
+
     imu = new MPU6050(MPU6050_ADDRESS_AD0_HIGH); //setDLPFMode?
     mag = new HMC5883L(0x1E);
     baro = new MS561101BA(0x77, MS561101BA_OSR_512);
