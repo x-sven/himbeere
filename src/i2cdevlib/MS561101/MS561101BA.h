@@ -71,7 +71,6 @@ class MS561101BA {
 	public:
 
 //		MS561101BA();
-		MS561101BA(uint8_t address);
 		MS561101BA(uint8_t address = MS561101BA_DEFAULT_ADDRESS, uint8_t osr = MS561101BA_OSR_1024);
 
 		void initialize();

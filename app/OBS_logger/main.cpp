@@ -35,11 +35,14 @@ namespace pt = boost::posix_time;
 #define DEBUGMSG(s) cout<<(s)
 
 HardwareSerial Serial("/dev/ttyAMA0");
+
 AP_GPS_MTK16 gps(&Serial);
 long gps_timing_buffer = 0;
 uint8_t gps_timing_counter = 0;
 
-Drotek10dof imu10dof;
+// I2Cdev::i2c_device_str = "/dev/i2c-1"; //OR
+Drotek10dof imu10dof("/dev/i2c-1");
+
 SensorFusion ECF;
 
 Logging gpslog;

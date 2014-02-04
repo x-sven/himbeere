@@ -13,7 +13,7 @@
 class Drotek10dof
 {
     public:
-        Drotek10dof();
+        Drotek10dof(std::string _device = "/dev/i2c-1");
         ~Drotek10dof();
         void begin(uint16_t frequency = 100, uint8_t sched_priority = 30, uint8_t sched_policy = SCHED_FIFO);
         //http://www.kernel.org/doc/man-pages/online/pages/man2/sched_setscheduler.2.html
@@ -51,6 +51,7 @@ class Drotek10dof
 
     protected:
     private:
+
         MPU6050 *imu;
         HMC5883L *mag;
         MS561101BA *baro;
