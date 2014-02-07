@@ -13,5 +13,6 @@
 		<Project filename="test/logging/boost_test/boost_test.cbp" />
 		<Project filename="app/tri-o-sim/tri-o-sim.cbp" />
 		<Project filename="app/wheatstone_benchmark/wheatstone_benchmark.cbp" />
+		<Project filename="app/UART_sender/uart_sender.cbp" active="1" />
 	</Workspace>
 </CodeBlocks_workspace_file>

@@ -68,7 +68,7 @@ void HardwareSerial::receive_loop(void)
                 {
                     return_value = ::read(fd, &c, 1); //timout is set to X seconds below
                     /* For using boost::thread::interrupt(), we have to use boost::thread::sleep() for it to work. */
-                    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+                    boost::this_thread::sleep(boost::posix_time::microseconds(10)); // ~1/115400baud
                 }
                 store_char(c, _rx_buffer);
             }
@@ -77,7 +77,7 @@ void HardwareSerial::receive_loop(void)
                 std::cout << "serial interface: file descriptor not valid" << std::endl;
 
             }
-            boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+            boost::this_thread::sleep(boost::posix_time::milliseconds(1));
         }
         std::cout << "leaving serial receive_loop thread" << std::endl;
 
