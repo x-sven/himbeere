@@ -8,8 +8,8 @@
 
 using namespace std;
 
-//HardwareSerial Serial("/dev/ttyUSB0");
-HardwareSerial Serial("/dev/ttyAMA0");
+HardwareSerial Serial("/dev/ttyUSB0");
+//HardwareSerial Serial("/dev/ttyAMA0");
 
 bool execute = true;
 
@@ -123,8 +123,7 @@ int main()
         }//if
 
         //printf("0x%d\n", data);
-
-        usleep(1000);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     }
     Serial.end();
     return(0);
