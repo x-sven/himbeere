@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="app/control_tester" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="debug_linux32_x86_gcc">
+				<Option output="../../bin/control_tester_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../tmp/bin/uart/debug/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add option="-DGPS_DEBUGGING" />
+					<Add option="-DWITH_STDIO" />
+				</Compiler>
+			</Target>
+			<Target title="release_linux32_x86_gcc">
+				<Option output="../../bin/control_tester_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../tmp/bin/uart/release/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="release_linux32_arm_gcc">
+				<Option output="../../bin/control_tester_linux32_arm_release" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../tmp/bin/uart/debug/linux32/arm/" />
+				<Option type="1" />
+				<Option compiler="armlinuxgnueabihfgcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-D_STDC_PREDEF_H" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="all" targets="debug_linux32_x86_gcc;release_linux32_x86_gcc;release_linux32_arm_gcc;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="../../src/AP_GPS" />
+			<Add directory="../../src/ARDUINO" />
+			<Add directory="../../src/linux" />
+			<Add directory="../../src/linux/Millis" />
+			<Add directory="../../src/linux/Logging" />
+			<Add directory="../../src/linux/HardwareSerial" />
+		</Compiler>
+		<Linker>
+			<Add library="boost_thread" />
+			<Add library="boost_system" />
+			<Add library="boost_filesystem" />
+		</Linker>
+		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
+		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />
+		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.h" />
+		<Unit filename="../../src/AP_GPS/GPS.cpp" />
+		<Unit filename="../../src/AP_GPS/GPS.h" />
+		<Unit filename="../../src/ARDUINO/Print.cpp" />
+		<Unit filename="../../src/ARDUINO/Print.h" />
+		<Unit filename="../../src/ARDUINO/Printable.h" />
+		<Unit filename="../../src/ARDUINO/Stream.cpp" />
+		<Unit filename="../../src/ARDUINO/Stream.h" />
+		<Unit filename="../../src/ARDUINO/WString.cpp" />
+		<Unit filename="../../src/ARDUINO/WString.h" />
+		<Unit filename="../../src/linux/Delay/Delay.cpp" />
+		<Unit filename="../../src/linux/Delay/Delay.h" />
+		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.cpp" />
+		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.h" />
+		<Unit filename="../../src/linux/Logging/Logging.cpp" />
+		<Unit filename="../../src/linux/Logging/Logging.h" />
+		<Unit filename="../../src/linux/Millis/millis.cpp" />
+		<Unit filename="../../src/linux/Millis/millis.h" />
+		<Unit filename="../../src/linux/ServoInterface/ServoInterface.cpp" />
+		<Unit filename="../../src/linux/ServoInterface/ServoInterface.h" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
