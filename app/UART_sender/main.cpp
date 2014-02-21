@@ -8,8 +8,8 @@
 
 using namespace std;
 
-HardwareSerial Serial("/dev/ttyUSB0");
-//HardwareSerial Serial("/dev/ttyAMA0");
+//HardwareSerial Serial("/dev/ttyUSB0");
+HardwareSerial Serial("/dev/ttyAMA0");
 
 bool execute = true;
 
@@ -110,7 +110,7 @@ int main()
                     break;
                 case 3:
 //                    printf("\n");
-//                    printf("%d %d %d %d %d %d\n",rx_channel[0],rx_channel[1],rx_channel[2],rx_channel[3],rx_channel[4],rx_channel[5]);
+                    printf("%d %d %d %d %d %d\n",rx_channel[0],rx_channel[1],rx_channel[2],rx_channel[3],rx_channel[4],rx_channel[5]);
                     reciever_state=0;
                     break;
                 default:

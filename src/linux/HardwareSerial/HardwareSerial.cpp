@@ -65,12 +65,9 @@ void HardwareSerial::receive_loop(void)
                 /* unistd.h: Read NBYTES into BUF from FD.  Return the
                              number read, -1 for errors or 0 for EOF.*/
                 /* It follows a BLOCKING read from fd*/
-                while(0 == nchars_read || SSIZE_MAX < nchars_read || EOF == nchars_read)
-                {
-                    nchars_read = ::read(fd, &c, 1);
-                    /* For using boost::thread::interrupt(), we have to use boost::thread::sleep() for it to work. */
-                    //boost::this_thread::sleep(boost::posix_time::microseconds(10)); // ~1/115400baud
-                }
+
+                nchars_read = ::read(fd, &c, 1);
+
                 for(uint16_t ii=0; ii<nchars_read; ii++ )
                 {
                     store_char(c[ii], _rx_buffer);
