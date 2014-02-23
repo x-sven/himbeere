@@ -1,6 +1,6 @@
 #include "ServoInterface.h"
 
-cServoInterfaceClass::cServoInterfaceClass(Stream *stream):
+ServoInterface::ServoInterface(Stream *stream):
     num_channel_max(6),
     m_stream(NULL),
     reciever_state(0),
@@ -16,7 +16,7 @@ cServoInterfaceClass::cServoInterfaceClass(Stream *stream):
     }
 }
 
-void cServoInterfaceClass::begin(Stream *stream)
+void ServoInterface::begin(Stream *stream)
 {
     if(NULL != stream)
     {
@@ -24,7 +24,7 @@ void cServoInterfaceClass::begin(Stream *stream)
     }
 }
 
-void cServoInterfaceClass::update(void)
+void ServoInterface::update(void)
 {
     uint8_t bytedata = 0;
     int16_t numc = 0;
@@ -108,7 +108,7 @@ void cServoInterfaceClass::update(void)
     }//if()
 }
 
-uint16_t cServoInterfaceClass::get_channel(uint8_t channel)
+uint16_t ServoInterface::get_channel(uint8_t channel)
 {
     if(0 < channel) // && channel < num_ch_max
     {
@@ -121,7 +121,7 @@ uint16_t cServoInterfaceClass::get_channel(uint8_t channel)
 }
 
 
-cServoInterfaceClass::~cServoInterfaceClass()
+ServoInterface::~ServoInterface()
 {
     if(NULL != rx_channel)
     {

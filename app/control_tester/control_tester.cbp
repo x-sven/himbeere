@@ -74,6 +74,8 @@
 		<Unit filename="../../src/ARDUINO/Stream.h" />
 		<Unit filename="../../src/ARDUINO/WString.cpp" />
 		<Unit filename="../../src/ARDUINO/WString.h" />
+		<Unit filename="../../src/linux/ControlSystem/ControlSystem.cpp" />
+		<Unit filename="../../src/linux/ControlSystem/ControlSystem.h" />
 		<Unit filename="../../src/linux/Delay/Delay.cpp" />
 		<Unit filename="../../src/linux/Delay/Delay.h" />
 		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.cpp" />

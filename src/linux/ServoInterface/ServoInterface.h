@@ -3,15 +3,15 @@
 
 #include "Stream.h"
 
-class cServoInterfaceClass
+class ServoInterface
 {
     public:
-        cServoInterfaceClass(Stream *stream = NULL);
+        ServoInterface(Stream *stream = NULL);
         void begin(Stream *stream);
         void update();
         uint16_t get_channel(uint8_t channel);
 
-        virtual ~cServoInterfaceClass();
+        virtual ~ServoInterface();
         const uint8_t num_channel_max;
     protected:
     private:
