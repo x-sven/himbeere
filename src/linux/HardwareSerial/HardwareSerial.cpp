@@ -56,28 +56,28 @@ void HardwareSerial::receive_loop(void)
     {
         while(thread_running)
         {
-            unsigned char c  =  0;
-            ssize_t return_value = 0;
+            unsigned char c[SERIAL_BUFFER_SIZE];
+            memset(c, 0, SERIAL_BUFFER_SIZE);
+            ssize_t nchars_read = 0;
 
             if(fd != -1)
             {
                 /* unistd.h: Read NBYTES into BUF from FD.  Return the
                              number read, -1 for errors or 0 for EOF.*/
                 /* It follows a BLOCKING read from fd*/
-                while(0 == return_value || SSIZE_MAX < return_value || EOF == return_value)
+
+                nchars_read = ::read(fd, &c, 1);
+
+                for(uint16_t ii=0; ii<nchars_read; ii++ )
                 {
-                    return_value = ::read(fd, &c, 1); //timout is set to X seconds below
-                    /* For using boost::thread::interrupt(), we have to use boost::thread::sleep() for it to work. */
-                    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+                    store_char(c[ii], _rx_buffer);
                 }
-                store_char(c, _rx_buffer);
             }
             else
             {
                 std::cout << "serial interface: file descriptor not valid" << std::endl;
-
+                boost::this_thread::sleep(boost::posix_time::milliseconds(100)); // don't waste too much time with error messages
             }
-            boost::this_thread::sleep(boost::posix_time::milliseconds(10));
         }
         std::cout << "leaving serial receive_loop thread" << std::endl;
 
@@ -101,7 +101,7 @@ HardwareSerial::HardwareSerial( const char* device)
     _rx_buffer = &rx_buffer;
     _tx_buffer = &tx_buffer;
 
-    fd = open(device, O_RDWR | O_NOCTTY | O_NDELAY);
+    fd = open(device, O_RDWR | O_NOCTTY);
 #if defined(DEBUG)
     if(fd == -1)
     {
@@ -194,7 +194,7 @@ void HardwareSerial::begin(unsigned long baudrate)
             ios_config.c_iflag = (IGNPAR);                 // IGNPAR: Ignore bytes with parity errors
             ios_config.c_oflag = 0;                        // Raw output
             ios_config.c_lflag = 0;                        // Set input mode (non-canonical, no echo,...)
-            ios_config.c_cc[VTIME] = 10;                   // Set timeout of 1.0 seconds
+            ios_config.c_cc[VTIME] = 0;                    // Disable timeout of 1.0 seconds
             ios_config.c_cc[VMIN]  = 1;                    // Blocking read until "min" chars received
             // info: no flowcontrol used here
             tcflush(fd, TCIFLUSH);                         // Flush terminal
