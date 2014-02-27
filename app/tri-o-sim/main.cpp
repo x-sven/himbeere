@@ -8,6 +8,8 @@
 
 #include "c_joystick.hpp"
 
+#include "c_joystick_manager.hpp"
+
 using namespace std;
 namespace po = boost::program_options;
 namespace pt = boost::posix_time;
@@ -15,6 +17,9 @@ namespace pt = boost::posix_time;
 bool execute = true;
 
 cJoystick* Joy;
+
+cJoystickManager JoyManager;
+
 
 //***************************************
 void trap(int signal)
@@ -34,26 +39,26 @@ int main(int argc, char **argv )
 
     std::cout << "Hello world!" << std::endl;
 
-    Joy = new cJoystick;
-
-    cout << " Name of the Joystick: "   << Joy->getName()
-         << ", Buttons: "               << Joy->getNumberOfButtons()
-         << ", Axis: "                  << Joy->getNumberOfAxes()
-         << endl;
-
-
-    while(execute)
-    {
-
-        for(int ii=0; ii < Joy->getNumberOfAxes(); ii++)
-        {
-            cout << " A(" << ii << "): " << Joy->getAxis(ii);
-
-        }
-        cout << endl;
-
-        boost::this_thread::sleep(pt::milliseconds(100)); //arround 10 Hz
-    }
+//    Joy = new cJoystick;
+//
+//    cout << " Name of the Joystick: "   << Joy->getName()
+//         << ", Buttons: "               << Joy->getNumberOfButtons()
+//         << ", Axis: "                  << Joy->getNumberOfAxes()
+//         << endl;
+//
+//
+//    while(execute)
+//    {
+//
+//        for(int ii=0; ii < Joy->getNumberOfAxes(); ii++)
+//        {
+//            cout << " A(" << ii << "): " << Joy->getAxis(ii);
+//
+//        }
+//        cout << endl;
+//
+//        boost::this_thread::sleep(pt::milliseconds(100)); //arround 10 Hz
+//    }
 
     return(0);
 }
