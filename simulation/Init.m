@@ -1,3 +1,4 @@
+setenv('MAKEFLAGS','');
 
 %------------------------------------
 % Simulation Proberties
@@ -87,7 +88,7 @@ RadToDeg = 1/DegToRad;
 % dRefAlt      = 63.98;   %height over elipsoid in m
 
 
-vis.IP_fg = '129.247.48.80';
+vis.IP_fg = '127.0.0.1';
 vis.PORT_fg = 5507;
 vis.dt_vis = 0.02;
 

@@ -28,8 +28,8 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "ft14sl"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Nov 20 19:23:44 2013"
-  RTWModifiedTimeStamp	  306876076
+  LastModifiedDate	  "Wed Jan 29 19:45:28 2014"
+  RTWModifiedTimeStamp	  312924268
   ModelVersionFormat	  "1.%<AutoIncrement:228>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
@@ -1159,10 +1159,10 @@ Model {
   }
   System {
     Name		    "tricopter_simulation"
-    Location		    [241, 122, 1678, 1014]
+    Location		    [265, 191, 1524, 1025]
     Open		    on
     ModelBrowserVisibility  on
-    ModelBrowserWidth	    239
+    ModelBrowserWidth	    245
     ScreenColor		    "white"
     PaperOrientation	    "landscape"
     PaperPositionMode	    "auto"
@@ -1173,7 +1173,26 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "1286"
+    SIDHighWatermark	    "1287"
+    Block {
+      BlockType		      Reference
+      Name		      "6DoF Animation"
+      SID		      "1287"
+      Ports		      [2]
+      Position		      [1085, 719, 1165, 801]
+      ZOrder		      -2
+      LibraryVersion	      "1.62"
+      SourceBlock	      "animation_lib/6DoF Animation"
+      SourceType	      "6DoF_Animation"
+      u1		      "[-10 10 -20 20 -50 50]"
+      u2		      "0.1"
+      u3		      "1.0"
+      u4		      "[0 0 100]"
+      u5		      "Fly alongside"
+      u6		      "[-10 0 -5]"
+      u7		      "45"
+      u8		      on
+    }
     Block {
       BlockType		      BusSelector
       Name		      "Bus\nSelector"
@@ -1190,7 +1209,7 @@ Model {
       Name		      "Bus\nSelector10"
       SID		      "1188"
       Ports		      [1, 1]
-      Position		      [960, 555, 965, 595]
+      Position		      [960, 565, 965, 605]
       ShowName		      off
       OutputSignals	      "pos.x,pos.y,pos.z"
       OutputAsBus	      on
@@ -1210,7 +1229,7 @@ Model {
       Name		      "Bus\nSelector4"
       SID		      "1189"
       Ports		      [1, 6]
-      Position		      [1005, 379, 1015, 536]
+      Position		      [1000, 379, 1010, 536]
       ShowName		      off
       OutputSignals	      "pos.x,pos.y,pos.z,attitude.phi,attitude.theta,attitude.psi"
       Port {
@@ -1255,7 +1274,7 @@ Model {
       Name		      "Bus\nSelector9"
       SID		      "1190"
       Ports		      [1, 1]
-      Position		      [960, 600, 965, 640]
+      Position		      [960, 610, 965, 650]
       ShowName		      off
       OutputSignals	      "attitude.phi,attitude.theta,attitude.psi"
       OutputAsBus	      on
@@ -1271,7 +1290,7 @@ Model {
       BlockType		      BusToVector
       Name		      "Bus to Vector1"
       SID		      "1191"
-      Position		      [1000, 610, 1025, 630]
+      Position		      [1000, 620, 1025, 640]
       ZOrder		      -1
     }
     Block {
@@ -1285,7 +1304,7 @@ Model {
       BlockType		      BusToVector
       Name		      "Bus to Vector4"
       SID		      "1192"
-      Position		      [1000, 565, 1025, 585]
+      Position		      [1000, 575, 1025, 595]
       ZOrder		      -1
     }
     Block {
@@ -1327,7 +1346,7 @@ Model {
       Name		      "Display"
       SID		      "1193"
       Ports		      [1]
-      Position		      [1455, 380, 1545, 410]
+      Position		      [1450, 380, 1540, 410]
       ZOrder		      -1
       Decimation	      "1"
       Lockdown		      off
@@ -1337,7 +1356,7 @@ Model {
       Name		      "Display1"
       SID		      "1194"
       Ports		      [1]
-      Position		      [1350, 405, 1440, 435]
+      Position		      [1345, 405, 1435, 435]
       ZOrder		      -1
       Decimation	      "1"
       Lockdown		      off
@@ -1347,7 +1366,7 @@ Model {
       Name		      "Display2"
       SID		      "1195"
       Ports		      [1]
-      Position		      [1220, 430, 1310, 460]
+      Position		      [1215, 430, 1305, 460]
       ZOrder		      -1
       Decimation	      "1"
       Lockdown		      off
@@ -1357,7 +1376,7 @@ Model {
       Name		      "Display3"
       SID		      "1196"
       Ports		      [1]
-      Position		      [1455, 455, 1545, 485]
+      Position		      [1450, 455, 1540, 485]
       ZOrder		      -1
       Decimation	      "1"
       Lockdown		      off
@@ -1367,7 +1386,7 @@ Model {
       Name		      "Display4"
       SID		      "1197"
       Ports		      [1]
-      Position		      [1365, 480, 1455, 510]
+      Position		      [1360, 480, 1450, 510]
       ZOrder		      -1
       Decimation	      "1"
       Lockdown		      off
@@ -1377,7 +1396,7 @@ Model {
       Name		      "Display5"
       SID		      "1198"
       Ports		      [1]
-      Position		      [1250, 505, 1340, 535]
+      Position		      [1245, 505, 1335, 535]
       ZOrder		      -1
       Decimation	      "1"
       Lockdown		      off
@@ -7345,7 +7364,7 @@ Model {
       Name		      "Flightgear Output\n(UDP)"
       SID		      "1199"
       Ports		      [2]
-      Position		      [1075, 551, 1175, 644]
+      Position		      [1075, 561, 1175, 654]
       TreatAsAtomicUnit	      on
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
@@ -7356,7 +7375,7 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"Flightgear Output\n(UDP)"
-	Location		[319, 74, 1678, 990]
+	Location		[319, 82, 1678, 998]
 	Open			off
 	ModelBrowserVisibility	on
 	ModelBrowserWidth	200
@@ -8797,7 +8816,7 @@ Model {
       BlockType		      Gain
       Name		      "Gain1"
       SID		      "1284"
-      Position		      [1145, 455, 1175, 485]
+      Position		      [1140, 455, 1170, 485]
       ZOrder		      -11
       Gain		      "180/pi"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
@@ -8808,7 +8827,7 @@ Model {
       BlockType		      Gain
       Name		      "Gain2"
       SID		      "1285"
-      Position		      [1100, 480, 1130, 510]
+      Position		      [1095, 480, 1125, 510]
       ZOrder		      -11
       Gain		      "180/pi"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
@@ -8819,7 +8838,7 @@ Model {
       BlockType		      Gain
       Name		      "Gain3"
       SID		      "1286"
-      Position		      [1145, 505, 1175, 535]
+      Position		      [1140, 505, 1170, 535]
       ZOrder		      -11
       Gain		      "180/pi"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
@@ -10329,7 +10348,7 @@ Model {
       Name		      "Real-Time Simulation"
       SID		      "672"
       Ports		      []
-      Position		      [41, 340, 130, 394]
+      Position		      [61, 560, 150, 614]
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
       RTWSystemCode	      "Auto"
@@ -14279,8 +14298,8 @@ Model {
       Position		      [640, 489, 670, 521]
       ZOrder		      -3
       Floating		      off
-      Location		      [649, 220, 1206, 590]
-      Open		      on
+      Location		      [1, 48, 1601, 1159]
+      Open		      off
       NumInputPorts	      "3"
       ZoomMode		      "yonly"
       List {
@@ -14351,19 +14370,22 @@ Model {
 	  }
 	}
 	Branch {
-	  DstBlock		  "Bus\nSelector4"
-	  DstPort		  1
-	}
-	Branch {
-	  Points		  [0, 115]
+	  Points		  [0, 0]
 	  Branch {
-	    DstBlock		    "Bus\nSelector10"
+	    DstBlock		    "Bus\nSelector4"
 	    DstPort		    1
 	  }
 	  Branch {
-	    Points		    [0, 45]
-	    DstBlock		    "Bus\nSelector9"
-	    DstPort		    1
+	    Points		    [0, 125]
+	    Branch {
+	      Points		      [0, 45]
+	      DstBlock		      "Bus\nSelector9"
+	      DstPort		      1
+	    }
+	    Branch {
+	      DstBlock		      "Bus\nSelector10"
+	      DstPort		      1
+	    }
 	  }
 	}
       }
@@ -14625,8 +14647,16 @@ Model {
     Line {
       SrcBlock		      "Bus to Vector4"
       SrcPort		      1
-      DstBlock		      "Flightgear Output\n(UDP)"
-      DstPort		      1
+      Points		      [15, 0]
+      Branch {
+	DstBlock		"Flightgear Output\n(UDP)"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, 155]
+	DstBlock		"6DoF Animation"
+	DstPort			1
+      }
     }
     Line {
       SrcBlock		      "Bus\nSelector9"
@@ -14637,8 +14667,16 @@ Model {
     Line {
       SrcBlock		      "Bus to Vector1"
       SrcPort		      1
-      DstBlock		      "Flightgear Output\n(UDP)"
-      DstPort		      2
+      Points		      [0, 0]
+      Branch {
+	DstBlock		"Flightgear Output\n(UDP)"
+	DstPort			2
+      }
+      Branch {
+	Points			[0, 150]
+	DstBlock		"6DoF Animation"
+	DstPort			2
+      }
     }
     Line {
       SrcBlock		      "Bus\nSelector10"

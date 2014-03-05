@@ -18,11 +18,11 @@ Library {
   Creator		  "The MathWorks Inc."
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "sven"
+  LastModifiedBy	  "ft14sl"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sun Oct 20 12:27:31 2013"
-  RTWModifiedTimeStamp	  304172844
-  ModelVersionFormat	  "1.%<AutoIncrement:61>"
+  LastModifiedDate	  "Wed Jan 29 18:56:22 2014"
+  RTWModifiedTimeStamp	  312922579
+  ModelVersionFormat	  "1.%<AutoIncrement:62>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -679,7 +679,7 @@ Library {
       Name		      "6DoF Animation"
       SID		      "7"
       Ports		      [2]
-      Position		      [80, 54, 160, 136]
+      Position		      [110, 69, 190, 151]
       ZOrder		      -2
       PermitHierarchicalResolution "ExplicitOnly"
       TreatAsAtomicUnit	      on
@@ -707,8 +707,8 @@ Library {
       MaskVisibilityString    "on,on,on,on,on,on,on,on"
       MaskToolTipString	      "on,on,on,on,on,on,on,on"
       MaskInitialization      "Config.axes = u1;\nConfig.update = u2;\nConfig.craft = u3;\nConfig.target = u4;\nConfig"
-      ".camera_view = u5;\nConfig.camera_pos = u6;\nConfig.view = u7;\nConfig.Animenable = u8;\n[xp yp] = aeroimage('an"
-      "im',gcbh);"
+      ".camera_view = u5;\nConfig.camera_pos = u6;\nConfig.view = u7;\nConfig.Animenable = u8;\n%[xp yp] = aeroimage('a"
+      "nim',gcbh);"
       MaskDisplay	      "port_label('input',1,'x_e','texmode','on');\nport_label('input',2,'\\phi \\theta \\psi','texm"
       "ode','on');\npatch(xp,yp) \n"
       MaskIconFrame	      on
@@ -721,7 +721,7 @@ Library {
       System {
 	Name			"6DoF Animation"
 	Location		[180, 271, 415, 409]
-	Open			on
+	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
