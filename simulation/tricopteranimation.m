@@ -1,4 +1,4 @@
-function [sys,x0,str,ts] = quatanim(t,x,u,flag,Config)
+function [sys,x0,str,ts] = tricopteranimation(t,x,u,flag,Config)
 %SAEROANIM S-Function for displaying 6DoF trajectories
 %
 
@@ -368,7 +368,7 @@ function [x,y,z]=miss_shape
       x = [x xcraft{i}'];
 	  y = [y ycraft{i}'];
 	  z = [z zcraft{i}'];
-	end
+   end
    
    for i =1:4
       dum = [x(i,:);y(i,:);z(i,:)];

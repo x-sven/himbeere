@@ -38,7 +38,7 @@ static void mdlInitializeSizes(SimStruct *S)
 
   /* SDL initialization */
   if (SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_NOPARACHUTE) == -1) {
-    snprintf(sdl_error, 512, 
+    sprintf(sdl_error, 512, 
 	     "Could not initialize SDL: %s", SDL_GetError());
     ssSetErrorStatus(S, sdl_error);
     return;
@@ -58,7 +58,7 @@ static void mdlInitializeSizes(SimStruct *S)
   /* Get parameter */
   joy_index = (int)*mxGetPr(ssGetSFcnParam (S, 0));
   if (joy_index >= num_joys) {
-    snprintf(sdl_error, 512, 
+    sprintf(sdl_error, 512, 
 	     "Only %d joystick(s) were found. Indexing starts at zero. Joystick %d "
              "does not exist.", num_joys, joy_index);
     ssSetErrorStatus(S, sdl_error);
