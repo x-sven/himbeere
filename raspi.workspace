@@ -17,5 +17,6 @@
 		<Project filename="app/wheatstone_benchmark/wheatstone_benchmark.cbp" />
 		<Project filename="app/control_tester/control_tester.cbp" />
 		<Project filename="src/flightgearUDP/asio_flightgear_sender.cbp" />
+		<Project filename="app/joystick_tester/joystick.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
