@@ -46,6 +46,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="SDL2" />
 					<Add library="boost_system" />
 					<Add library="boost_filesystem" />
 					<Add library="boost_signals" />
@@ -53,7 +54,9 @@
 					<Add library="boost_chrono" />
 					<Add library="boost_timer" />
 					<Add library="boost_thread" />
-					<Add library="SDL2" />
+					<Add library="pthread" />
+					<Add library="dl" />
+					<Add library="stdc++" />
 					<Add directory="../../src/linux/SDL2-2.0.1/build/linux32" />
 				</Linker>
 			</Target>
