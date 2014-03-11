@@ -72,7 +72,7 @@ int main(int argc, char **argv )
 //             << std::endl;
 
         //boost::this_thread::sleep( pt::microseconds(1e+6*sim.get_sample_time()) );
-        boost::this_thread::sleep(pt::milliseconds(100)); //around 10 Hz
+//        boost::this_thread::sleep(pt::milliseconds(100)); //around 10 Hz
     }
 
 
