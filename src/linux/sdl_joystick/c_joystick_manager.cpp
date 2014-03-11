@@ -11,8 +11,8 @@ cJoystickManager::cJoystickManager():
 
     if(NULL == joy)
         fail = true;
-    else if(NULL == joy->getName())
-        fail = true;
+//    else if(NULL == joy->getName())
+//        fail = true;
 
     if(fail)
         cout << "cJoystickManager: Could not initialize joystick!" << endl;

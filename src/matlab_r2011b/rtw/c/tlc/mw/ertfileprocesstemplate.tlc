@@ -1,0 +1,53 @@
+%% =============================================================================
+%% $RCSfile: ertfileprocesstemplate.tlc,v $
+%% $Revision: 1.1.6.8 $
+%% $Date: 2010/08/23 22:01:47 $
+%%
+%% Abstract:
+%%   Invokes Embedded Coder file processing template
+%%
+%% Copyright 1994-2010 The MathWorks, Inc.
+%%
+%selectfile NULL_FILE
+
+%function SLibERTCustomFileProcessing() void
+
+%if !IsModelReferenceSimTarget()
+    
+  %if SLibIsERTTarget()
+
+    %% Make sure templates exist
+    %if !FILE_EXISTS(ERTCustomFileTemplate)
+      %assign errTxt = "Unable to locate ERT custom file template: " ...
+        "%<ERTCustomFileTemplate>."
+      %<LibReportError(errTxt)>
+    %endif
+     
+    %% Invoke custom file processing template
+    %include ERTCustomFileTemplate
+    %if GenerateGRTWrapper && ...
+      EXISTS("ERTCustomFileTest") && ERTCustomFileTest == TLC_TRUE
+        %assign errTxt = "The option 'GRT compatible call interface' on "...
+        "the ERT target interface page does not support the setting: "...
+        "ERTCustomFileTest = 1 in the "...
+        "'File customization template: %<ERTCustomFileTemplate>."
+      %<LibReportError(errTxt)>
+    %endif
+   
+  %endif
+  %if EXISTS(CustomFileTemplate)
+    %% Make sure templates exist
+    %if !FILE_EXISTS(CustomFileTemplate)
+      %assign errTxt = "Unable to locate general custom file template: " ...
+        "%<CustomFileTemplate>."
+      %<LibReportError(errTxt)>
+    %endif
+    
+    %% Invoke custom file processing template
+    %include CustomFileTemplate
+    
+  %endif
+%endif
+  
+%endfunction
+

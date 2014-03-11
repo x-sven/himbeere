@@ -21,7 +21,7 @@ cJoystick::cJoystick(int selected_joystick)
     /* SDL initialization */
     // without video (or everything), the joystick events wont work *grrr*
     // without eventthread, no events on my mac deteced *grrr*
-    if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_NOPARACHUTE | SDL_INIT_EVENTTHREAD) < 0)
+    if (SDL_Init(SDL_INIT_EVERYTHING  | SDL_INIT_EVENTS) < 0)
     {
         cerr << "Could not initialize SDL: " <<  SDL_GetError() << endl;
         exit(1);
@@ -50,7 +50,13 @@ cJoystick::cJoystick(int selected_joystick)
     num_axes    = SDL_JoystickNumAxes(m_pJoystick);
     num_buttons = SDL_JoystickNumButtons(m_pJoystick);
     num_hats    = SDL_JoystickNumHats(m_pJoystick);
-
+#if defined(DEBUG)
+    cout << "Joystick number: " << joy_index
+         << ", num_axes: " << num_axes
+         << ", num_buttons: " << num_buttons
+         << ", num_hats: " << num_hats
+         << endl;
+#endif
     vf_axis.resize(num_axes);
     vf_button.resize(num_buttons);
     vf_hat.resize(num_hats);
@@ -67,61 +73,63 @@ void cJoystick::loop(void)
 
     while(m_thread_running)
     {
-        while(SDL_PollEvent(&event))
+//        while(SDL_PollEvent(&event))
+//        {
+//            switch(event.type)
+//            {
+//
+//            cout << "Event.Type: " << event.type << endl;
+//
+//            case SDL_JOYAXISMOTION:  /* Handle Joystick Motion */
+//                if ( ( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 ) )
+//                {
+//                    for (ii = 0; ii < vf_axis.size(); ii++)
+//                    {
+//                        if( ii == event.jaxis.axis)
+//                        {
+//                            vf_axis[ii] = SDL_JoystickGetAxis(m_pJoystick, ii) / 32768.0;
+//                            signal_axis(getJoystick(), event.jaxis.axis);
+//                        }// if
+//                    }// for
+//                }// axis event
+//                break;
+//
+//            case SDL_JOYBUTTONDOWN:  /* Handle Joystick Button Presses */
+//                for (ii = 0; ii < vf_button.size(); ii++)
+//                {
+//                    if( ii == event.jbutton.button)
+//                    {
+//                        vf_button[ii] = SDL_JoystickGetButton(m_pJoystick, ii);
+//                        signal_button(getJoystick(), event.jbutton.button);
+//                    }// if
+//                }// for
+//                break;
+//            case SDL_QUIT:
+//                m_thread_running = false;
+//                break;
+//            default:
+//                break;
+//            } // switch
+//        }//SDL_event
+
+        /* Grab current joystick information. */
+        SDL_JoystickUpdate();
+
+        unsigned int ii = 0;
+        for (ii = 0; ii < vf_axis.size(); ii++)
         {
-            switch(event.type)
-            {
+            vf_axis[ii] = SDL_JoystickGetAxis(m_pJoystick, ii) / 32768.0;
+        }
 
-            cout << "Event.Type: " << event.type << endl;
+        for (ii = 0; ii < vf_button.size(); ii++)
+        {
+            vf_button[ii] = SDL_JoystickGetButton(m_pJoystick, ii);
+        }
 
-            case SDL_JOYAXISMOTION:  /* Handle Joystick Motion */
-                if ( ( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 ) )
-                {
-                    for (ii = 0; ii < vf_axis.size(); ii++)
-                    {
-                        if( ii == event.jaxis.axis)
-                        {
-                            vf_axis[ii] = SDL_JoystickGetAxis(m_pJoystick, ii) / 32768.0;
-                            signal_axis(getJoystick(), event.jaxis.axis);
-                        }// if
-                    }// for
-                }// axis event
-                break;
-
-            case SDL_JOYBUTTONDOWN:  /* Handle Joystick Button Presses */
-                for (ii = 0; ii < vf_button.size(); ii++)
-                {
-                    if( ii == event.jbutton.button)
-                    {
-                        vf_button[ii] = SDL_JoystickGetButton(m_pJoystick, ii);
-                        signal_button(getJoystick(), event.jbutton.button);
-                    }// if
-                }// for
-                break;
-            case SDL_QUIT:
-                m_thread_running = false;
-                break;
-            } // switch
-        }//SDL_event
-
-//        /* Grab current joystick information. */
-//        SDL_JoystickUpdate();
-//
-//        unsigned int ii = 0;
-//        for (ii = 0; ii < vf_axis.size(); ii++)
-//        {
-//            vf_axis[ii] = SDL_JoystickGetAxis(m_pJoystick, ii) / 32768.0;
-//        }
-//
-//        for (ii = 0; ii < vf_button.size(); ii++)
-//        {
-//            vf_button[ii] = SDL_JoystickGetButton(m_pJoystick, ii);
-//        }
-//
-//        for (ii = 0; ii < vf_hat.size(); ii++)
-//        {
-//            vf_hat[ii] = SDL_JoystickGetHat(m_pJoystick, ii);
-//        }
+        for (ii = 0; ii < vf_hat.size(); ii++)
+        {
+            vf_hat[ii] = SDL_JoystickGetHat(m_pJoystick, ii);
+        }
 
         boost::this_thread::sleep(pt::milliseconds(10)); //around 100 Hz
     }// thread_running
@@ -139,10 +147,10 @@ int cJoystick::getNumberOfAxes ()
     return(vf_axis.size());
 }
 
-const char *cJoystick::getName()
-{
-    return(SDL_JoystickName(joy_index));
-}
+//const char *cJoystick::getName()
+//{
+//    return(SDL_JoystickName(joy_index));
+//}
 
 const cJoystick* cJoystick::getJoystick()
 {

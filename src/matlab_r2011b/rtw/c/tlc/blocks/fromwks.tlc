@@ -1,0 +1,974 @@
+%% 
+%% $Revision: 1.1.6.16 $
+%% 
+%%
+%% Copyright 1994-2009 The MathWorks, Inc.
+%%
+%% Abstract: From Workspace block target file
+
+%implements FromWorkspace "C"
+
+%% Function: BlockTypeSetup ====================================================
+%% Abstract:
+%%      Define the #Interpolate macro.
+%%
+%function BlockTypeSetup(block, system) void
+  %openfile headerBuffer
+
+  /* Used by %<Type> Block: '%<Name>' */
+  #ifndef rtInterpolate
+  # define rtInterpolate(v1,v2,f1,f2) \
+  (((v1)==(v2))?((double)(v1)):\
+  (((f1)*((double)(v1)))+((f2)*((double)(v2)))))
+  #endif
+
+  #ifndef rtRound
+  # define rtRound(v) ( ((v) >= 0) ? \
+  %<LibGenMathFcnCall("floor", tSS_DOUBLE, "(v) + 0.5","")> : \
+  %<LibGenMathFcnCall("ceil" , tSS_DOUBLE, "(v) - 0.5","")> )
+  #endif
+
+  %closefile headerBuffer
+  %<LibCacheDefine(headerBuffer)>
+
+%endfunction %% BlockTypeSetup
+
+
+%% Function: BlockInstanceSetup ==============================================
+%% Abstract:
+%%   Set expression folding compliance
+%%
+%function BlockInstanceSetup(block, system) void
+  %<LibBlockSetIsExpressionCompliant(block)>
+%endfunction
+
+
+%% Function: FcnDeclareTUData =================================================
+%% Abstract:
+%%      Declare the TU data vector and place in the model registration
+%%      routine.  
+%%
+%function FcnDeclareTUData(block, system) Output
+  %%
+  %% Data
+  %%
+  %assign isVarDims = LibGetIsOutputPortVarDims(0)
+  
+  %if isRSim %% Only for RSim usage
+    %assign dTypeId   = LibBlockOutputSignalDataTypeId(0)
+    %assign elSize    = LibGetDataTypeNameFromId(dTypeId)
+    %assign isComplex = LibBlockOutputSignalIsComplex(0)
+    %assign Width     = LibBlockOutputSignalWidth(0)
+    %assign varName   = ParamSettings.VariableName
+
+    FWksInfo *fromwksInfo;
+
+    if ((fromwksInfo = (FWksInfo *) calloc(1, sizeof(FWksInfo))) == %<SLibGetNullDefinitionFromTfl()>) {
+      %<RTMSetErrStat("\"from workspace %<Name> memory allocation error\"")>;
+    } else {
+      fromwksInfo->origWorkspaceVarName = "%<varName>";
+      fromwksInfo->origDataTypeId = %<dTypeId>;
+      fromwksInfo->origIsComplex  = %<isComplex>;
+      fromwksInfo->origWidth      = %<Width>;
+      fromwksInfo->origElSize     = sizeof(%<elSize>);
+      fromwksInfo->data           = (void *)%<LibBlockParameterAddr(Data, "", "", 0)>;
+      fromwksInfo->nDataPoints    = %<ParamSettings.NumPoints>;
+      %assign time = LibBlockParameterSize(Time)
+      %if time[1] == 0
+	fromwksInfo->time = %<SLibGetNullDefinitionFromTfl()>;
+      %else
+	fromwksInfo->time = (double *)%<LibBlockParameterAddr(Time, "", "", 0)>;
+      %endif
+
+      %if isVarDims
+        fromwksInfo->valDims = (double *)%<LibBlockParameterAddr(ValDims, "", "", 0)>;
+        %assign valDimsPtr = "valDims"
+      %endif 
+      
+      %assign timePtr = "time"
+      %assign dataPtr = "data"
+      %<LibBlockPWork(TimePtr, "", "", 0)> = fromwksInfo->time;
+      %<LibBlockPWork(DataPtr, "", "", 0)> = fromwksInfo->data;
+      %if isVarDims
+        %<LibBlockPWork(ValDimsPtr, "", "", 0)> = fromwksInfo->valDims;
+      %endif
+      %<LibBlockPWork(RSimInfoPtr, "", "", 0)> = fromwksInfo;
+    }
+    
+  %elseif !Accelerator %% All non-RSim usage except Accelerator
+
+    %if SIZE(ParamSettings.Time, 1) > 0
+      %assign nRows = SIZE(ParamSettings.Time, 0)
+      %assign nCols = SIZE(ParamSettings.Time, 1)
+      %openfile genBuffer
+      %assign tvecName = ""
+      %assign tvecVal  = ParamSettings.Time
+      %assign tvecNonFiniteIndices = ... 
+        GENERATE_FORMATTED_VALUE(tvecVal, tvecName)
+      %closefile genBuffer
+      %if tvecNonFiniteIndices[0][0] >= 0
+	%%START_ASSERT
+	%<LibBlockReportError(block, ...
+	  "Only finite values allowed in time (T) array")>
+	%%END_ASSERT
+      %endif
+      static real_T pTimeValues[] = %<genBuffer>;
+
+      %assign timePtr = "pTimeValues"
+    %else
+      %assign timePtr = "0"
+    %endif
+
+    %if EXISTS("block.Data")
+      %openfile valString
+         %assign prmVal = block.Data
+         %assign prmNonFiniteIndices = GENERATE_FORMATTED_VALUE(prmVal, "")
+      %closefile valString
+      %assign dType = LibBlockOutputSignalDataTypeName(0, "")
+      static %<dType> pDataValues[] = %<valString>;
+      %assign dataPtr = "pDataValues"
+    %else
+      %if SIZE(ParamSettings.Data, 0) > 0
+        %assign nRows = SIZE(ParamSettings.Data, 0)
+        %assign nCols = SIZE(ParamSettings.Data, 1)
+        %assign width = nRows * nCols
+        %assign dTypeId   = LibBlockOutputSignalDataTypeId(0)
+        %assign isComplex = LibBlockOutputSignalIsComplex(0)
+        %if isComplex
+          %assign complexSig = 1
+        %else
+          %assign complexSig = 0
+        %endif
+        %assign wksVecName = ""
+        %assign tmpVar = wksVecTemp { Value  ParamSettings.Data ; DataTypeIdx dTypeId ; Width width ; ComplexSignal complexSig}
+        %assign wksVecVal = SLibGetFormattedPrmValue(wksVecTemp, wksVecName)
+        %assign dType = LibBlockOutputSignalDataTypeName(0, "")
+        %if width == 1
+          %% preserve vector-ness
+          static %<dType> pDataValues[] = { %<wksVecVal> };
+        %else
+          static %<dType> pDataValues[] = %<wksVecVal>;
+        %endif
+
+        %assign dataPtr = "pDataValues"
+      %else
+        %assign dataPtr = "0"
+      %endif
+    %endif
+    
+    %if isVarDims
+      %assign nRows = SIZE(ParamSettings.ValDims, 0)
+      %assign nCols = SIZE(ParamSettings.ValDims, 1)
+      %openfile genBuffer
+      %assign valDimsVecName = ""
+      %assign valDimsVecVal  = ParamSettings.ValDims
+      %assign valDimsVecNonFiniteIndices = ... 
+        GENERATE_FORMATTED_VALUE(valDimsVecVal, valDimsVecName)
+      %closefile genBuffer
+      static real_T pCurrDimsValues[] = %<genBuffer>;
+      %assign valDimsPtr = "pCurrDimsValues"
+    %endif
+    %%
+    %% Set PWork
+    %%
+    %<LibBlockPWork(TimePtr, "", "", 0)> = (void *) %<timePtr>;
+    %<LibBlockPWork(DataPtr, "", "", 0)> = (void *) %<dataPtr>;
+    %if isVarDims
+      %<LibBlockPWork(ValDimsPtr, "", "", 0)> = (double *) %<valDimsPtr>;
+    %endif
+  %endif
+
+%endfunction %% FcnDeclareTUData
+
+
+%% Function: Start =============================================================
+%% Abstract:
+%%      Initialize IWork
+%%
+%function Start(block, system) Output
+  {
+    %<FcnDeclareTUData(block, system)>
+    %if isRSim  
+      %assign time = LibBlockParameterSize(Time)
+      %assign noTime = (time[1] == 0)
+      %%      
+    %else
+      %assign noTime = (SIZE(ParamSettings.Time, 1) == 0)
+    %endif
+    %if noTime
+      %<LibBlockIWork(PrevIndex, "", "", 0)> = -1;
+    %else
+      %<LibBlockIWork(PrevIndex, "", "", 0)> = 0;
+    %endif
+    %%
+    %if NumNonsampledZCs > 0 
+      {
+	%% cache the zero crossing times in the pointer vector
+	%% and set up the index dworks.
+	%% get number of ZC from width of the 1st dwork
+	%% get ZC time indices head pointer from 1st dwork
+	%%
+	int_T* zcTimeIndices = %<LibBlockDWorkAddr(ZCTimeIndices, "", "", 0)>;
+	const double* timePoints = (double*) %<LibBlockPWork(TimePtr, "", "", 0)>;
+	boolean_T justHadZcTime = FALSE;
+	int_T zcIdx = 0;	
+	int_T i; 
+	%assign nTimePoints = %<ParamSettings.NumPoints>
+	%%
+	for (i = 0; i < %<nTimePoints>-1; i++) {
+	  if ( !justHadZcTime && timePoints[i] == timePoints[i+1]) {
+	    zcTimeIndices[zcIdx++] = i;                
+	    justHadZcTime = TRUE;
+	  } else {
+	    justHadZcTime = FALSE;
+	  }
+	}	
+	%if ISEQUAL(ParamSettings.OutputAfterFinalValue, "Setting to zero")
+	  %% if last value set to zero, last time point is a zerocrossing point 
+	  if ( justHadZcTime == FALSE ) {
+	    zcTimeIndices[zcIdx++] = %<nTimePoints>-1;
+	  }  
+	%endif	
+	%<LibBlockDWork(CurZCTimeIndIdx, "", "", 0)> = 0; 
+      }
+      %endif
+  }
+
+%endfunction %% Start
+
+
+%% Function: Output ============================================================
+%% Abstract:
+%%      Output data from matrix in Workspace
+%%
+%function Outputs(block, system) Output
+  %assign isVarDims = LibGetIsOutputPortVarDims(0)
+  %if Accelerator
+    /* Call into Simulink for From Workspace */
+    %<SLibCallBlockInSimulink(system, block, "SS_CALL_MDL_OUTPUTS")>
+
+  %else
+    {
+    %assign dTypeId     = LibBlockOutputSignalDataTypeId(0)
+    %assign dTypeIdThru = LibBlockOutputSignalAliasedThruDataTypeId(0)
+    %assign dTypeName   = LibBlockOutputSignalDataTypeName(0, "")
+    %assign rollRegion  = [0:%<LibBlockOutputSignalWidth(0)-1>]
+    %assign rollVars    = ["Y"]
+    %if isRSim  %% For RSim targets
+      %assign lastPoint = "lastPoint"
+    %else %% For all non-RSim targets
+      %assign lastPoint  = ParamSettings.NumPoints-1
+    %endif
+    %assign timePtr    = LibBlockPWork(TimePtr, "", "", 0)
+    %assign dataPtr    = LibBlockPWork(DataPtr, "", "", 0)
+    %if isVarDims
+      %assign valDimsPtr = LibBlockPWork(ValDimsPtr, "", "", 0)
+    %endif
+    %%
+    %if ParamSettings.Interpolate == "off"
+      %if isRSim
+        %assign time = LibBlockParameterSize(Time)
+        %assign noTime = (time[1] == 0)
+      %else
+        %assign noTime = (SIZE(ParamSettings.Time, 1) == 0)
+      %endif
+      
+      %if noTime
+        %%
+        %assign numDims = LibBlockOutputSignalNumDimensions(0)
+        int_T currIndex = %<LibBlockIWork(PrevIndex,"","",0)>+1;
+        %<dTypeName> *pDataValues = (%<dTypeName> *) %<dataPtr>;
+        %if isVarDims
+          real_T *pCurrDimsValues = (real_T *) %<valDimsPtr>;
+        %endif
+        %if isRSim 
+          int numPoints, lastPoint;
+          FWksInfo  *fromwksInfo = (FWksInfo *) %<LibBlockPWork(RSimInfoPtr, "", "", 0)>;
+          numPoints = fromwksInfo->nDataPoints;
+          lastPoint = numPoints-1;
+          %assign numPoints = "numPoints"
+        %else
+          %assign numPoints = ParamSettings.NumPoints
+        %endif
+	%if ParamSettings.OutputAfterFinalValue == "Cyclic repetition"
+	  if (currIndex >= %<numPoints>) {
+	      currIndex = 0;
+	  }
+	%endif
+        if (currIndex < %<numPoints>) {
+          pDataValues += currIndex;
+          %if (%<LibBlockOutputSignalWidth(0)> == 1)
+            %<LibBlockOutputSignal(0, "", "", 0)> = *pDataValues;
+          %else
+            %roll idx = rollRegion, lcv = RollThreshold, block, "Roller", ...
+              rollVars
+              %<LibBlockOutputSignal(0, "", lcv, idx)> = *pDataValues;
+              %if isRSim %% Only for RSim usage
+                pDataValues += numPoints;
+              %else %% For all non-RSim targets
+                pDataValues += %<ParamSettings.NumPoints>;
+              %endif
+            %endroll
+          %endif
+          
+          %if isVarDims
+            /* 
+              For the variable-size signal, also update valueDimensions.
+            */
+            pCurrDimsValues += currIndex;
+            %foreach dimsIdx = numDims
+              %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> ...
+                = (int_T) *pCurrDimsValues;
+              %if isRSim  %% Only for RSim usage
+                pCurrDimsValues += numPoints;
+              %else  %% For all non-RSim targets
+                pCurrDimsValues += %<ParamSettings.NumPoints>;
+              %endif
+            %endforeach
+          %endif
+          
+        } else {
+          %if ParamSettings.OutputAfterFinalValue == "Setting to zero"
+            %roll idx = rollRegion, lcv = RollThreshold, block, "Roller", ...
+              rollVars
+              %assign yRe = LibBlockOutputSignal(0, "", lcv, ...
+                "%<tRealPart>%<idx>")
+              %assign rec  = FixPt_GetOutputDataType(0)
+              %assign zero = FixPt_GetGroundValueOrNameFromDataTypeRec(rec, TLC_FALSE)
+              %<yRe> = %<zero>;
+              %if LibBlockOutputSignalIsComplex(0)
+                %assign yIm = LibBlockOutputSignal(0,"",lcv, ...
+                  "%<tImagPart>%<idx>")
+                %assign rec  = FixPt_GetOutputDataType(0)
+                %assign zero = FixPt_GetGroundValueOrNameFromDataTypeRec(rec, TLC_FALSE)
+                %<yIm> = %<zero>;
+              %endif
+            %endroll
+            
+            %if isVarDims
+              /* 
+                For the variable-size signal, 
+                if "Setting to zero" is checked, 
+                set valueDimensions to the maximum dimensions
+                after the last point.
+               */
+              %foreach dimsIdx = numDims
+                %assign oDims = LibBlockOutputSignalDimensions(0)
+                %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> ...
+                  = %<oDims[dimsIdx]>;
+                %if isRSim  %% Only for RSim usage
+                  pCurrDimsValues += numPoints;
+                %else  %% For all non-RSim targets
+                  pCurrDimsValues += %<ParamSettings.NumPoints>;
+                %endif
+              %endforeach
+            %endif
+          %else %%"holding the final value" or "cyclic repetition"
+            %if isRSim %% Only for RSim usage
+              pDataValues += (numPoints-1);
+	    %else %% For all non-RSim targets
+              pDataValues += (%<ParamSettings.NumPoints-1>);
+            %endif
+            %if (%<LibBlockOutputSignalWidth(0)> == 1)
+              %<LibBlockOutputSignal(0, "", "", 0)> = *pDataValues;
+            %else
+              %roll idx = rollRegion, lcv = RollThreshold, block, "Roller",...
+                rollVars
+                %<LibBlockOutputSignal(0, "", lcv, idx)> = *pDataValues;
+                %if isRSim %% Only for RSim usage
+                  pDataValues += numPoints;
+		%else %% For all non-RSim targets
+                  pDataValues += %<ParamSettings.NumPoints>;
+                %endif
+              %endroll
+            %endif
+            
+            %if isVarDims
+              /* 
+                For the variable-size signal, also update valueDimensions.
+              */
+              %if isRSim  %% Only for RSim usage
+                pCurrDimsValues += (numPoints-1);
+              %else  %% For all non-RSim targets
+                pCurrDimsValues += (%<ParamSettings.NumPoints-1>);
+              %endif
+              %foreach dimsIdx = numDims
+                %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> ...
+                  = (int_T) *pCurrDimsValues;
+              %if isRSim %% Only for RSim usage
+                  pCurrDimsValues += numPoints;
+		%else %% For all non-RSim targets
+                  pCurrDimsValues += %<ParamSettings.NumPoints>;
+                %endif  
+              %endforeach
+            %endif
+            
+          %endif
+        }
+        %<LibBlockIWork(PrevIndex,"","",0)> = currIndex;
+        %%
+      %else %% SIZE(ParamSettings.Time, 1) != 0
+        %%
+        %assign numDims = LibBlockOutputSignalNumDimensions(0)
+        real_T t = %<LibGetTaskTimeFromTID(block)>;
+        real_T *pTimeValues = (real_T *) %<timePtr>;
+        %<dTypeName> *pDataValues = (%<dTypeName> *) %<dataPtr>;
+        %if isVarDims
+          real_T *pCurrDimsValues = (real_T *) %<valDimsPtr>;
+        %endif
+        %if isRSim   %% Only for RSim usage
+          int numPoints, lastPoint;
+          FWksInfo *fromwksInfo = (FWksInfo *) %<LibBlockPWork(RSimInfoPtr, "", "", 0)>;
+          numPoints = fromwksInfo->nDataPoints;
+          lastPoint = numPoints - 1;
+        %endif
+	%%
+        if (t < pTimeValues[0]) {
+          %roll idx = rollRegion, lcv = RollThreshold, block, "Roller", rollVars
+            %assign yRe = LibBlockOutputSignal(0, "", lcv, "%<tRealPart>%<idx>")
+            %assign rec  = FixPt_GetOutputDataType(0)
+            %assign zero = FixPt_GetGroundValueOrNameFromDataTypeRec(rec, TLC_FALSE)
+            %<yRe> = %<zero>;
+            %if LibBlockOutputSignalIsComplex(0)
+              %assign yIm = LibBlockOutputSignal(0,"",lcv, "%<tImagPart>%<idx>")
+              %assign rec  = FixPt_GetOutputDataType(0)
+              %assign zero = FixPt_GetGroundValueOrNameFromDataTypeRec(rec, TLC_FALSE)
+              %<yIm> = %<zero>;
+            %endif
+          %endroll
+          %if isVarDims
+            /* 
+               For the variable-size signal, also set valueDimensions to 
+               maximum dimensions
+            */
+            %% Although it is ill-defined for var-dims signal in this case,
+            %% we set the pre-simulation value to maximum dimensions here.
+            %assign oDims = LibBlockOutputSignalDimensions(0)
+            %foreach dimsIdx = numDims
+              %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> = %<oDims[dimsIdx]>;
+            %endforeach
+          %endif
+          %if ParamSettings.OutputAfterFinalValue == "Setting to zero"
+          } else if (t == pTimeValues[%<lastPoint>]) {
+            %if (%<LibBlockOutputSignalWidth(0)> == 1)
+              %<LibBlockOutputSignal(0, "", "", 0)> = ...
+                pDataValues[%<lastPoint>];
+            %else
+              %roll idx = rollRegion, lcv = RollThreshold, block, "Roller", ...
+                rollVars
+                %<LibBlockOutputSignal(0, "", lcv, idx)> = ...
+                  pDataValues[%<lastPoint>];
+                %if isRSim  %% Only for RSim usage
+                  pDataValues += numPoints;
+                %else  %% For all non-RSim targets
+                  pDataValues += %<ParamSettings.NumPoints>;
+                %endif
+              %endroll
+            %endif
+            %if isVarDims
+              /* 
+                For the variable-size signal, 
+                set valueDimensions to the last point values
+               */
+              %foreach dimsIdx = numDims
+                %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> ...
+                  = (int_T) pCurrDimsValues[%<lastPoint>];
+                %if isRSim  %% Only for RSim usage
+                  pCurrDimsValues += numPoints;
+                %else  %% For all non-RSim targets
+                  pCurrDimsValues += %<ParamSettings.NumPoints>;
+                %endif
+              %endforeach
+            %endif            
+          } else if (t > pTimeValues[%<lastPoint>]) {
+            %roll idx = rollRegion, lcv = RollThreshold, block, "Roller", ...
+              rollVars
+              %assign yRe = LibBlockOutputSignal(0, "", lcv, ...
+                "%<tRealPart>%<idx>")
+              %assign rec  = FixPt_GetOutputDataType(0)
+              %assign zero = FixPt_GetGroundValueOrNameFromDataTypeRec(rec, TLC_FALSE)
+              %<yRe> = %<zero>;
+              %if LibBlockOutputSignalIsComplex(0)
+                %assign yIm = LibBlockOutputSignal(0,"",lcv, ...
+                  "%<tImagPart>%<idx>")
+                %assign rec  = FixPt_GetOutputDataType(0)
+                %assign zero = FixPt_GetGroundValueOrNameFromDataTypeRec(rec, TLC_FALSE)
+                %<yIm> = %<zero>;
+              %endif
+            %endroll
+            
+            %if isVarDims
+              /* 
+                For the variable-size signal, 
+                if "Setting to zero" is checked, 
+                set valueDimensions to the maximum dimensions
+                after the last point.
+               */
+              %foreach dimsIdx = numDims
+                %assign oDims = LibBlockOutputSignalDimensions(0)
+                %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> ...
+                  = %<oDims[dimsIdx]>;
+                %if isRSim  %% Only for RSim usage
+                  pCurrDimsValues += numPoints;
+                %else  %% For all non-RSim targets
+                  pCurrDimsValues += %<ParamSettings.NumPoints>;
+                %endif
+              %endforeach
+            %endif
+            
+          %else %% "holding the final value"
+          } else if (t >= pTimeValues[%<lastPoint>]) {
+            %if (%<LibBlockOutputSignalWidth(0)> == 1)
+              %<LibBlockOutputSignal(0, "", "", 0)> = ...
+                pDataValues[%<lastPoint>];
+              %if isVarDims
+                /* 
+                  For the variable-size signal, also update valueDimensions.
+                */
+                %foreach dimsIdx = numDims
+                   %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> ...
+                     = (int_T) pCurrDimsValues[%<lastPoint>];
+                   %if isRSim  %% Only for RSim usage
+                     pCurrDimsValues += numPoints;
+                   %else  %% For all non-RSim targets
+                     pCurrDimsValues += %<ParamSettings.NumPoints>;
+                   %endif
+                %endforeach
+              %endif                           
+            %else
+              %roll idx = rollRegion, lcv = RollThreshold, block, "Roller", ...
+                rollVars
+                %<LibBlockOutputSignal(0, "", lcv, idx)> = ...
+                  pDataValues[%<lastPoint>];
+                %if isRSim  %% Only for RSim usage
+                  pDataValues += numPoints;
+                %else  %% For all non-RSim targets
+                  pDataValues += %<ParamSettings.NumPoints>;
+                %endif
+              %endroll
+              
+              %if isVarDims
+                /* 
+                  For the variable-size signal, also update valueDimensions.
+                */
+                %foreach dimsIdx = numDims
+                   %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> ...
+                     = (int_T) pCurrDimsValues[%<lastPoint>];
+                   %if isRSim  %% Only for RSim usage
+                     pCurrDimsValues += numPoints;
+                   %else  %% For all non-RSim targets
+                     pCurrDimsValues += %<ParamSettings.NumPoints>;
+                   %endif
+                %endforeach
+              %endif              
+              
+            %endif
+          %endif  
+        } else {
+          int_T  currTimeIndex = %<LibBlockIWork(PrevIndex,"","",0)>;
+          if (t < pTimeValues[currTimeIndex]) {
+            while (t < pTimeValues[currTimeIndex]) {
+              currTimeIndex--;
+            }
+          } else {
+            while (t >= pTimeValues[currTimeIndex + 1]) {
+              currTimeIndex++;
+            }
+          }
+          %if (%<LibBlockOutputSignalWidth(0)> == 1)
+            %<LibBlockOutputSignal(0, "", "", 0)> = ...
+              pDataValues[currTimeIndex];
+            %if isVarDims
+              /* 
+                For the variable-size signal, also update valueDimensions.
+              */
+              %foreach dimsIdx = numDims
+                %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> ...
+                  = (int_T) pCurrDimsValues[currTimeIndex];
+                %if isRSim  %% Only for RSim usage
+                  pCurrDimsValues += numPoints;
+                %else  %% For all non-RSim targets
+                  pCurrDimsValues += %<ParamSettings.NumPoints>;
+                %endif
+              %endforeach
+            %endif            
+          %else
+            %roll idx = rollRegion, lcv = RollThreshold, block, "Roller", ...
+              rollVars
+              %<LibBlockOutputSignal(0, "", lcv, idx)> = ...
+                pDataValues[currTimeIndex];
+              %if isRSim  %% Only for RSim usage
+                pDataValues += numPoints;
+	      %else %% For all non-RSim targets
+                pDataValues += %<ParamSettings.NumPoints>;
+              %endif
+            %endroll
+            
+            %if isVarDims
+              /* 
+                For the variable-size signal, also update valueDimensions.
+              */
+              %foreach dimsIdx = numDims
+                %<SLibGetCurrentOutputPortDimensions(0, dimsIdx)> ...
+                  = (int_T) pCurrDimsValues[currTimeIndex];
+                %if isRSim  %% Only for RSim usage
+                  pCurrDimsValues += numPoints;
+                %else  %% For all non-RSim targets
+                  pCurrDimsValues += %<ParamSettings.NumPoints>;
+                %endif
+              %endforeach
+            %endif              
+
+          %endif
+          %<LibBlockIWork(PrevIndex,"","",0)> = currTimeIndex;
+        }
+        %%
+      %endif
+    %else %% ParamSettings.Interpolate == "on"
+      %%
+      %% When Interpolate is ON, no variable-size signal is allowed.
+      %%
+      %if isRSim
+        %assign time = LibBlockParameterSize(Time)
+        %assign noTime = (time[1] == 0)
+      %else
+        %assign noTime = (SIZE(ParamSettings.Time, 1) == 0)
+      %endif
+      %if noTime
+	%%START_ASSERT
+        %assign errTxt = "Invalid empty TimeName"
+        %<LibBlockReportError(block, errTxt)>
+	%%END_ASSERT
+      %endif
+      %%
+      %<dTypeName> *pDataValues = (%<dTypeName> *) %<dataPtr>;
+      %%
+      %if ParamSettings.NumPoints == 1
+        %if (%<LibBlockOutputSignalWidth(0)> == 1)
+          %<LibBlockOutputSignal(0, "", "", 0)> = pDataValues[0];
+        %else
+          %roll idx = rollRegion, lcv = RollThreshold, block, "Roller", ...
+            rollVars
+            %<LibBlockOutputSignal(0, "", lcv, idx)> = pDataValues[0];
+            pDataValues += 1;
+          %endroll
+        %endif
+      %else
+        real_T *pTimeValues = (real_T *) %<timePtr>;
+        int_T currTimeIndex = %<LibBlockIWork(PrevIndex,"","",0)>;
+        real_T t = %<LibGetTaskTimeFromTID(block)>;
+        %assign finalIndex = ParamSettings.NumPoints
+	%%
+	%if ParamSettings.OutputAfterFinalValue == "Setting to zero"
+	  if (t > pTimeValues[%<finalIndex-1>]) {
+            %roll idx = rollRegion, lcv = RollThreshold, block, "Roller", ...
+              rollVars
+              %assign yRe = LibBlockOutputSignal(0, "", lcv, ...
+                "%<tRealPart>%<idx>")
+              %assign rec  = FixPt_GetOutputDataType(0)
+              %assign zero = FixPt_GetGroundValueOrNameFromDataTypeRec(rec, TLC_FALSE)
+              %<yRe> = %<zero>;
+              %if LibBlockOutputSignalIsComplex(0)
+                %assign yIm = LibBlockOutputSignal(0,"",lcv, ...
+                  "%<tImagPart>%<idx>")
+                %assign rec  = FixPt_GetOutputDataType(0)
+                %assign zero = FixPt_GetGroundValueOrNameFromDataTypeRec(rec, TLC_FALSE)
+                %<yIm> = %<zero>;
+              %endif
+            %endroll	    
+	  } else {
+	%elseif ParamSettings.OutputAfterFinalValue == "Holding final value"
+	  if (t >= pTimeValues[%<finalIndex-1>]) {
+	    %if (%<LibBlockOutputSignalWidth(0)> == 1)
+	      %<LibBlockOutputSignal(0, "", "", 0)> = ...
+		pDataValues[%<finalIndex-1>];
+	    %else
+	      %roll idx=rollRegion, lcv=RollThreshold, block, "Roller", rollVars
+		%<LibBlockOutputSignal(0,"",lcv,idx)> = ...
+		  pDataValues[%<finalIndex-1>];
+		pDataValues += %<finalIndex>;
+	      %endroll
+	    %endif
+	  } else {
+	%endif
+	%if isRSim  %% Only for RSim usage
+	  int numPoints, lastPoint;
+	  FWksInfo *fromwksInfo = (FWksInfo *) %<LibBlockPWork(RSimInfoPtr, "", "", 0)>;
+	  numPoints = fromwksInfo->nDataPoints;
+	  lastPoint = numPoints - 1;
+	  %assign lastPointMinus1 = "lastPoint-1"
+	%else
+	  %assign lastPointMinus1 = %<lastPoint-1>
+	%endif
+	/* get index */
+	if (t <= pTimeValues[0]) {
+	  currTimeIndex = 0;
+	} else if (t >= pTimeValues[%<lastPoint>]) {
+	  currTimeIndex = %<lastPointMinus1>;
+	} else {
+	  if (t < pTimeValues[currTimeIndex]) {
+	    while (t < pTimeValues[currTimeIndex]) {
+	      currTimeIndex--;
+	    }
+	  } else {
+	    while (t >= pTimeValues[currTimeIndex + 1]) {
+	      currTimeIndex++;
+	    }
+	  }
+	}
+	%<LibBlockIWork(PrevIndex,"","",0)> = currTimeIndex;
+          
+	/* post output */
+	{
+	  real_T t1 = pTimeValues[currTimeIndex];
+	  real_T t2 = pTimeValues[currTimeIndex + 1];
+	  \
+	  if (t1 == t2) {
+	    if (t < t1) {
+	      %if (%<LibBlockOutputSignalWidth(0)> == 1)
+		%<LibBlockOutputSignal(0, "", "", 0)> = ...
+		  pDataValues[currTimeIndex];
+	      %else
+		%roll idx=rollRegion, lcv=RollThreshold, block, "Roller", ...
+		  rollVars
+		  %<LibBlockOutputSignal(0, "", lcv, idx)> = ...
+		    pDataValues[currTimeIndex];
+		  %if isRSim  %% Only for RSim usage
+		    pDataValues += numPoints;
+		  %else %% for all non-RSim targets
+		    pDataValues += %<ParamSettings.NumPoints>;
+		  %endif
+		%endroll
+	      %endif
+	    } else {
+	      %if (%<LibBlockOutputSignalWidth(0)> == 1)
+		%<LibBlockOutputSignal(0,"","",0)> = ...
+		  pDataValues[currTimeIndex + 1];
+	      %else
+		%roll idx=rollRegion, lcv=RollThreshold, block, "Roller", ...
+		  rollVars
+		  %<LibBlockOutputSignal(0,"",lcv,idx)> = ...
+		    pDataValues[currTimeIndex + 1];
+		  %if isRSim  %% Only for RSim usage
+		    pDataValues += numPoints;
+		  %else %% for all non-RSim targets
+		    pDataValues += %<ParamSettings.NumPoints>;
+		  %endif
+		%endroll
+	      %endif
+	    }
+	  } else {
+	    %if dTypeIdThru != tSS_BOOLEAN
+	      real_T f1 = (t2 - t) / (t2 - t1);
+	      real_T f2 = 1.0 - f1;
+	    %endif
+	    %<dTypeName> d1;
+	    %<dTypeName> d2;
+	    %%
+	    %switch dTypeIdThru
+	      %case tSS_DOUBLE
+	      %case tSS_SINGLE
+		\
+		int_T TimeIndex= currTimeIndex;
+		%if (NumNonsampledZCs > 0)
+		  %%
+		  int_T *zcTimeIndices        = &%<LibBlockDWork(ZCTimeIndices,"","",0)>;
+		  int_T *zcTimeIndicesIdx     =&%<LibBlockDWork(CurZCTimeIndIdx,"","",0)>;
+		  int_T zcIdx                 = zcTimeIndices[*zcTimeIndicesIdx];  
+		  int_T numZcTimes            = %<LibBlockDWorkWidth(ZCTimeIndices)>;  
+		  %%   
+		  if ( *zcTimeIndicesIdx < numZcTimes) {   
+		    if ( %<RTMIs("MajorTimeStep")> ) {
+		      if (t > pTimeValues[zcIdx]) {
+		        while( *zcTimeIndicesIdx < (numZcTimes-1) && 
+			         (t > pTimeValues[zcIdx]) ){
+			  (*zcTimeIndicesIdx)++;
+			  zcIdx = zcTimeIndices[*zcTimeIndicesIdx];  
+			}
+	              }
+		    } else {
+		      if ( t >= pTimeValues[zcIdx] && ...
+		        (%<RTMGet("TimeOfLastOutput")> < pTimeValues[zcIdx])){
+                        t2 = pTimeValues[zcIdx];      
+                        if (zcIdx == 0) {
+                          TimeIndex = 0; 
+                          t1 = t2 - 1; 
+                        } else {
+                          t1 = pTimeValues[zcIdx-1];
+                          TimeIndex = zcIdx - 1 ;
+                        }
+		
+                        f1 = (t2 - t) / (t2 - t1);
+			f2 = 1.0 - f1;    
+		      }
+		    }
+		  }
+		%endif
+	      %%  
+	      %%	      
+	      %assign dType = LibGetDataTypeNameFromId(dTypeId)
+	      %roll idx=rollRegion, lcv=RollThreshold, block,"Roller",...
+		rollVars
+		%assign sigIdx = "%<tRealPart>%<idx>"
+		%assign yRe = LibBlockOutputSignal(0,"",lcv,sigIdx)
+		%assign sigIdx = "%<tImagPart>%<idx>"
+		%assign yIm = LibBlockOutputSignal(0,"",lcv,sigIdx)
+		%%
+		d1 = pDataValues[TimeIndex];
+                d2 = pDataValues[TimeIndex + 1];
+                %if (NumNonsampledZCs > 0)
+                if (zcIdx == 0) {
+                  d2 = d1;
+                }
+                %endif
+                
+		%%                            
+		%%
+		%if LibBlockOutputSignalIsComplex(0)
+		  %assign d1re = "d1.%<tRealPart>"
+		  %assign d2re = "d2.%<tRealPart>"
+		  %<yRe> = ...
+		    (%<dType>) rtInterpolate(%<d1re>, %<d2re>, f1, f2);
+		  %assign d1im = "d1.%<tImagPart>"
+		  %assign d2im = "d2.%<tImagPart>"
+		  %<yIm> = ...
+		    (%<dType>) rtInterpolate(%<d1im>, %<d2im>, f1, f2);
+		%else
+		  %<yRe> = ...
+		    (%<dType>) rtInterpolate(d1, d2, f1, f2);
+		%endif
+		%if isRSim  %% Only for RSim usage
+		  pDataValues += numPoints;
+		%else %% for all non-RSim targets
+		  pDataValues += %<ParamSettings.NumPoints>;
+		%endif
+	      %endroll
+	      %break
+	    %case tSS_INT8
+	    %case tSS_INT16
+	    %case tSS_INT32
+	    %case tSS_UINT8
+	    %case tSS_UINT16
+	    %case tSS_UINT32
+	      real_T  tempOut;
+	      \
+	      %assign dType = LibGetDataTypeNameFromId(dTypeId)
+	      %assign dTypeThru = LibGetDataTypeNameFromId(dTypeIdThru)
+	      %roll idx=rollRegion, lcv=RollThreshold, block,"Roller",rollVars
+		%assign sigIdx = "%<tRealPart>%<idx>"
+		%assign yRe = LibBlockOutputSignal(0,"",lcv,sigIdx)
+		%assign sigIdx = "%<tImagPart>%<idx>"
+		%assign yIm = LibBlockOutputSignal(0,"",lcv,sigIdx)
+		%%
+		d1 = pDataValues[currTimeIndex];
+		d2 = pDataValues[currTimeIndex + 1];
+		%if LibBlockOutputSignalIsComplex(0)
+		  %assign d1re = "d1.%<tRealPart>"
+		    %assign d2re = "d2.%<tRealPart>"
+		    tempOut = rtInterpolate(%<d1re>, %<d2re>, f1, f2);
+		    if (tempOut >= MAX_%<dTypeThru>) {
+		      %<yRe> = MAX_%<dTypeThru>;
+		    } else if (tempOut <= MIN_%<dTypeThru>) {
+		      %<yRe> = MIN_%<dTypeThru>;
+		    } else {
+		      %<yRe> = (%<dType>) rtRound(tempOut);
+		    }
+		    %assign d1im = "d1.%<tImagPart>"
+		    %assign d2im = "d2.%<tImagPart>"
+		    tempOut = rtInterpolate(%<d1im>, %<d2im>, f1, f2);
+		    if (tempOut >= MAX_%<dTypeThru>) {
+		      %<yIm> = MAX_%<dTypeThru>;
+		    } else if (tempOut <= MIN_%<dTypeThru>) {
+		      %<yIm> = MIN_%<dTypeThru>;
+		    } else {
+		      %<yIm> = (%<dType>) rtRound(tempOut);
+		    }
+		  %else
+		    tempOut = rtInterpolate(d1, d2, f1, f2);
+		    if (tempOut >= MAX_%<dTypeThru>) {
+		      %<yRe> = MAX_%<dTypeThru>;
+		    } else if (tempOut <= MIN_%<dTypeThru>) {
+		      %<yRe> = MIN_%<dTypeThru>;
+		    } else {
+		      %<yRe> = (%<dType>) rtRound(tempOut);
+		    }
+		  %endif
+		  %%
+		  %if isRSim  %% Only for RSim usage
+		    pDataValues += numPoints;
+		  %else %% for all non-RSim targets
+		    pDataValues += %<ParamSettings.NumPoints>;
+		  %endif
+		%endroll
+		%break
+	      %case tSS_BOOLEAN
+		\
+		%roll idx=rollRegion, lcv=RollThreshold, block,"Roller",rollVars
+		  %assign y = LibBlockOutputSignal(0,"",lcv,idx)
+		  d1 = pDataValues[currTimeIndex];
+		  d2 = pDataValues[currTimeIndex + 1];
+		  %<y> = (fabs(t-t1) < fabs(t-t2)) ? d1 : d2;
+		  %if isRSim  %% Only for RSim usage
+		    pDataValues += numPoints;
+		  %else %% for all non-RSim targets
+		    pDataValues += %<ParamSettings.NumPoints>;
+		  %endif
+		%endroll
+		
+		%break
+	      %default
+		%%START_ASSERT
+		%assign errTxt = "Invalid data type id %<dTypeId>"
+		%<LibBlockReportError(block, errTxt)>
+		%%END_ASSERT
+	    %endswitch
+	    \
+	  }
+	}
+	%if ParamSettings.OutputAfterFinalValue == "Holding final value" || ...
+	  ParamSettings.OutputAfterFinalValue == "Setting to zero"
+	}
+        %endif
+	\
+      %endif
+    %endif
+    }
+  %endif
+%endfunction %% Outputs
+  
+  
+  
+%% Function: Terminate ========================================================
+%% Abstract:
+%%      Free PWorks used with RSim target
+%%
+%function Terminate(block, system) Output
+  %if isRSim
+    rt_FREE(%<LibBlockPWork(RSimInfoPtr, "", "", 0)>);
+  %endif %% end of RSim section
+
+%endfunction %% Terminate
+
+%% Function: ZeroCrossings =====================================================
+%% Abstract:
+%%      NSZC[i] = time - timeptr[ZcTimesIndices[CurZCTimeIndIdx]];
+%%
+%function ZeroCrossings(block, system) Output
+  {
+    %if Accelerator
+      /* Call into Simulink */
+      %<SLibCallBlockInSimulink(system, block, "SS_CALL_MDL_ZERO_CROSSINGS")>
+    %else
+      %assign time = LibGetT()
+      const double* timePtr  = (double *)%<LibBlockPWork(TimePtr, "", "", 0)>;
+      int_T *zcTimeIndices   = %<LibBlockDWorkAddr(ZCTimeIndices,"","",0)>;
+      int_T zcTimeIndicesIdx =  %<LibBlockDWork(CurZCTimeIndIdx,"","",0)>;
+      %% 
+      %<LibBlockZCSignalValue("","",0, 0)> = \
+      %<time> - timePtr[zcTimeIndices[zcTimeIndicesIdx]];  
+    %endif
+  }
+    
+%endfunction %% ZeroCrossings
+
+%% [EOF] fromwks.tlc

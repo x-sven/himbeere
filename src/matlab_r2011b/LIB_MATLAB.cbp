@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="lib/matlab_R2011b" />
+		<Option pch_mode="2" />
+		<Option compiler="qcc_compiler" />
+		<Build>
+			<Target title="release_win32_vc8_x86">
+				<Option platforms="Windows;" />
+				<Option output="../../tmp/lib/matlab_r2011b/release/win32/vc8/x86/matlab.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../../tmp/lib/matlab_r2011b/release/win32/vc8/x86/" />
+				<Option type="2" />
+				<Option compiler="msvc8" />
+				<Compiler>
+					<Add option="/MD" />
+					<Add option="/GR" />
+					<Add option="/w" />
+					<Add option="/Zp8" />
+					<Add option="/FD" />
+					<Add option="/wd4430" />
+					<Add option="/wd4867" />
+					<Add option="/nologo" />
+					<Add option="/errorReport:prompt" />
+					<Add option="/c" />
+					<Add option="/DWIN32" />
+					<Add option="/D_WIN32" />
+					<Add option="/DNDEBUG" />
+					<Add option="/D_SCL_SECURE_NO_WARNINGS" />
+					<Add option="/D_CRT_SECURE_NO_DEPRECATE" />
+					<Add option="/D_CRT_NONSTDC_NO_DEPRECATE" />
+				</Compiler>
+			</Target>
+			<Target title="release_qnx_qcc_x86">
+				<Option platforms="Windows;" />
+				<Option output="../../tmp/lib/matlab_r2011b/release/qnx/qcc/x86/libmatlab.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../../tmp/lib/matlab_r2011b/release/qnx/qcc/x86/" />
+				<Option type="2" />
+				<Option compiler="qcc_compiler" />
+				<Compiler>
+					<Add option="-w" />
+					<Add option="-malign-double -Vgcc_ntox86 -c -Wc,-Wno-parentheses" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="release_qnx_qcc_arm">
+				<Option platforms="Windows;" />
+				<Option output="../../tmp/lib/matlab_r2011b/release/qnx/qcc/arm/libmatlab.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../../tmp/lib/matlab_r2011b/release/qnx/qcc/arm/" />
+				<Option type="2" />
+				<Option compiler="qcc_compiler_arm" />
+				<Compiler>
+					<Add option="-w" />
+					<Add option="-Vgcc_ntoarmle -c -Wc,-Wno-parentheses" />
+					<Add option="-march=armv7-a -Wa,-march=armv7-a -mfpu=neon -Wa,-mfpu=neon -mtune=cortex-a8 -mfloat-abi=softfp -ftree-vectorize" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="release_win32_gcc_x86">
+				<Option platforms="Windows;" />
+				<Option output="../../tmp/lib/matlab_r2011b/release/win32/gcc/x86/libmatlab.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../../tmp/lib/matlab_r2011b/release/win32/gcc/x86/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-w" />
+					<Add option="-malign-double" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="debug_win32_vc8_x86">
+				<Option platforms="Windows;" />
+				<Option output="../../tmp/lib/matlab_r2011b/debug/win32/vc8/x86/matlab.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../../tmp/lib/matlab_r2011b/debug/win32/vc8/x86/" />
+				<Option type="2" />
+				<Option compiler="msvc8" />
+				<Compiler>
+					<Add option="/MDd" />
+					<Add option="/GR" />
+					<Add option="/w" />
+					<Add option="/Zi" />
+					<Add option="/Zp8" />
+					<Add option="/FD" />
+					<Add option="/wd4430" />
+					<Add option="/wd4867" />
+					<Add option="/nologo" />
+					<Add option="/errorReport:prompt" />
+					<Add option="/c" />
+					<Add option="/DWIN32" />
+					<Add option="/D_WIN32" />
+					<Add option="/DDEBUG" />
+					<Add option="/D_SCL_SECURE_NO_WARNINGS" />
+					<Add option="/D_CRT_SECURE_NO_DEPRECATE" />
+					<Add option="/D_CRT_NONSTDC_NO_DEPRECATE" />
+				</Compiler>
+				<Linker>
+					<Add option="/DEBUG" />
+				</Linker>
+			</Target>
+			<Target title="debug_qnx_qcc_x86">
+				<Option platforms="Windows;" />
+				<Option output="../../tmp/lib/matlab_r2011b/debug/qnx/qcc/x86/libmatlab.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../../tmp/lib/matlab_r2011b/debug/qnx/qcc/x86/" />
+				<Option type="2" />
+				<Option compiler="qcc_compiler" />
+				<Compiler>
+					<Add option="-w" />
+					<Add option="-g" />
+					<Add option="-malign-double" />
+					<Add option="-Vgcc_ntox86 -c -Wc,-Wno-parentheses" />
+					<Add option="-O0" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="debug_qnx_qcc_arm">
+				<Option platforms="Windows;" />
+				<Option output="../../tmp/lib/matlab_r2011b/debug/qnx/qcc/arm/libmatlab.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../../tmp/lib/matlab_r2011b/debug/qnx/qcc/arm/" />
+				<Option type="2" />
+				<Option compiler="qcc_compiler_arm" />
+				<Compiler>
+					<Add option="-w" />
+					<Add option="-g" />
+					<Add option="-Vgcc_ntoarmle -c -Wc,-Wno-parentheses" />
+					<Add option="-O0" />
+					<Add option="-march=armv7-a -Wa,-march=armv7-a -mfpu=neon -Wa,-mfpu=neon -mtune=cortex-a8 -mfloat-abi=softfp -ftree-vectorize" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="debug_win32_gcc_x86">
+				<Option platforms="Windows;" />
+				<Option output="../../tmp/lib/matlab_r2011b/debug/win32/gcc/x86/libmatlab.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../../tmp/lib/matlab_r2011b/debug/win32/gcc/x86/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-w" />
+					<Add option="-g" />
+					<Add option="-malign-double" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="release_linux32_gcc_x86">
+				<Option platforms="Unix;" />
+				<Option output="../../tmp/lib/matlab_r2011b/release/linux32/gcc/x86/libmatlab.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../../tmp/lib/matlab_r2011b/release/linux32/gcc/x86/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-w" />
+					<Add option="-malign-double" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="release_win32_vc8_x86;release_qnx_qcc_x86;release_qnx_qcc_arm;release_win32_gcc_x86;debug_win32_vc8_x86;debug_qnx_qcc_x86;debug_qnx_qcc_arm;debug_win32_gcc_x86;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-DRT" />
+			<Add directory="extern/include" />
+			<Add directory="rtw/c/libsrc" />
+			<Add directory="rtw/c/src" />
+			<Add directory="simulink/include" />
+			<Add directory="." />
+		</Compiler>
+		<Unit filename="extern/include/blas.h" />
+		<Unit filename="extern/include/blascompat32.h" />
+		<Unit filename="extern/include/emlrt.h" />
+		<Unit filename="extern/include/engine.h" />
+		<Unit filename="extern/include/fintrf.h" />
+		<Unit filename="extern/include/io64.h" />
+		<Unit filename="extern/include/lapack.h" />
+		<Unit filename="extern/include/mat.h" />
+		<Unit filename="extern/include/matrix.h" />
+		<Unit filename="extern/include/mex.h" />
+		<Unit filename="rtw/c/src/rt_matrx.h" />
+		<Unit filename="rtw/c/src/rt_mxclassid.h" />
+		<Unit filename="rtw/c/src/rt_printf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="rtw/c/src/rtiostream.h" />
+		<Unit filename="rtw/c/src/rtmcmacros.h" />
+		<Unit filename="rtw/c/src/rtmmacros.h" />
+		<Unit filename="rtw/c/src/rtsplntypes.h" />
+		<Unit filename="rtw/c/src/rtw_capi.h" />
+		<Unit filename="rtw/c/src/rtw_modelmap.h" />
+		<Unit filename="rtw/c/src/rtw_modelmap_logging.h" />
+		<Unit filename="rtw/c/src/rtw_windows.h" />
+		<Unit filename="rtw/c/src/rtw_xpc.h" />
+		<Unit filename="simulink/include/fixedpoint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="simulink/include/fixedpoint.h" />
+		<Unit filename="simulink/include/fixpoint_spec.hpp" />
+		<Unit filename="simulink/include/mwmathutil.h" />
+		<Unit filename="simulink/include/rtw_continuous.h" />
+		<Unit filename="simulink/include/rtw_extmode.h" />
+		<Unit filename="simulink/include/rtw_matlogging.h" />
+		<Unit filename="simulink/include/rtw_solver.h" />
+		<Unit filename="simulink/include/sfun_rtwcg.hpp" />
+		<Unit filename="simulink/include/sigmapdef_sfcn.h" />
+		<Unit filename="simulink/include/sigregdef.h" />
+		<Unit filename="simulink/include/simstruc.h" />
+		<Unit filename="simulink/include/simstruc_types.h" />
+		<Unit filename="simulink/include/simulink2.h" />
+		<Unit filename="simulink/include/simulink_solver_api.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="simulink/include/simulink_solver_api.h" />
+		<Unit filename="simulink/include/sl_common_types_def.h" />
+		<Unit filename="simulink/include/sl_datatype_access.h" />
+		<Unit filename="simulink/include/sl_fileio_rtw.h" />
+		<Unit filename="simulink/include/sl_fixpt.h" />
+		<Unit filename="simulink/include/sl_prodhwdevicetype.h" />
+		<Unit filename="simulink/include/sl_sample_time_defs.h" />
+		<Unit filename="simulink/include/sl_solver_rtw.h" />
+		<Unit filename="simulink/include/sl_types_def.h" />
+		<Unit filename="simulink/include/slexec_ssbridge.h" />
+		<Unit filename="simulink/include/solver_zc.h" />
+		<Unit filename="simulink/include/sysran_types.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

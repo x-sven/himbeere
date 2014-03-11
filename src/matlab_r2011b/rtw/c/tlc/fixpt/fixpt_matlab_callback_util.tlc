@@ -1,0 +1,75 @@
+%% $Revision: 1.1.6.4 $
+%% $Date: 2010/10/15 12:03:28 $
+%%
+%% This file contains tlc code to support callbacks to
+%% MATLAB code or mex.
+%%
+%% Copyright 1994-2010 The MathWorks, Inc.
+%%
+
+
+%% Function: FixPt_NumericType_2_TlcDT =============================
+%%
+%% Abstract:
+%%   This is a helper function that bridges data type specification
+%%   across the Matlab to TLC boundary.
+%%   The input is a Simulink.NumericType object that was turned into
+%%   a struct, ex.
+%%      mySimuNumericType         = fixdt(1,8,6);
+%%      structFormSimuNumericType = struct( mySimuNumericType );
+%%   The struct has entered the TLC domain as the return argument
+%%   from an FEVAL call.  This struct will be turned in the
+%%   the type of record that TLC uses to for data type
+%%   specification.
+%%
+%function FixPt_NumericType_2_TlcDT(numericType) void
+  %%
+  %if     numericType.DataTypeMode == "Double"
+    %%
+    %assign outDT = FixPt_GetDataTypeFromIndex(0)
+    %%
+  %elseif numericType.DataTypeMode == "Single"
+    %%
+    %assign outDT = FixPt_GetDataTypeFromIndex(1)
+    %%
+  %elseif numericType.DataTypeMode == "Boolean"
+    %%
+    %assign outDT = FixPt_GetDataTypeFromIndex(9)
+    %%
+  %else
+    %%
+    %assign requiredBits =  CAST("Number", numericType.WordLength   )
+    %%
+    %% An empty SignednessBool indicates that Signedness is Auto.  Assert that Signed is specified 1 or 0.
+    %assert(numericType.SignednessBool==1 || numericType.SignednessBool==0)
+    %assign isSign       =  CAST("Number", numericType.SignednessBool)
+    %assign fixExp       =  CAST("Number", numericType.FixedExponent)
+    %%
+    %assign actualBits   = FixPt_RequiredBits_2_ActualBits(requiredBits)
+    %%
+    %if FixPt_ActualBits_TooBig(actualBits)
+      %%
+      %<LibReportFatalError("An integer data type used in a temporary calculation required more bits than the current code generation target can hold in a long.")>
+    %endif
+    %%
+    %assign dataTypeName = LibFixPointFormDataTypeName( isSign, requiredBits, fixExp)
+    %%
+    %createrecord outDT { ...
+      DataTypeName     dataTypeName; ...
+      IsSigned         isSign; ...
+      RequiredBits     requiredBits; ...
+      ActualBits       actualBits; ...
+      FixedExp         fixExp; ...
+      FracSlope        numericType.SlopeAdjustmentFactor; ...
+      Bias             numericType.Bias; ...
+      NativeType       "#error x" ...
+    }
+    %%
+    %<FixPt_DefineDataType(outDT)>\
+    %%
+  %endif
+  %%  
+  %return outDT
+  %%
+%endfunction  %% FixPt_NumericType_2_TlcDT
+

@@ -1,0 +1,802 @@
+%%
+%% $Revision: 1.1.6.31 $
+%%
+%% Abstract:
+%%   This TLC library file contains library routines in support of the
+%%   Stateflow interface.
+%%
+%% Copyright 1994-2010 The MathWorks, Inc.
+%%
+
+%if EXISTS("_SFLIB_") == 0
+%assign _SFLIB_ = 1
+
+%addtorecord CompiledModel MachineInitializeCache ""
+%addtorecord CompiledModel MachineTerminateCache  ""
+
+%function SFLibRegSignalLogging(blkIdx, sysIdx) Output
+  %assign system = ::CompiledModel.System[sysIdx]
+  %assign block  = system.Block[blkIdx]
+  %with system
+    %with block
+      %generatefile "chartSource" "%<block.SFInfo.ChartTLCFile>.tlc"
+      %<GENERATE_TYPE(block, "USLRegCode", "chartSource", system)>
+      %assign unused = UNLOAD_GENERATE_TYPE(block, "chartSource")
+    %endwith
+  %endwith
+%endfunction
+
+%function SFLibGetSimS(sysIdx) Output
+    %assign system = ::CompiledModel.System[sysIdx]
+    %return RTMsGet(system, "MdlRefSfcnS")
+%endfunction
+
+%function SLibMachineInitializeIsEmpty() void
+  %return WHITE_SPACE(MachineInitializeCache)
+%endfunction
+
+%function SLibMachineTerminateIsEmpty() void
+  %return WHITE_SPACE(MachineTerminateCache)
+%endfunction
+
+%function SLibSetMachineInitialize(code) void
+  %if MachineInitializeCache != ""
+    %% Should only be called once 
+    %<LibReportFatalError("MachineInitializeCache should be empty")>
+  %endif
+  %if !WHITE_SPACE(code)
+    %assign CompiledModel.MachineInitializeCache = code
+  %endif
+%endfunction
+
+%function SLibSetMachineTerminate(code) void
+  %if MachineTerminateCache != ""
+    %% Should only be called once
+    %<LibReportFatalError("MachineTerminateCache should be empty")>
+  %endif
+  %if !WHITE_SPACE(code)
+    %assign CompiledModel.MachineTerminateCache = code
+  %endif
+%endfunction
+
+%function SLibWriteMachineInitialize() void
+  %return MachineInitializeCache
+%endfunction
+
+%function SLibWriteMachineTerminate() void
+  %return MachineTerminateCache
+%endfunction
+
+
+%% Function: LibSFUpdateAccessFlagsOfAllInstances ==============================
+%% Abstract:
+%%      Updates the access flags for the chart based on another instance that
+%%      has already generated the code for the library chart.
+%%
+%%      block      = block record for the chart
+%%      chartIndex = the index of the Chart record
+%%
+%% WISH at this point this is not doing anything
+%function LibSFUpdateAccessFlagsOfAllInstances(block,chartIndex) void
+  %if chartIndex<0
+    %% single instance case do nothing
+    %return ""
+  %endif
+  %assign blockInstances = ...
+    CompiledModel.SFLibraryNames.Chart[chartIndex].ReferencedBy
+  %assign numberOfBlockInstances = SIZE(blockInstances,0)
+  %if numberOfBlockInstances > 1
+    %foreach idx = numberOfBlockInstances
+      %assign sysIdx = blockInstances[idx][0]
+      %assign blkIdx = blockInstances[idx][1]
+      %assign instanceBlock = CompiledModel.System[sysIdx].Block[blkIdx]
+    %endforeach
+  %endif
+%endfunction
+
+
+%% Function: LibSFGetChartIndexAndGenerate =====================================
+%% Abstract:
+%%      This is used to decide whether to call the TLC file to generate code.
+%%
+%%      chartName:
+%%               the name of the library Chart
+%%      returns:
+%%               -2 : if a library chart that has already been generated
+%%               -1 : if a single instance chart (generate it)
+%%               0-N: the chart Index into the Chart records (generate it and
+%%                    mark it as generated
+%%
+%function LibSFGetChartIndexAndGenerate(chartName) void
+  %assign chartIndex = -1
+  %foreach idx = SFLibraryNames.NumUniqueCharts
+    %if SFLibraryNames.Chart[idx].Name == chartName
+      %assign chartIndex = idx
+    %endif
+  %endforeach
+
+  %if chartIndex<0
+    %% single instance case return -1
+    %return chartIndex
+  %endif
+  %if EXISTS("SFLibraryNames.Chart[chartIndex].HitCount")
+    %return -2
+  %else
+    %assign HitCount = 1
+    %assign CompiledModel.SFLibraryNames.Chart[chartIndex] = ...
+      CompiledModel.SFLibraryNames.Chart[chartIndex] + HitCount
+    %return chartIndex
+  %endif
+%endfunction
+
+
+%% Function: LibSFGetCurrentTaskTime ===========================================
+%% Abstract:
+%%      Return the correct string for accessing the task time for the given
+%%      chart.
+%%
+%%      block = Block record for the stateflow chart
+%%
+%function LibSFGetCurrentTaskTime(block) void
+  %return LibGetTaskTimeFromTID(block)
+%endfunction
+
+
+%% Function: LibSFChartInstance ================================================
+%% Abstract:
+%%      Return the correct string for accessing the chartInstance stucture. When
+%%      the chart in not multi-instanced, direct access is used.
+%%
+%%      block = Block record for the stateflow chart
+%%
+%function LibSFChartInstance(block) void
+    %<SETFIELD(block,"ChartInstanceAccessed",1)>
+   	%return "%<LibBlockDWork(ChartInstance,"","",0)>."
+%endfunction
+
+%function LibSFChartInstanceNoMemberRef(block) void
+    %<SETFIELD(block,"ChartInstanceAccessed",1)>
+   	%return LibBlockDWork(ChartInstance,"","",0)
+%endfunction
+
+%function LibSFChartInstanceArg(block) void
+    %<SETFIELD(block,"ChartInstanceAccessed",1)>
+   	%return ""
+%endfunction
+
+%function SLibResetSFChartInstanceAccessed(block) void
+  %<SETFIELD(block,"ChartInstanceAccessed",0)>
+%endfunction
+
+%function SLibGetSFChartInstanceAccessed(block) void
+  %return block.ChartInstanceAccessed
+%endfunction
+
+%function SLibGetSFEventName() void
+  %return CompiledModel.SFEventName
+%endfunction
+
+%function SLibGetSystemFcn(sysIdx) void
+  %if ISFIELD(System[sysIdx], "%<::BlockFcn>Fcn")
+    %return SLibSystemFcnInfoRecord(System[sysIdx], ::BlockFcn)
+  %elseif ::BlockFcn == "OutputUpdate"
+    %return SLibSystemFcnInfoRecord(System[sysIdx], "Output")
+  %endif
+%endfunction
+
+%% Function: LibSFPassThruArgs ================================================
+%%
+%function LibSFPassThruArgs(block, isEmpty) void
+  %if !ISFIELD(block, "PassThroughArgs")
+    %<LibSFPassThruPairsForce(block)>
+  %endif
+  %assign passThroughArgs = block.PassThroughArgs
+  %if !ISEMPTY(passThroughArgs)
+    %if !isEmpty
+      %assign passThroughArgs = ", " + passThroughArgs
+    %endif
+  %endif
+  %return passThroughArgs
+%endfunction
+
+%% Function: LibSFPassThruDummy ================================================
+%%
+%function LibSFPassThruDummy(block) void
+  %return ""
+%endfunction
+
+%% Function: LibSFPassThruPairs ================================================
+%%
+%function LibSFPassThruPairs(block, isEmpty) void
+  %if !ISFIELD(block, "PassThroughArgDefs")
+    %<LibSFPassThruPairsForce(block)>
+  %endif
+  %assign passThroughArgDefs = block.PassThroughArgDefs
+  %if ISEMPTY(passThroughArgDefs)
+    %if isEmpty
+      %assign passThroughArgDefs = "void"
+    %endif
+  %else
+    %if !isEmpty
+      %assign passThroughArgDefs = ", " + passThroughArgDefs
+    %endif
+  %endif
+  %return passThroughArgDefs
+%endfunction
+
+%function LibSFSetPassThruArgs(block, argDefs, args) void
+  %if !ISFIELD(block, "PassThroughArgDefs")
+    %addtorecord block PassThroughArgDefs argDefs
+    %addtorecord block PassThroughArgs args
+  %else
+    %<SETFIELD(block, "PassThroughArgDefs", argDefs)>
+    %<SETFIELD(block, "PassThroughArgs", args)>
+  %endif
+%endfunction
+
+%function LibSFResetPassThruArgs(block) void
+  %<LibSFSetPassThruArgs(block, "", "")>
+%endfunction
+
+%function LibSFResetProtoTypeInfo(block) void
+  %with block
+    %if !ISFIELD(SFInfo, "ChartInstancePrototype")
+      %addtorecord SFInfo ChartInstancePrototype "void"
+      %addtorecord SFInfo ChartInstanceCommaPrototype ""
+      %addtorecord SFInfo ChartInstanceArgument ""
+      %addtorecord SFInfo ChartInstanceCommaArgument ""
+      %addtorecord SFInfo SFChartEntryPoint ""
+    %else
+      %<SETFIELD(SFInfo, "ChartInstancePrototype", "void")>
+      %<SETFIELD(SFInfo, "ChartInstanceCommaPrototype", "")>
+      %<SETFIELD(SFInfo, "ChartInstanceArgument", "")>
+      %<SETFIELD(SFInfo, "ChartInstanceCommaArgument", "")>
+      %<SETFIELD(SFInfo, "SFChartEntryPoint", "")>
+    %endif
+  %endwith
+%endfunction
+
+%function LibSFSetProtoTypeInfo(block) void
+    %assign block.SFInfo.ChartInstancePrototype =  "" + ...
+      " *chartInstance, " + LibSFPassThruPairs(block, 0)
+    %assign block.SFInfo.ChartInstanceCommaPrototype = ...
+       "" + ","
+    %assign  block.SFInfo.ChartInstanceArgument = "chartInstance," + ...
+      LibSFPassThruArgs(block, 0)
+    %assign  block.SFInfo.ChartInstanceCommaArgument = ...
+       block.SFInfo.ChartInstanceArgument + ","
+    %assign  block.SFInfo.ChartInitializeFcn = LibSFUniquePrefix(block) + ...
+       block.SFInfo.ChartInitializeFcn
+    %assign  block.SFInfo.ChartOutputsFcn = LibSFUniquePrefix(block) + ...
+       block.SFInfo.ChartOutputsFcn
+    %assign  block.SFInfo.SFChartEntryPoint = ...
+      "void %<block.SFInfo.ChartOutputsFcn>(%<block.SFInfo.ChartInstancePrototype>)"
+%endfunction
+
+%function LibSFPassThruPairsForce(block) void
+  %assign sysIdx = block.BlockIdx[0]
+  %if System[sysIdx].RTWSystemCode != 2
+    %if UsingMalloc
+      %assign passThroughArgDefs = "%<tSimStructType> *%<tSimStruct>"
+      %assign passThroughArgs = "%<tSimStruct>"
+      %<LibSFSetPassThruArgs(block, passThroughArgDefs, passThroughArgs)>      
+    %else
+      %<LibSFResetPassThruArgs(block)>
+    %endif
+  %else
+    %assign fcnInfo = SLibGetSystemFcn(sysIdx)
+    %assign passThroughArgDefs = fcnInfo.Params
+    %assign passThroughArgs = FEVAL("rtwprivate", "getargstr", passThroughArgDefs)
+    %if ISEMPTY(passThroughArgs)
+      %<LibSFResetPassThruArgs(block)>
+    %else
+      %<LibSFSetPassThruArgs(block, passThroughArgDefs, passThroughArgs)>
+    %endif
+  %endif
+  %return block.PassThroughArgDefs
+%endfunction
+
+
+%function LibSFUniquePrefix(block) void
+  %return "S%<block.BlockIdx[0]>_%<block.BlockIdx[2]>_"
+%endfunction
+
+%function LibSFOutputFcnCallEnable(block, idx) void
+  %assign ::CompiledModel.HaveSeparateSourceFiles = 1
+  %if NumSFcnSysOutputCalls == 0
+    %error Invalid idx: %<idx> arg in LibSFOutputFcnCallEnable, no Function Calls.
+  %endif
+  %if idx >= NumSFcnSysOutputCalls
+    %error Invalid idx: %<idx> arg in LibSFOutputFcnCallEnable,outside valid range.
+  %endif
+  
+  %% Get the record index of the first block called by output function-call
+  %% signal of index 'idx'.
+  %assign recIdx = SFcnSystemOutputCallMappingInfo[idx].StartingIdx
+  %with SFcnSystemOutputCall[recIdx]
+    %if ISEQUAL(BlockToCall,"unconnected")
+      %return ""    %% Unconnected Function call
+    %else
+      %assign retVal = LibBlockExecuteFcnEnable(block,idx)
+      %if (!WHITE_SPACE(retVal))
+	%return retVal
+      %else
+	%return ""
+      %endif
+    %endif
+  %endwith
+%endfunction
+
+%function LibSFOutputFcnCallDisable(block, idx) void
+  %assign ::CompiledModel.HaveSeparateSourceFiles = 1
+  %if NumSFcnSysOutputCalls == 0
+    %error Invalid idx: %<idx> arg in LibSFOutputFcnCallDisable, no Function Calls.
+  %endif
+  %if idx >= NumSFcnSysOutputCalls
+    %error Invalid idx: %<idx> arg in LibSFOutputFcnCallDisable,outside valid range.
+  %endif
+  
+  %% Get the record index of the first block called by output function-call
+  %% signal of index 'idx'.
+  %assign recIdx = SFcnSystemOutputCallMappingInfo[idx].StartingIdx
+  %with SFcnSystemOutputCall[recIdx]
+      %if ISEQUAL(BlockToCall,"unconnected")
+	%return ""    %% Unconnected Function call
+      %else
+        %assign retVal = LibBlockExecuteFcnDisable(block,idx)
+	%if (!WHITE_SPACE(retVal))
+	  %return retVal
+	%else
+	  %return ""
+	%endif
+      %endif
+  %endwith
+%endfunction
+
+%% Function: LibSFOutputFcnCall ================================================
+%% Abstract:
+%%      Return the correct string for making a function-call.  When
+%%      possible, direct calling is done, otherwise function-pointers are used.
+%%
+%%      block = Block record for the stateflow chart
+%%      idx   = number of the element being accessed
+%%
+%function LibSFOutputFcnCall(block, idx) void
+  %assign ::CompiledModel.HaveSeparateSourceFiles = 1
+  %if NumSFcnSysOutputCalls == 0
+    %error Invalid idx: %<idx> arg in LibSFOutputFcnCall, no Function Calls.
+  %endif
+  %if idx >= NumSFcnSysOutputCalls
+    %error Invalid idx: %<idx> arg in LibSFOutputFcnCall,outside valid range.
+  %endif
+  
+  %% Get the record index of the first block called by output function-call
+  %% signal of index 'idx'.
+  %assign recIdx = SFcnSystemOutputCallMappingInfo[idx].StartingIdx
+  %with SFcnSystemOutputCall[recIdx]
+    %if ISEQUAL(BlockToCall,"unconnected")
+      %return ""    %% Unconnected Function call
+    %else
+      %assign retVal = LibBlockExecuteFcnCall(block,idx)
+      %if (!WHITE_SPACE(retVal))
+	%return retVal
+      %else
+	%return ""
+      %endif
+    %endif
+  %endwith
+%endfunction
+
+
+%% Function: LibSFDWork =====================================================
+%% Return the correct string for accessing the chart dworks.
+%%   block:    Block record for the Stateflow chart
+%%   dWorkIdx: DWork index
+%%   eleIdx:   Element index for array dwork. eleIdx must be string.
+%%
+%function LibSFDWork(block, dWorkIdx, eleIdx) void
+    %return LibBlockDWork(DWork[dWorkIdx], eleIdx, "", 0)
+%endfunction
+
+
+%% Function: LibSFAssignDWork =====================================================
+%% Assign dwork (array element) with value.
+%%   block:    Block record for the Stateflow chart
+%%   dWorkIdx: DWork index
+%%   eleIdx:   Element index for array dwork. eleIdx must be string.
+%%   u:        The assigned value
+%%
+%function LibSFAssignDWork(block, dWorkIdx, eleIdx, u) Output
+    %<LibBlockAssignDWork(DWork[dWorkIdx], eleIdx, "", 0, u)>
+%endfunction
+
+
+%% Function: LibSFDWorkAddr ===================================================
+%% Return the correct string for accessing a chart dwork array  
+%%   block:    Block record for the stateflow chart
+%%   dWorkIdx: DWork index
+%%   eleIdx:   Array element index of this dwork data. eleIdx must be string.
+%%
+%function LibSFDWorkAddr(block, dWorkIdx, eleIdx) void
+    %return LibBlockDWorkAddr(DWork[dWorkIdx], eleIdx, "", 0)
+%endfunction
+
+%% Function: LibSFMachineParentedData =========================================
+%% Return the correct string for accessing the chart machineDatas.
+%%   block:    Block record for the Stateflow chart
+%%   machineDataIdx: MachineParentedData index
+%%   eleIdx:   Element index for array machineData. eleIdx must be string.
+%%
+%function LibSFMachineParentedData(block, machineDataIdx, eleIdx) void
+  %assign vgIdx = ...
+    CompiledModel.VarGroups.StateflowMachineVarGroupVarIdx[machineDataIdx]
+  %assign varGroup = CompiledModel.VarGroups.VarGroup[vgIdx[0]]
+  %assign memberEl = FcnSLibCGIRGetVarGroupMember(varGroup, vgIdx[1])
+  %assign width = LibCGTypeWidth(memberEl.CGTypeIdx)
+  %assign sigIndexer = SLibGet1DArrayIndexer(width, eleIdx, "", 0)
+  %return SLibCG_GetVarGroupElementPath(vgIdx, ...
+    HStructDeclSystemIdx, CrossNoArgFcnBound) + sigIndexer
+%endfunction
+
+
+%% Function: LibSFAssignMachineParentedData ====================================
+%% Assign machineData (array element) with value.
+%%   block:    Block record for the Stateflow chart
+%%   machineDataIdx: MachineParentedData index
+%%   eleIdx:   Element index for array machineData. eleIdx must be string.
+%%   u:        The assigned value
+%%
+%function LibSFAssignMachineParentedData(block, machineDataIdx, eleIdx, u) Output
+    %<LibSFMachineParentedData(block, machineDataIdx, eleIdx)> = %<u>;
+%endfunction
+
+%% Function: LibSFMachineParentedDataAddr ======================================
+%% Return the correct string for accessing a chart machineData array  
+%%   block:    Block record for the stateflow chart
+%%   machineDataIdx: MachineParentedData index
+%%   eleIdx:   Array element index of this machineData data. eleIdx must be string.
+%%
+%function LibSFMachineParentedDataAddr(block, machineDataIdx, eleIdx) void
+    %return "&" + LibSFMachineParentedData(block, machineDataIdx, eleIdx)
+%endfunction
+
+
+%% Function: LibSFCState =====================================================
+%function LibSFCState(block, eleIdx) void
+    %return LibBlockContinuousState(eleIdx, "", 0)
+%endfunction
+
+%% Function: LibSFAssignCState ==================================================
+%function LibSFAssignCState(block, eleIdx, u) Output
+    %<LibSFCState(block, eleIdx)> = %<u>;
+%endfunction
+
+%% Function: LibSFCStateAddr ===================================================
+%function LibSFCStateAddr(block, unused) void
+    %return "&" + LibBlockContinuousState("", "", 0)
+%endfunction
+
+%% Function: LibSFCStateDeriv =====================================================
+%function LibSFCStateDeriv(block, eleIdx) void
+    %return LibBlockContinuousStateDerivative(eleIdx, "", 0)
+%endfunction
+
+%% Function: LibSFAssignCStateDeriv ==================================================
+%function LibSFAssignCStateDeriv(block, eleIdx, u) Output
+    %<LibSFCStateDeriv(block, eleIdx)> = %<u>;
+%endfunction
+
+%% Function: LibSFCStateDerivAddr ===================================================
+%function LibSFCStateDerivAddr(block, unused) void
+    %return "&" + LibBlockContinuousStateDerivative("", "", 0)
+%endfunction
+
+%% Function: LibSFZC =====================================================
+%function LibSFZC(block, eleIdx) void
+    %return LibBlockNonSampledZC(eleIdx, "", 0)
+%endfunction
+
+%% Function: LibSFAssignZC ==================================================
+%function LibSFAssignZC(block, eleIdx, u) Output
+    %<LibSFZC(block, eleIdx)> = %<u>;
+%endfunction
+
+%% Function: LibSFZCAddr ===================================================
+%function LibSFZCAddr(block, unused) void
+    %return LibBlockNonSampledZC("", "", 0)
+%endfunction
+
+%% Function: LibSFRTWClockTick ==================================================
+%function LibSFRTWClockTick(block, eleIdx) void
+    %assign tid = SLibGetNumericTID(block)
+    %return LibGetClockTick(tid)
+%endfunction
+
+%% Function: LibSFResetSolver ===================================================
+%function LibSFResetSolver() Output
+    %if isRSim || CodeFormat == "S-Function" || ...
+        IsModelReferenceForASimstructBasedTarget()
+        %<RTMSetSolverNeedsReset()>;
+    %endif
+%endfunction
+
+%% Function: LibSFParameter =======================================================
+%% Return the correct string for accessing the chart parameter.
+%%   block:    Block record for the Stateflow chart
+%%   param:    Parameter reference
+%%   eleIdx:   Array element index of this parameter. eleIdx must be string.
+%%
+%function LibSFParameter(block, param, eleIdx) void
+  %return LibBlockParameter(param, eleIdx, "", 0)
+%endfunction
+
+%% Function: LibSFParameterAddr ===================================================
+%% Return the correct address string for accessing a chart parameter.  
+%%   block:   Block record for the stateflow chart
+%%   param:   Parameter reference
+%%   eleIdx:  Array element index of this parameter. eleIdx must be string.
+%%
+%function LibSFParameterAddr(block, param, eleIdx) void
+  %return LibBlockParameterAddr(param, eleIdx, "", 0)
+%endfunction
+
+%% Function: LibSFOutput =======================================================
+%% Return the correct string for accessing the chart outputs.
+%% NOTE: port 0 is reserved by Stateflow for function-call output events.
+%%   block:    Block record for the Stateflow chart
+%%   portIdx:  Index of the port being accessed
+%%   eleIdx:   Array element index of this output data. eleIdx must be string.
+%%
+%function LibSFOutput(block, portIdx, eleIdx) void
+  %if portIdx == 0
+    %error LibSFOutput cannot be called for port 0 reserved for function calls
+  %endif
+  %if portIdx >= NumDataOutputPorts
+    %error Invalid port number %<portIdx> passed to LibSFOutputs
+  %endif
+  %return LibBlockOutputSignal(portIdx, eleIdx, "", 0)
+%endfunction
+
+
+%% Function: LibSFAssignOutput =================================================
+%% Assign chart output (array element) with value.
+%% NOTE: port 0 is reserved by Stateflow for function-call output events.
+%%   block:    Block record for the Stateflow chart
+%%   portIdx:  Index of the port being accessed
+%%   eleIdx:   Array element index of this output data. eleIdx must be string.
+%%   u:        The assigned value
+%%
+%function LibSFAssignOutput(block, portIdx, eleIdx, u) Output
+  %if portIdx == 0
+    %error LibSFAssignOutput cannot be called for port 0 reserved for function calls
+  %endif
+  %if portIdx >= NumDataOutputPorts
+    %error Invalid port number %<portIdx> passed to LibSFAssignOutput
+  %endif
+  %<LibBlockAssignOutputSignal(portIdx, eleIdx, "", 0, u)>
+%endfunction
+
+
+%% Function: LibSFOutputAddr ===================================================
+%% Return the correct address string for accessing a chart output  
+%%   block:   Block record for the stateflow chart
+%%   portIdx: Index of the port being accessed
+%%   eleIdx:   Array element index of this output data. eleIdx must be string.
+%%
+%function LibSFOutputAddr(block, portIdx, eleIdx) void
+  %if portIdx == 0
+    %error LibSFOutputAddr cannot be called for port 0 reserved for function calls
+  %endif
+  %if portIdx >= NumDataOutputPorts
+    %error Invalid port number %<portIdx> passed to LibSFOutputAddr
+  %endif
+  %return LibBlockOutputSignalAddr(portIdx, eleIdx, "", 0)
+%endfunction
+
+
+%% Function: LibSFOutputs ======================================================
+%% Abstract:
+%%      Return the correct string for accessing the charts outputs.  When
+%%      possible, direct access is done, otherwise pointer access is used.
+%%      NOTE: port 0 is reserved by Stateflow for function-call output events
+%%
+%%      block = Block record for the stateflow chart
+%%      port  = number of the port being accessed
+%%      idx   = number or string for the element being accessed
+%%
+%function LibSFOutputs(block, port, idx) void
+  %if port==0
+    %error LibSfOutputs cannot be called for port 0 reserved for function calls
+  %endif
+  %if port>=NumDataOutputPorts
+    %error Invalid port number %<port> passed to LibSFOutputs
+  %endif
+  %if TYPE(idx) == "Number"
+    %if idx >= LibBlockOutputSignalWidth(port)
+      %error Invalid idx: %<idx> arg in LibSFOutputs, outside valid range.
+    %endif
+    %return LibBlockOutputSignal(port,"","",idx)
+  %else
+    %return LibBlockOutputSignal(port,idx,"",0)
+  %endif
+%endfunction
+
+
+%% Function: LibSFOutputArray ==================================================
+%% Abstract:
+%%      Return the correct string for accessing a chart output array.  
+%%      block = Block record for the stateflow chart
+%%      port  = number of the port being accessed
+%%
+%function LibSFOutputArray(block, port, unused) void
+  %if port==0
+    %error LibSfOutputs cannot be called for port 0 reserved for function calls
+  %endif
+  %if port>=NumDataOutputPorts
+    %error Invalid port number %<port> passed to LibSFOutputs
+  %endif
+  %return LibBlockOutputSignalAddr(port,"","",0)
+%endfunction
+
+
+%% Function: LibSFInput =======================================================
+%% Return the correct string for accessing the chart input.
+%%   block:    Block record for the Stateflow chart
+%%   portIdx:  Index of the port being accessed
+%%   eleIdx:   Array element index of this input data. eleIdx must be string.
+%%
+%function LibSFInput(block, portIdx, eleIdx) void
+  %if portIdx >= NumDataInputPorts
+    %error Invalid port number %<portIdx> passed to LibSFInput
+  %endif
+  %return LibBlockInputSignal(portIdx, eleIdx, "", 0)
+%endfunction
+
+
+%% Function: LibSFInputAddr ===================================================
+%% Return the correct address string for accessing a chart input  
+%%   block:   Block record for the stateflow chart
+%%   portIdx: Index of the port being accessed
+%%   eleIdx:   Array element index of this input data. eleIdx must be string.
+%%
+%function LibSFInputAddr(block, portIdx, eleIdx) void
+  %if portIdx >= NumDataInputPorts
+    %error Invalid port number %<portIdx> passed to LibSFInputAddr
+  %endif
+  %return LibBlockInputSignalAddr(portIdx, eleIdx, "", 0)
+%endfunction
+
+
+%% Function: LibSFInputs ======================================================
+%% Abstract:
+%%      Return the correct string for accessing the charts inputs.  When
+%%      possible, direct access is done, otherwise pointer access is used.
+%%
+%%      block = Block record for the stateflow chart
+%%      port  = number of the port being accessed
+%%      idx   = number or string for the element being accessed
+%%
+%function LibSFInputs(block, port, idx) void
+  %if port>=NumDataInputPorts
+    %error Invalid port number %<port> passed to LibSFInputs
+  %endif
+  %if NumDataInputPorts > 0
+    %if TYPE(idx) == "Number"
+      %if !(LibGetRecordWidth(DataInputPort[port]) >= idx && idx >=0)
+        %error Invalid idx: %<idx> arg in LibSFInputs, outside valid range.
+      %endif
+      %return LibBlockInputSignal(port,"","",idx)
+    %else
+      %return LibBlockInputSignal(port,idx,"",0)
+    %endif
+  %else
+    %error Invalid call to LibSFInputs, no inputs for %<LibGetFormattedBlockPath(block)>
+  %endif
+%endfunction
+
+
+%% Function: LibSFInputArray ==================================================
+%% Abstract:
+%%      Return the correct string for accessing a chart input array.  
+%%      block = Block record for the stateflow chart
+%%      port  = number of the port being accessed
+%%
+%function LibSFInputArray(block, port, unused) void
+  %if port>=NumDataInputPorts
+    %error Invalid port number %<port> passed to LibSFInputs
+  %endif
+  %if NumDataInputPorts > 0
+    %return LibBlockInputSignalAddr(port,"","",0)
+  %else
+    %error Invalid call to LibSFInputArray, no inputs for %<LibGetFormattedBlockPath(block)>
+  %endif
+%endfunction
+
+%function LibSFInputSize(block, port, idx) 
+    %return SLibGetCurrentInputPortDimensions(port, idx)
+%endfunction
+
+%function LibSFInputSizeAddr(block, port, idx) 
+    %return "&" + SLibGetCurrentInputPortDimensions(port, idx)
+%endfunction
+
+%function LibSFOutputSize(block, port, idx) 
+    %return SLibGetCurrentOutputPortDimensions(port, idx)
+%endfunction
+
+%% Function: LibSFOutputSizeAddr ==========================================
+%function LibSFOutputSizeAddr(block, port, idx) 
+    %return "&" + SLibGetCurrentOutputPortDimensions(port, idx)
+%endfunction
+
+%function SLibGetSystemStateflowFcnCache(ss)
+  %assign sfFcn = ""
+  %if !SLibSystemStateflowFcnCacheIsEmpty(ss)
+    %assign sfFcn = "\n" + LibGetSystemField(ss, "CachedStateflowFcnCode")
+  %endif
+  %return sfFcn
+%endfunction
+
+
+%function SLibAppendToSystemStateflowFcnCache(ss, buff) void
+  %if !WHITE_SPACE(buff)
+    %<LibAddToSystemField(ss, "CachedStateflowFcnCode", buff)>
+  %endif
+%endfunction
+
+
+%function SLibSystemStateflowFcnCacheIsEmpty(ss) void
+  %if !WHITE_SPACE(LibGetSystemField(ss, "CachedStateflowFcnCode"))
+    %return TLC_FALSE
+  %else
+    %return TLC_TRUE
+  %endif
+%endfunction
+
+%function SFLibLookupUtilityFunction(fcnName) void
+  %return SLibLookupUtility(fcnName)
+%endfunction
+
+%function SFLibInsertUtilityFunction(fcnName) void 
+  %<SLibInsertUtility(fcnName)>
+%endfunction
+
+%function SFLibLookupUtilityFunctionDecl(fcnName) void
+  %return SLibLookupUtilityDecl(fcnName)
+%endfunction
+
+%function SFLibInsertUtilityFunctionDecl(fcnName) void 
+  %<SLibInsertUtilityDecl(fcnName)>
+%endfunction
+
+%function FcnSFGetDSMElementValue(block, dsmIdx, elemIdx,width,dataType) void
+  %assign dWorkSrc = block.ParamSettings.DataStoreSource[dsmIdx]
+  %assign globalDSM = block.ParamSettings.DataStoreGlobalDSM[dsmIdx]
+  %if Accelerator
+    %<LibReportFatalError("Stateflow should be using cached addresses here")>
+  %elseif (IsModelReferenceSimTarget() && globalDSM)
+    %assign sigIndexer = SLibGet1DArrayIndexer(width, elemIdx, "", 0)
+    %assign deref      = (width == 1) ? "*" : ""
+    %return "%<deref>((%<dataType>*)%<CompiledModel.Name>_DSM[%<dWorkSrc>])%<sigIndexer>"
+  %else
+    %return LibBlockDWork(dWorkSrc, elemIdx, "", 0)
+  %endif
+%endfunction
+
+%function FcnSFSetDSMElementValue(block, dsmIdx, elemIdx, width,dataType,u) Output
+  %assign dWorkSrc = block.ParamSettings.DataStoreSource[dsmIdx]
+  %assign globalDSM = block.ParamSettings.DataStoreGlobalDSM[dsmIdx]
+  %if Accelerator
+    %<LibReportFatalError("Stateflow should be using cached addresses here")>
+  %elseif (IsModelReferenceSimTarget() && globalDSM)
+    %assign sigIndexer = SLibGet1DArrayIndexer(width, elemIdx, "", 0)
+    %assign deref      = (width == 1) ? "*" : ""
+    %<deref>((%<dataType>*)%<CompiledModel.Name>_DSM[%<dWorkSrc>])%<sigIndexer> = %<u>;
+  %else
+    %<LibBlockAssignDWork(dWorkSrc, elemIdx, "", 0, u)>
+  %endif
+%endfunction
+
+%endif %% _SFLIB_
+
+%% [EOF] sflib.tlc

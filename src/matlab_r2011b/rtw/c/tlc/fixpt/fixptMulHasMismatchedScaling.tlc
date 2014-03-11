@@ -1,0 +1,88 @@
+%% $Revision: 1.1.6.1 $
+%% $Date: 2010/04/21 17:32:19 $
+%%
+%% Copyright 1994-2010 The MathWorks, Inc.
+%%
+
+%function FixPt_MultiplyHasMismatchedScaling(cDT,aDT,bDT) void
+  %%
+  %createrecord results { ...
+        MismatchedScaling    TLC_FALSE; ...
+        NonUnityFracSlope    TLC_FALSE; ...
+        FixExpAdjustment     0          ...
+      }
+  %%
+  %% if any of the signals has a non-zero bias 
+  %% then regard as mismatch TRUE
+  %%
+  %if !ISEQUAL(aDT.Bias,0.0) || ...
+      !ISEQUAL(bDT.Bias,0.0) || ...
+      !ISEQUAL(cDT.Bias,0.0)
+    %%
+    %assign results.MismatchedScaling = TLC_TRUE
+    %%
+  %else
+    %% 
+    %% If the FracSlope are all trivial
+    %%   the leave the results at default
+    %% otherwise closer analysis is required
+    %%
+    %if !ISEQUAL(aDT.FracSlope,1.0) || ...
+        !ISEQUAL(bDT.FracSlope,1.0) || ...
+        !ISEQUAL(cDT.FracSlope,1.0)
+      %%
+      %assign results.NonUnityFracSlope = TLC_TRUE
+      %%
+      %assign fracCorrection = cDT.FracSlope /( aDT.FracSlope * bDT.FracSlope )
+      %%
+      %if fxpIsDataTypeFloatOrSclDbl(cDT)
+        %%
+        %if ISEQUAL(fracCorrection,1.0)
+          %%
+          %assign results.FixExpAdjustment = CAST("Number", 0)
+          %%
+        %elseif ISEQUAL(fracCorrection,2.0)
+          %%
+          %assign results.FixExpAdjustment = CAST("Number", 1)
+          %%
+        %elseif ISEQUAL(fracCorrection,0.5)
+          %%
+          %assign results.FixExpAdjustment = CAST("Number",-1)
+          %%
+        %elseif ISEQUAL(fracCorrection,0.25)
+          %%
+          %assign results.FixExpAdjustment = CAST("Number",-2)
+          %%
+        %else
+          %%
+          %assign results.MismatchedScaling = TLC_TRUE
+          %%
+        %endif
+      %else
+        %%
+        %assign slopeFixExp = FEVAL("fixptPrivate",...
+                                    "fhpBestPrecisionQuantizeParts",...
+                                    fracCorrection,...
+                                    cDT.RequiredBits,...
+                                    cDT.IsSigned)
+        %%
+        %assign slope  = CAST("Real",slopeFixExp[0])
+        %%
+        %if ISEQUAL(slope,1.0)
+          %%
+          %assign results.FixExpAdjustment = CAST("Number",slopeFixExp[1])
+          %%
+        %else
+          %%
+          %assign results.MismatchedScaling = TLC_TRUE
+          %%
+        %endif
+      %endif
+      %%
+    %endif
+  %endif
+  %%
+  %return results
+  %%
+%endfunction
+

@@ -1,7 +1,7 @@
 #ifndef CJOYSTICK_HPP
 #define CJOYSTICK_HPP
 
-#include <SDL/SDL.h>
+#include "SDL.h"
 #include <boost/thread.hpp>
 #include <boost/signal.hpp>
 
@@ -14,7 +14,7 @@ public:
 
     int getNumberOfButtons ();
     int getNumberOfAxes ();
-    const char* getName();
+    //const char* getName();
     const cJoystick* getJoystick();
     float getAxis(int axis);
     int getButton(int button);
