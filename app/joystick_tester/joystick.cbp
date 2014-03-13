@@ -8,9 +8,9 @@
 		<Build>
 			<Target title="debug_linux32_x86_gcc">
 				<Option platforms="Unix;" />
-				<Option output="../../bin/tri-o-sim_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option output="../../bin/joy_test_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin" />
-				<Option object_output="../../tmp/bin/tri-o-sim/debug/linux32/x86/" />
+				<Option object_output="../../tmp/bin/joy_test/debug/linux32/x86/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -36,9 +36,9 @@
 			</Target>
 			<Target title="release_linux32_x86_gcc">
 				<Option platforms="Unix;" />
-				<Option output="../../bin/tri-o-sim_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option output="../../bin/joy_test_linux32_x86_release" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin" />
-				<Option object_output="../../tmp/bin/tri-o-sim/release/linux32/x86/" />
+				<Option object_output="../../tmp/bin/joy_test/release/linux32/x86/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -91,9 +91,9 @@
 			</Target>
 			<Target title="release_win32_x86_gcc">
 				<Option platforms="Windows;" />
-				<Option output="../../bin/tri-o-sim_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option output="../../bin/joy_test_linux32_x86_release" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../../bin" />
-				<Option object_output="../../tmp/bin/tri-o-sim/release/linux32/x86/" />
+				<Option object_output="../../tmp/bin/joy_test/release/linux32/x86/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>

@@ -16,8 +16,8 @@ public:
     int getNumberOfAxes ();
     //const char* getName();
     const cJoystick* getJoystick();
-    float getAxis(int axis);
-    int getButton(int button);
+    float getAxis(uint8_t axis);
+    int getButton(uint8_t button);
 
 
     boost::signal<void (const cJoystick*, int axis  )>  signal_axis;

@@ -6,7 +6,7 @@
 #include <boost/timer/timer.hpp> //http://www.boost.org/doc/libs/1_52_0/libs/timer/doc/cpu_timers.html
 
 #include "c_joystick.hpp"
-#include "c_joystick_manager.hpp"
+//#include "c_joystick_manager.hpp"
 
 #include "c_flightgear_sender_asio.hpp"
 c_flightgear_sender_asio FGM("192.168.1.57", 5507);
