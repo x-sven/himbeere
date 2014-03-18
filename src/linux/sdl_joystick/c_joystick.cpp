@@ -43,7 +43,6 @@ cJoystick::cJoystick(int selected_joystick)
         return;
     }
 
-//   SDL_JoystickEventState(SDL_ENABLE);
     m_pJoystick = SDL_JoystickOpen(joy_index);
 
     if (m_pJoystick == NULL)
@@ -56,6 +55,7 @@ cJoystick::cJoystick(int selected_joystick)
         char guid[64];
         SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(m_pJoystick),
                                   guid, sizeof (guid));
+        SDL_Log("Joystick found!");
         SDL_Log("       axes: %d\n", SDL_JoystickNumAxes(m_pJoystick));
         SDL_Log("      balls: %d\n", SDL_JoystickNumBalls(m_pJoystick));
         SDL_Log("       hats: %d\n", SDL_JoystickNumHats(m_pJoystick));
@@ -93,7 +93,6 @@ void cJoystick::loop(void)
         {
             switch(event.type)
             {
-                cout << "Event.Type: " << event.type << endl;
             case SDL_JOYAXISMOTION:  /* Handle Joystick Motion */
                 vf_axis.at(event.jaxis.axis) = (float)event.jaxis.value/32768.; // scaling to +/-1
                 signal_axis(getJoystick(), event.jaxis.axis);

@@ -162,6 +162,8 @@
 		<Unit filename="../../src/flightgearUDP/universal.h" />
 		<Unit filename="../../src/linux/sdl_joystick/c_joystick.cpp" />
 		<Unit filename="../../src/linux/sdl_joystick/c_joystick.hpp" />
+		<Unit filename="../../src/linux/sdl_joystick/c_joystick_manager.cpp" />
+		<Unit filename="../../src/linux/sdl_joystick/c_joystick_manager.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
