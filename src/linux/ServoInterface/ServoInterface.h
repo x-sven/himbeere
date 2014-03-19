@@ -8,7 +8,7 @@ class ServoInterface
     public:
         ServoInterface(Stream *stream = NULL);
         void begin(Stream *stream);
-        void update();
+        bool update();
         uint16_t get_channel(uint8_t channel);
 
         virtual ~ServoInterface();
@@ -19,6 +19,7 @@ class ServoInterface
         uint8_t reciever_state;
         uint8_t reciever_couter;
         uint16_t *rx_channel;
+
 // TODO (sven#1#): Failsafe values?
 
 };

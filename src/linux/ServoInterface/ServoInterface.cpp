@@ -24,10 +24,11 @@ void ServoInterface::begin(Stream *stream)
     }
 }
 
-void ServoInterface::update(void)
+bool ServoInterface::update(void)
 {
     uint8_t bytedata = 0;
     int16_t numc = 0;
+    bool ret_val=false;
 
     numc = m_stream->available();
     if(0 < numc )
@@ -99,6 +100,7 @@ void ServoInterface::update(void)
 // TODO (sven#1#): CRC check here?
 
                 reciever_state=0;
+                ret_val=true;
                 break;
             default:
                 ;
@@ -106,6 +108,8 @@ void ServoInterface::update(void)
             }//switch case
         }//for(numc)
     }//if()
+
+    return ret_val;
 }
 
 uint16_t ServoInterface::get_channel(uint8_t channel)

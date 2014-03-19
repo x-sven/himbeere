@@ -56,12 +56,14 @@
 			<Add directory="../../src/linux/Millis" />
 			<Add directory="../../src/linux/Logging" />
 			<Add directory="../../src/linux/HardwareSerial" />
+			<Add directory="../../src/crc16" />
 		</Compiler>
 		<Linker>
 			<Add library="boost_thread" />
 			<Add library="boost_system" />
 			<Add library="boost_filesystem" />
 		</Linker>
+		<Unit filename="main.cpp" />
 		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
 		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />
 		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.h" />
@@ -74,6 +76,10 @@
 		<Unit filename="../../src/ARDUINO/Stream.h" />
 		<Unit filename="../../src/ARDUINO/WString.cpp" />
 		<Unit filename="../../src/ARDUINO/WString.h" />
+		<Unit filename="../../src/crc16/crc16.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/crc16/crc16.h" />
 		<Unit filename="../../src/linux/ControlSystem/ControlSystem.cpp" />
 		<Unit filename="../../src/linux/ControlSystem/ControlSystem.h" />
 		<Unit filename="../../src/linux/Delay/Delay.cpp" />
@@ -86,7 +92,6 @@
 		<Unit filename="../../src/linux/Millis/millis.h" />
 		<Unit filename="../../src/linux/ServoInterface/ServoInterface.cpp" />
 		<Unit filename="../../src/linux/ServoInterface/ServoInterface.h" />
-		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
