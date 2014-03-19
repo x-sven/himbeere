@@ -4,7 +4,7 @@
   --control=joystick ^
   --disable-random-objects ^
   --prop:/sim/rendering/random-vegetation=false ^
-  --prop:/sim/model/path=Models/tri.ac ^
+  --prop:/sim/model/path=Models/Tricopter/Tri-o-copter.ac ^
   --disable-ai-models ^
   --disable-ai-traffic ^
   --disable-real-weather-fetch ^
