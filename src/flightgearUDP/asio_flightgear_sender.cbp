@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="test/flightgear_sender_asio" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="release_win32_gcc_x86">
+				<Option platforms="Windows;" />
+				<Option output="../../bin/asio_flightgear_sender_win32_gcc_x86.exe" prefix_auto="0" extension_auto="0" />
+				<Option object_output="../../tmp/flightgear/release/win32/gcc/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="0" />
+				<Compiler>
+					<Add directory="../windows/boost_1_49_0" />
+				</Compiler>
+				<Linker>
+					<Add library="ws2_32" />
+					<Add library="system" />
+					<Add library="thread" />
+					<Add directory="../tmp/lib/boost/1.45.0/release/win32/gcc" />
+				</Linker>
+			</Target>
+			<Target title="release_linux32_gcc_x86">
+				<Option platforms="Unix;" />
+				<Option output="../../bin/asio_flightgear_sender_linux32_gcc_x86" prefix_auto="0" extension_auto="0" />
+				<Option object_output="../../tmp/test/xitl/flightgear/release/win32/gcc/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="0" />
+				<Linker>
+					<Add library="boost_system" />
+					<Add library="boost_thread" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="release_win32_gcc_x86;" />
+		</VirtualTargets>
+		<Unit filename="c_flightgear_base.cpp" />
+		<Unit filename="c_flightgear_base.hpp" />
+		<Unit filename="c_flightgear_sender_asio.cpp" />
+		<Unit filename="c_flightgear_sender_asio.hpp" />
+		<Unit filename="i_flightgear_sender.hpp" />
+		<Unit filename="net_fdm_20.hxx" />
+		<Unit filename="net_fdm_24.hxx" />
+		<Unit filename="test_flightgear_sender_asio.cpp" />
+		<Unit filename="universal.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

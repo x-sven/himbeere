@@ -21,9 +21,9 @@ cJoystick::cJoystick(int selected_joystick)
     /* SDL initialization */
     // without video (or everything), the joystick events wont work *grrr*
     // without eventthread, no events on my mac deteced *grrr*
-    if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_NOPARACHUTE | SDL_INIT_EVENTTHREAD) < 0)
+    if (SDL_Init(SDL_INIT_JOYSTICK) < 0)
     {
-        cerr << "Could not initialize SDL: " <<  SDL_GetError() << endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s\n", SDL_GetError());
         exit(1);
     }
     num_joys = SDL_NumJoysticks();
@@ -43,67 +43,72 @@ cJoystick::cJoystick(int selected_joystick)
         return;
     }
 
-    SDL_JoystickEventState(SDL_ENABLE);
     m_pJoystick = SDL_JoystickOpen(joy_index);
+
+    if (m_pJoystick == NULL)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_JoystickOpen failed: %s\n",
+                     SDL_GetError());
+    }
+    else
+    {
+        char guid[64];
+        SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(m_pJoystick),
+                                  guid, sizeof (guid));
+        SDL_Log("Joystick found!");
+        SDL_Log("       axes: %d\n", SDL_JoystickNumAxes(m_pJoystick));
+        SDL_Log("      balls: %d\n", SDL_JoystickNumBalls(m_pJoystick));
+        SDL_Log("       hats: %d\n", SDL_JoystickNumHats(m_pJoystick));
+        SDL_Log("    buttons: %d\n", SDL_JoystickNumButtons(m_pJoystick));
+        SDL_Log("instance id: %d\n", SDL_JoystickInstanceID(m_pJoystick));
+        SDL_Log("       guid: %s\n", guid);
+    }
+
+
 
     /* Collect joystick data. */
     num_axes    = SDL_JoystickNumAxes(m_pJoystick);
     num_buttons = SDL_JoystickNumButtons(m_pJoystick);
     num_hats    = SDL_JoystickNumHats(m_pJoystick);
-
+#if defined(DEBUG)
+    cout << "Joystick number: " << joy_index
+         << ", num_axes: " << num_axes
+         << ", num_buttons: " << num_buttons
+         << ", num_hats: " << num_hats
+         << endl;
+#endif
     vf_axis.resize(num_axes);
     vf_button.resize(num_buttons);
     vf_hat.resize(num_hats);
 
     m_thread_running = true;
     m_joy_thread = boost::thread( boost::bind(&cJoystick::loop, this));
-
 }
 
 void cJoystick::loop(void)
 {
-
-    unsigned int ii = 0;
-
     while(m_thread_running)
     {
         while(SDL_PollEvent(&event))
         {
             switch(event.type)
             {
-
-            cout << "Event.Type: " << event.type << endl;
-
             case SDL_JOYAXISMOTION:  /* Handle Joystick Motion */
-                if ( ( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 ) )
-                {
-                    for (ii = 0; ii < vf_axis.size(); ii++)
-                    {
-                        if( ii == event.jaxis.axis)
-                        {
-                            vf_axis[ii] = SDL_JoystickGetAxis(m_pJoystick, ii) / 32768.0;
-                            signal_axis(getJoystick(), event.jaxis.axis);
-                        }// if
-                    }// for
-                }// axis event
+                vf_axis.at(event.jaxis.axis) = (float)event.jaxis.value/32768.; // scaling to +/-1
+                signal_axis(getJoystick(), event.jaxis.axis);
                 break;
-
             case SDL_JOYBUTTONDOWN:  /* Handle Joystick Button Presses */
-                for (ii = 0; ii < vf_button.size(); ii++)
-                {
-                    if( ii == event.jbutton.button)
-                    {
-                        vf_button[ii] = SDL_JoystickGetButton(m_pJoystick, ii);
-                        signal_button(getJoystick(), event.jbutton.button);
-                    }// if
-                }// for
+                vf_button.at(event.jbutton.button) = (int)event.jbutton.state;
+                signal_button(getJoystick(), event.jbutton.button);
                 break;
             case SDL_QUIT:
                 m_thread_running = false;
                 break;
+            default:
+                break;
             } // switch
         }//SDL_event
-
+//
 //        /* Grab current joystick information. */
 //        SDL_JoystickUpdate();
 //
@@ -122,7 +127,7 @@ void cJoystick::loop(void)
 //        {
 //            vf_hat[ii] = SDL_JoystickGetHat(m_pJoystick, ii);
 //        }
-
+//
         boost::this_thread::sleep(pt::milliseconds(10)); //around 100 Hz
     }// thread_running
 
@@ -139,31 +144,31 @@ int cJoystick::getNumberOfAxes ()
     return(vf_axis.size());
 }
 
-const char *cJoystick::getName()
-{
-    return(SDL_JoystickName(joy_index));
-}
+//const char *cJoystick::getName()
+//{
+//    return(SDL_JoystickName(joy_index));
+//}
 
 const cJoystick* cJoystick::getJoystick()
 {
     return( (const cJoystick*)m_pJoystick );
 }
 
-float cJoystick::getAxis(int axis)
+float cJoystick::getAxis(uint8_t axis)
 {
-    if(axis > 0 && axis < (int)vf_axis.size())
+    if(axis < (uint8_t)vf_axis.size())
     {
-        return( vf_axis[axis] );
+        return( vf_axis.at(axis) );
     }
     else
-        return(0.);
+        return(99.);
 }
 
-int cJoystick::getButton(int button)
+int cJoystick::getButton(uint8_t button)
 {
-    if(button > 0 && button < (int)vf_button.size())
+    if(button < (int)vf_button.size())
     {
-        return( vf_button[button] );
+        return( vf_button.at(button) );
     }
     else
         return(-1);

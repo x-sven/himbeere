@@ -1,0 +1,123 @@
+%% $RCSfile: fixptrelop.tlc,v $
+%% $Revision: 1.2.4.1 $
+%% $Date: 2005/06/24 08:54:53 $
+%%
+%% This file contains tlc code for generation of fixed point relational ops
+%%
+%% Copyright 1994-2005 The MathWorks, Inc.
+%%
+
+%% Function: FixPt_RelOp ==========================================
+%%
+%% Abstract:
+%%  Relational Operator
+%%
+%%  Vc = ( Va == Vb )
+%%  Vc = ( Va ~= Vb )
+%%  Vc = ( Va <  Vb )
+%%  Vc = ( Va <= Vb )
+%%  Vc = ( Va >= Vb )
+%%  Vc = ( Va >  Vb )
+%%
+%%  The records C, A, and B must contain
+%%  all the fixed point data type and scaling fields.
+%%  They must also contain a field called "Label"
+%%  In C_Language terms cLabel must be an l-value.
+%%  aLabel and bLabel are treated as read only and
+%%  they must provide the values (stored integers) for
+%%  A and B.  Please note none of the Labels can be addresses.
+%%
+%% Synopsis:
+%%      FixPt_RelOp(C,A,B,relOp)
+%%
+%%     C = record describing output
+%%     A = record describing input 1
+%%     B = record describing input 2
+%%     relOp = string contain relational operator (don't pad, no spaces at all)
+%%
+%function FixPt_RelOp(cLabel,cDT,aLabel,aDT,bLabel,bDT,relOp) Output
+  %%
+  %assign compareDT = FixPt_SelectRelopDataType(aDT,bDT)
+  %%
+  %<FixPt_RelOpCastBoth(cLabel,cDT,aLabel,aDT,bLabel,bDT,relOp,compareDT)>\
+  %%
+%endfunction  %% FixPt_RelOp
+  
+  
+%function FixPt_RelOpCastBoth(cLabel,cDT,aLabel,aDT,bLabel,bDT,relOp,compareDT) Output
+  %%
+  %openfile gutsOfUtil
+  %%
+  %assign aCastInWasUsed = 0
+  %assign bCastInWasUsed = 0
+  %%
+  %assign aCastLabel = "tempCastRelopInputLeft"
+  %assign bCastLabel = "tempCastRelopInputRght"
+  %%
+  %assign aRetVecStr = FixPt_Fix2Fix(aCastLabel,compareDT,aLabel,aDT,"Floor","Saturate")
+  %%
+  %if SIZE(aRetVecStr,1) == 3
+    %%
+    %assign aCastLabel = aRetVecStr[1]
+    %%
+  %else
+    %%
+    %assign aCastInWasUsed = 1
+    %%
+  %endif
+  %%
+  %assign bRetVecStr = FixPt_Fix2Fix(bCastLabel,compareDT,bLabel,bDT,"Floor","Saturate")
+  %%
+  %if SIZE(bRetVecStr,1) == 3
+    %%
+    %assign bCastLabel = bRetVecStr[1]
+    %%
+  %else
+    %%
+    %assign bCastInWasUsed = 1
+    %%
+  %endif
+  %%
+  %if cDT.NativeType != "real32_T"
+    %<cLabel> = (%<aCastLabel>) %<relOp> (%<bCastLabel>);
+  %else
+    %<cLabel> = (%<FixPt_single_label>)((%<aCastLabel>) %<relOp> (%<bCastLabel>));
+  %endif
+  %%
+  %closefile gutsOfUtil
+  %%
+  %if aCastInWasUsed || bCastInWasUsed
+    {
+      %if aCastInWasUsed
+        %<compareDT.NativeType> %<aCastLabel>;
+      %endif
+      %if bCastInWasUsed
+        %<compareDT.NativeType> %<bCastLabel>;
+      %endif
+      %<gutsOfUtil>
+    }
+  %else
+    %<gutsOfUtil>
+  %endif
+  %%
+%endfunction  %% FixPt_RelOpCastBoth
+
+
+
+%function FixPt_SelectRelopDataType(aDT,bDT) void
+  %%
+  %assign niceDTS = FEVAL("fixpt_data_type_rules", ...
+    "Relop", ...
+    "u1_dt", ...
+    aDT, ...
+    "u2_dt", ...
+    bDT, ...
+    "AllowedWordLengths", ...
+    ProdTargetAllowedWordSize, ...
+    "calledFromTlc")
+  %%
+  %assign binPointDT = FixPt_NumericType_2_TlcDT( niceDTS )
+  %%
+  %return binPointDT
+  %%
+%endfunction  %% FixPt_SensorDT_2_BinPointDT

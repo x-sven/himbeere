@@ -1,0 +1,732 @@
+%% 
+%% 
+%%
+%% Copyright 1994-2011 The MathWorks, Inc.
+%%
+%% Abstract: ToFile block target file.
+
+%implements ToFile "C"
+
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%      Cache the function for writing the mat file header at the bottom of
+%%      model_reg.h and its prototype at the bottom of model.h 
+%%      (or model_common.h).
+%%
+%function BlockTypeSetup(block, system) void
+  %%
+  %% Use sl_fileio module for writing MAT-File instead of stdio FILE
+  %%
+  %if ParamSettings.useHDF5
+    %<SLibAddToCommonIncludes("sl_fileio_rtw.h")>
+    %return ""
+  %endif
+
+  %%
+  %% Needed for FILE
+  %%
+  %<SLibAddToCommonIncludes("<stdio.h>")>
+
+  %openfile codeBuffer
+  %openfile fcnAbstract  
+Writes out MAT-file header.  Returns success or failure.
+Returns:
+     0 - success
+     1 - failure
+  %closefile fcnAbstract
+  
+  %assign fcnName = "rt_WriteMat4FileHeader"
+  %assign fcnReturns = "int_T"
+  %assign fcnParams = "FILE *fp, int32_T m, int32_T n, const char *name"
+  %createrecord fcnRec {Name fcnName; Returns fcnReturns; Params fcnParams; ...
+    Abstract fcnAbstract; Category "utility"; GeneratedBy "tofile.tlc"}
+  %<SLibDumpFunctionBanner(fcnRec)>
+  %undef fcnRec
+  %<fcnReturns> %<fcnName>(%<fcnParams>)
+  {
+    typedef enum { ELITTLE_ENDIAN, EBIG_ENDIAN } ByteOrder;
+
+    int16_T   one       = 1;
+    ByteOrder byteOrder = (*((int8_T *)&one)==1) ? ELITTLE_ENDIAN : EBIG_ENDIAN;
+    int32_T   type      = (byteOrder == ELITTLE_ENDIAN) ? 0: 1000;
+    int32_T   imagf     = 0;
+    int32_T   name_len  = strlen(name) + 1;
+
+    if((fwrite(&type,     sizeof(int32_T), 1, fp) == 0) ||
+       (fwrite(&m,        sizeof(int32_T), 1, fp) == 0) ||
+       (fwrite(&n,        sizeof(int32_T), 1, fp) == 0) ||
+       (fwrite(&imagf,    sizeof(int32_T), 1, fp) == 0) ||
+       (fwrite(&name_len, sizeof(int32_T), 1, fp) == 0) ||
+       (fwrite(name,       sizeof(char),    name_len, fp) == 0)) {
+      return(1);
+    } else {
+      return(0);
+    }
+
+  } /* end rt_WriteMat4FileHeader */
+
+
+  %closefile codeBuffer
+  
+  %openfile prototype
+  
+   int_T rt_WriteMat4FileHeader(FILE        *fp,
+                                int32_T      m,
+                                int32_T      n,
+			        const char_T *name);
+  
+  %closefile prototype
+  
+  %if GenUtilsSrcInSharedLocation == 1
+    %<LibPushEmptyStackSharedUtils()>
+    %<LibAddtoSharedUtilsIncludes("<stdio.h>")>
+    %<LibAddtoSharedUtilsIncludes("<string.h>")>
+    %<SLibDumpUtilsSourceCodeWithPrototypeIncludesAndCached("rt_WriteMat4FileHeader",prototype,codeBuffer,"#include <stdio.h>")>  
+    %assign GSUStackBuf = LibPopStackSharedUtilsIncludes()
+ %else   
+   %<SLibCacheSourceCode(codeBuffer)>
+   %<LibCacheFunctionPrototype(prototype)>
+ %endif 
+  
+%endfunction %% BlockTypeSetup
+
+
+%% BlockInstanceSetup =========================================================
+%% Abstract:
+%%      Define over-ride data type for PWork structure
+%%
+%function BlockInstanceSetup(block, system) void
+  %<LibBlockSetIsExpressionCompliant(block)>
+%endfunction %% BlockInstanceSetup
+
+%% FcnCreateH5LoggingCollection =================================================
+%function FcnCreateH5LoggingCollection( ...
+  block, ...
+  system, ...
+  signalName, ...
+  interpolationName, ...
+  decimation, ...
+  formatInt ...  
+  ) Output
+  %assign portDTypeId = LibBlockInputSignalDataTypeId(0)
+  %assign complex     = LibBlockInputSignalIsComplex(0)
+  %assign nDims       = LibBlockInputSignalNumDimensions(0)
+  %assign dims        = LibBlockInputSignalDimensions(0)
+  %assign varPath     = LibBlockInputSignal(0, "", "", 0)
+  %assign leafIdx     = 0
+  
+  errMsg = rtwH5LoggingCollectionCreateInstance(%<::CompiledModel.ErrorXMLMode>, &fp);
+  
+  %assign tmp = %<FcnCreateH5LoggingCollectionRecursion( ...
+    block, ...
+    system, ...
+    varPath, ...
+    portDTypeId, ...
+    complex, ...
+    nDims, ...
+    dims, ...
+    signalName, ...
+    interpolationName, ...
+    decimation, ...
+    formatInt, ...
+    leafIdx ...
+    )>
+%endfunction %% FcnCreateH5LoggingCollection
+
+%% FcnCreateH5LoggingCollectionRecursion ========================================
+%function FcnCreateH5LoggingCollectionRecursion( ...
+  block, ...
+  system, ...
+  varPath, ...
+  dTypeId, ...
+  complex, ...
+  nDims, ...
+  dims, ...
+  signalName, ...
+  interpolationName, ...
+  decimation, ...
+  formatInt, ...
+  leafIdx ...
+  ) Output
+  %assign portDTypeId = LibBlockInputSignalDataTypeId(0)
+  %assign dataTypeName = LibGetDataTypeNameFromId(dTypeId)
+  %assign nChildren = LibDataTypeNumElements(dTypeId)
+  %if nChildren == 0
+    {
+      %if nDims == 1
+        int_T dimensions[1] = {%<dims[0]>};
+      %else
+        %assign dimsInit = "int_T dimensions[%<nDims>] = {"
+        %foreach dimsIdx = nDims
+          %assign dimsInit = dimsInit + "%<dims[dimsIdx]>"
+          %if dimsIdx != nDims-1
+            %assign dimsInit = dimsInit + ", "
+          %endif
+        %endforeach
+        %assign dimsInit = dimsInit + "};"
+        %<dimsInit>
+      %endif
+      %% Default values for fixed-point properties which are
+      %% ignored when not logging fixed-point type
+      %assign fixedPoint = 0
+      %assign isSigned = 0
+      %assign wordLength = 0
+      %assign slopeAdjustmentFactor = 0
+      %assign fixedExponent = 0
+      %assign bias = 0
+      %assign dataTypeMode = 0
+      %if LibIsEnumDataType(dTypeId)
+        %assign dTypeId = SLibGetIdFromMLDataType("int32")
+      %elseif LibIsDataTypeFixpt(dTypeId)
+        %assign fixedPoint = 1
+        %assign curDT = FixPt_GetDataTypeFromIndex(dTypeId)
+        %if fxpIsDataTypeFixPt(curDT)     
+          %assign dataTypeMode = 0
+        %elseif fxpIsDataTypeScaledDouble(curDT)     
+          %assign dataTypeMode = 1
+        %elseif FixPt_DataTypeIsDouble(curDT)
+          %assign dataTypeMode = 2
+        %elseif FixPt_DatatTypeIsSingle(curDT)
+          %assign dataTypeMode = 3
+        %elseif FixPt_DatatTypeIsBoolean(curDT)
+          %assign dataTypeMode = 4
+        %else
+          %assert TLC_FALSE
+        %endif
+        %assign isSigned = curDT.IsSigned
+        %assign wordLength = curDT.RequiredBits
+        %assign slopeAdjustmentFactor = curDT.FracSlope
+        %assign fixedExponent = curDT.FixedExp
+        %assign bias = curDT.Bias
+        %assign dTypeId = LibGetDataTypeStorageIdFromId(dTypeId)
+      %endif
+      %assign className = SLibGetMLDataTypeFromId(dTypeId)
+      %if className == "boolean"
+        %assign className = "logical"
+      %endif
+      
+      char *u = (char *)&%<varPath>;
+      char *baseAddr = (char *)%<LibBlockInputSignalAddr(0, "", "", 0)>;
+      size_t offset = u - baseAddr;
+      errMsg = rtwH5LoggingCollectionAddElement(...
+        %<::CompiledModel.ErrorXMLMode>, ...
+        fp, ...
+        fileName, ...
+        %<leafIdx>, ...
+        "%<signalName>", ...
+        "%<interpolationName>", ...
+        "%<className>", ...
+        %<nDims>, ...
+        dimensions, ...
+        %<complex>, ...
+        %<decimation>, ...
+        %<formatInt>, ...
+        %<fixedPoint>, ...
+        %<dataTypeMode>, ...
+        %<isSigned>, ...
+        %<wordLength>, ...
+        %<slopeAdjustmentFactor>, ...
+        %<fixedExponent>, ...
+        %<bias>, ...
+        (void *)offset);
+    }
+    %assign leafIdx = leafIdx + 1
+  %else
+    %foreach childNo = nChildren
+      %assign childDTypeId = LibDataTypeElementDataTypeId(dTypeId, childNo)
+      %assign childComplex = LibDataTypeElementIsComplex(dTypeId, childNo)
+      %assign childNDims = LibDataTypeElementNumDimensions(dTypeId, childNo)
+      %assign childDims = LibDataTypeElementDimensions(dTypeId, childNo)
+      %assign childSignalName = LibDataTypeElementName(dTypeId, childNo)
+      %assign childVarPath = varPath + "." + childSignalName
+      %assign leafIdx = %<FcnCreateH5LoggingCollectionRecursion( ...
+        block, ...
+        system, ...
+        childVarPath, ...
+        childDTypeId, ...
+        childComplex, ...
+        childNDims, ...
+        childDims, ...
+        "", ...
+        interpolationName, ...
+        decimation, ...
+        formatInt, ...
+        leafIdx ...
+        )>
+    %endforeach
+  %endif
+  %return leafIdx
+%endfunction %% FcnCreateH5LoggingCollectionRecursion
+
+%% Function: Start ============================================================
+%% Abstract:
+%%      During startup open binary file and write .mat file header with record
+%%      count set to zero.
+%%
+%function Start(block, system) Output
+  %assign useHDF5 = ParamSettings.useHDF5
+  %assign nulldef = SLibGetNullDefinitionFromTfl()
+  %assign portDTypeId = LibBlockInputSignalDataTypeId(0)
+  %assign nChildren = LibDataTypeNumElements(portDTypeId)
+  %assign featureToFileBusLogging = FEVAL("slfeature", "ToFileBusLogging")
+  %if IsModelReferenceSimTarget() 
+    %assign simS = RTMsGet(system, "MdlRefSfcnS")
+    if(!((ssGetSimMode(%<simS>) == SS_SIMMODE_NORMAL) || 
+    (ssRTWGenIsAccelerator(%<simS>)))) {
+      %<LibBlockPWork(FilePtr, "", "", 0)> = %<nulldef>;
+    }
+    else
+  %endif
+  {
+    %assign fnStr = STRING(ParamSettings.Filename)
+    char fileName[%<RTWMaxStringLength>] = "%<fnStr>";
+    
+    %if useHDF5
+      void *fp = %<nulldef>;
+    %else
+      FILE *fp = %<nulldef>;
+    %endif
+    
+    %if isRSim
+      %if isRAccel
+        %assign blockPath = STRING(LibGetBlockPath(block))
+        const char *blockpath = "%<blockPath>";
+        rt_RAccelReplaceToFilename(blockpath,fileName);
+        rt_RAccelAddToFileSuffix(fileName);
+      %else
+        rt_RSimRemapToFileName(fileName);
+      %endif
+    %endif
+    
+    %if useHDF5
+      %assign decimation = ParamSettings.Decimation
+      %assign mtxName    = ParamSettings.MatrixName
+      %assign formatInt  = ParamSettings.SaveFormat
+      %assign signalName = ParamSettings.SignalName
+      %assign interpolationName = ParamSettings.InterpolationName
+      
+      %if featureToFileBusLogging == 1 && nChildren > 0
+        {
+          const char *errMsg = %<nulldef>;
+          %if formatInt == 0 %% 0 - TIMESERIES, 1- ARRAY
+            %assign seedfile      = ParamSettings.SeedFileMATFileName
+            %assign bufferName    = ParamSettings.SeedFileBufferName
+            %assign bufferLenName = ParamSettings.SeedFileBufferLenName
+                        
+            %if %<FILE_EXISTS(seedfile)> == TLC_TRUE
+              %assign fid        = FEVAL("fopen", seedfile, "r")
+              %assign data       = FEVAL("fread", fid, [1,inf], "*uint8")
+              %assign status     = FEVAL("fclose", fid)
+              %matlab delete(seedfile)
+              %openfile buffer
+              %assign bufferData = GENERATE_FORMATTED_VALUE(data, "")
+              %closefile buffer
+              
+              %% Built-in and enumerated types create a global buffer
+              %openfile glbBuf
+              uint8_T %<bufferName>[] = %<buffer>;
+              size_t %<bufferLenName> = sizeof(%<bufferName>)/sizeof(uint8_T);
+              %closefile glbBuf
+              %<SLibCacheSourceCode(glbBuf)>
+              %openfile extBuf
+              extern uint8_T %<bufferName>[];
+              extern size_t %<bufferLenName>;
+              %closefile extBuf
+              %<LibCacheExtern(extBuf)>
+            %endif
+            {
+              FILE *seedfp = %<nulldef>;
+              if ((seedfp = fopen(fileName, "wb")) == %<nulldef>) {
+                %assign errMsg = "\"Error creating .mat file %<fnStr>\""
+                %<RTMSetErrStat(errMsg)>;
+                return;
+              }
+              if (fwrite(%<bufferName>, sizeof(uint8_T), %<bufferLenName>, seedfp) == 0) {
+                %assign errMsg = "\"Error writing to .mat file %<fnStr>\""
+                %<RTMSetErrStat(errMsg)>;
+                return;
+              }
+              if (fclose(seedfp) == EOF) {
+                %assign errMsg = "\"Error closing MAT-file %<fnStr>\""
+                %<RTMSetErrStat(errMsg)>;
+                return;
+              }
+            }
+            errMsg = rtwSetMcosObjName(fileName,  %<::CompiledModel.ErrorXMLMode>, "%<mtxName>");
+            if (errMsg != %<nulldef>) {
+              %<RTMSetErrStat("errMsg")>;
+              return;
+            }
+          %endif
+          %<FcnCreateH5LoggingCollection( ...
+            block, ...
+            system, ...
+            signalName, ...
+            interpolationName, ...
+            decimation, ...
+            formatInt ...
+            )>
+        }
+      %else
+        %assign complex    = LibBlockInputSignalIsComplex(0)
+        %assign dTypeId    = LibBlockInputSignalDataTypeId(0)
+        %assign nDims      = LibBlockInputSignalNumDimensions(0)
+        %assign dims       = LibBlockInputSignalDimensions(0)
+        
+        {
+          const char *errMsg = %<nulldef>;
+          %if nDims == 1
+            int_T dimensions[1] = {%<dims[0]>};
+          %else
+            %assign dimsInit = "int_T dimensions[%<nDims>] = {"
+            %foreach dimsIdx = nDims
+              %assign dimsInit = dimsInit + "%<dims[dimsIdx]>"
+              %if dimsIdx != nDims-1
+                %assign dimsInit = dimsInit + ", "
+              %endif
+            %endforeach
+            %assign dimsInit = dimsInit + "};"
+            %<dimsInit>
+          %endif
+          
+          %% Default values for fixed-point properties which are
+          %% ignored when not logging fixed-point type
+          %assign fixedPoint = 0
+          %assign isSigned = 0
+          %assign wordLength = 0
+          %assign slopeAdjustmentFactor = 0
+          %assign fixedExponent = 0
+          %assign bias = 0
+          %assign dataTypeMode = 0
+          
+          %if formatInt == 0 %% 0 - TIMESERIES, 1- ARRAY
+            %assign seedfile      = ParamSettings.SeedFileMATFileName
+            %assign bufferName    = ParamSettings.SeedFileBufferName
+            %assign bufferLenName = ParamSettings.SeedFileBufferLenName
+            
+            %if LibIsEnumDataType(dTypeId)
+              %assign dTypeId = SLibGetIdFromMLDataType("int32")
+            %elseif LibIsDataTypeFixpt(dTypeId)
+              %assign fixedPoint = 1
+              %assign curDT = FixPt_GetDataTypeFromIndex(dTypeId)
+              
+              %if fxpIsDataTypeFixPt(curDT)     
+                %assign dataTypeMode = 0
+              %elseif fxpIsDataTypeScaledDouble(curDT)     
+                %assign dataTypeMode = 1
+              %elseif FixPt_DataTypeIsDouble(curDT)
+                %assign dataTypeMode = 2
+              %elseif FixPt_DatatTypeIsSingle(curDT)
+                %assign dataTypeMode = 3
+              %elseif FixPt_DatatTypeIsBoolean(curDT)
+                %assign dataTypeMode = 4
+              %else
+                %assert TLC_FALSE
+              %endif
+              
+              %assign isSigned = curDT.IsSigned
+              %assign wordLength = curDT.RequiredBits
+              %assign slopeAdjustmentFactor = curDT.FracSlope
+              %assign fixedExponent = curDT.FixedExp
+              %assign bias = curDT.Bias
+              %assign dTypeId = LibGetDataTypeStorageIdFromId(dTypeId)
+            %endif
+            
+            %if %<FILE_EXISTS(seedfile)> == TLC_TRUE
+              %assign fid        = FEVAL("fopen", seedfile, "r")
+              %assign data       = FEVAL("fread", fid, [1,inf], "*uint8")
+              %assign status     = FEVAL("fclose", fid)
+              %matlab delete(seedfile)
+              %openfile buffer
+              %assign bufferData = GENERATE_FORMATTED_VALUE(data, "")
+              %closefile buffer
+              
+              %% Built-in and enumerated types create a global buffer
+              %openfile glbBuf
+              uint8_T %<bufferName>[] = %<buffer>;
+              size_t %<bufferLenName> = sizeof(%<bufferName>)/sizeof(uint8_T);
+              %closefile glbBuf
+              %<SLibCacheSourceCode(glbBuf)>
+              %openfile extBuf
+              extern uint8_T %<bufferName>[];
+              extern size_t %<bufferLenName>;
+              %closefile extBuf
+              %<LibCacheExtern(extBuf)>
+            %endif
+            
+            {
+              FILE *seedfp = %<nulldef>;
+              if ((seedfp = fopen(fileName, "wb")) == %<nulldef>) {
+                %assign errMsg = "\"Error creating .mat file %<fnStr>\""
+                %<RTMSetErrStat(errMsg)>;
+                return;
+              }
+              if (fwrite(%<bufferName>, sizeof(uint8_T), %<bufferLenName>, seedfp) == 0) {
+                %assign errMsg = "\"Error writing to .mat file %<fnStr>\""
+                %<RTMSetErrStat(errMsg)>;
+                return;
+              }
+              if (fclose(seedfp) == EOF) {
+                %assign errMsg = "\"Error closing MAT-file %<fnStr>\""
+                %<RTMSetErrStat(errMsg)>;
+                return;
+              }
+            }
+            errMsg = rtwSetMcosObjName(fileName,  %<::CompiledModel.ErrorXMLMode>, "%<mtxName>");
+            if (errMsg != %<nulldef>) {
+              %<RTMSetErrStat("errMsg")>;
+              return;
+            }
+          %endif
+          
+          %assign className = SLibGetMLDataTypeFromId(dTypeId)
+          %if className == "boolean"
+            %assign className = "logical"
+          %endif
+          
+          errMsg = rtwH5LoggingCreateInstance(...
+            fileName, ...
+            %<::CompiledModel.ErrorXMLMode>, ...
+            "%<mtxName>", ...
+            "%<signalName>", ...
+            "%<interpolationName>", ...
+            "%<className>", ...
+            %<nDims>, ...
+            dimensions, ...
+            %<complex>, ...
+            %<decimation>, ...
+            %<formatInt>, ...
+            %<fixedPoint>, ...
+            %<dataTypeMode>, ...
+            %<isSigned>, ...
+            %<wordLength>, ...
+            %<slopeAdjustmentFactor>, ...
+            %<fixedExponent>, ...
+            %<bias>, ...
+            &fp);
+          if (errMsg != %<nulldef>) {
+            %<RTMSetErrStat("errMsg")>;
+            return;
+          }
+        }
+      %endif
+    %else
+      if ((fp = fopen(fileName, "wb")) == %<nulldef>) {
+        %assign errMsg = "\"Error creating .mat file %<fnStr>\""
+        %<RTMSetErrStat(errMsg)>;
+        return;
+      }
+      %assign width   = LibBlockInputSignalWidth(0)
+      %assign mtxName = ParamSettings.MatrixName
+      if (rt_WriteMat4FileHeader(fp,%<width+1>,0,"%<mtxName>")) {
+        %assign errMsg = "\"Error writing mat file header to file %<fnStr>\""
+        %<RTMSetErrStat(errMsg)>;
+        return;
+      }
+    %endif
+    %<LibBlockIWork(Count, "", "", 0)> = 0;
+    %<LibBlockIWork(Decimation, "", "", 0)> = -1;
+    %<LibBlockPWork(FilePtr, "", "", 0)> = fp;
+  }
+  
+%endfunction %% Start
+
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%      Write time and inputs to .mat file
+%%
+%function Outputs(block, system) Output
+  %assign nulldef = SLibGetNullDefinitionFromTfl()
+  %assign portDTypeId = LibBlockInputSignalDataTypeId(0)
+  %assign nChildren = LibDataTypeNumElements(portDTypeId)
+  %assign featureToFileBusLogging = FEVAL("slfeature", "ToFileBusLogging")
+  %if (SLibIsERTCodeFormat()) && (NumContStates > 0) && SLibIsRateGrouping() && ...
+    (ISEQUAL(SLibGetNumericTID(block), 0) || ...
+    (ISEQUAL(SLibGetNumericTID(block), 1) && LibGetTID01EQ()))
+    if (%<RTMIs("MajorTimeStep")>) {
+  %endif
+  
+  %if !ParamSettings.useHDF5 && Accelerator 
+    %assert(0)
+  %else
+    %assign width = LibGetRecordWidth(DataInputPort[0])        
+    %if ParamSettings.useHDF5
+      %assign condStrIsUsed = isRSimWithSolverModule || ...
+        ((Accelerator || IsModelReferenceSimTarget()) && ...
+        SolverType == "VariableStep")
+      %if condStrIsUsed
+        %assign condStr = RTMGet("LogOutput")
+        if ( %<condStr> ) {
+      %else
+        {
+      %endif
+      const char *errMsg = %<nulldef>;
+      void *fp = (void *) %<LibBlockPWork(FilePtr, "", "", 0)>;
+      
+      if(fp != %<nulldef>) {
+        real_T t;
+        %if featureToFileBusLogging == 1 && nChildren > 0
+          void *baseAddr;
+          %if Accelerator
+            baseAddr = 0;
+          %else
+            baseAddr = %<LibBlockInputSignalAddr(0, "", "", 0)>;
+          %endif
+          t = %<LibGetTaskTimeFromTID(block)>;
+          errMsg = rtwH5LoggingCollectionWrite(...
+            %<::CompiledModel.ErrorXMLMode>, ...
+            fp, ...
+            baseAddr, ...
+            t);
+        %else
+          %<LibBlockInputSignalDataTypeName(0, "")> u[%<width>];
+          t = %<LibGetTaskTimeFromTID(block)>;
+          %foreach idx = width
+            u[%<idx>] = %<LibBlockInputSignal(0, "", "", idx)>;
+          %endforeach
+          
+          errMsg = rtwH5LoggingWrite(%<::CompiledModel.ErrorXMLMode>, fp, t, u);
+        %endif
+        if (errMsg != %<nulldef>) {
+          %<RTMSetErrStat("errMsg")>;
+          return;
+        }
+      }
+    }
+    %else
+      %assign decimation = LibBlockIWork(Decimation, "", "", 0)
+      %assign condStr = "!(++%<decimation> % %<ParamSettings.Decimation>)"
+      %if isRSimWithSolverModule || ...
+        ((Accelerator || IsModelReferenceSimTarget()) && ...
+        SolverType == "VariableStep")
+        %assign condStr = RTMGet("LogOutput") + " && " + condStr
+      %endif
+      %% There is a limitation in writing out V4 matfiles of 10^8 elements.
+      %% Each time we write a step out to the matfile, the number of elements
+      %% is equal to the width of the signal plus one for time.
+      %assign maxEls = 100000000 %% 10^8
+      %assign condStr = condStr + " && " + "(%<LibBlockIWork(Count, "", "", 0)>*%<width + 1>)+1 < %<maxEls>"
+      
+      if ( %<condStr> ) {
+        FILE *fp = (FILE *) %<LibBlockPWork(FilePtr, "", "", 0)>;
+        
+        if(fp != %<nulldef>) {
+          real_T u[%<width + 1>];
+          
+          %<decimation> = 0;
+          
+          u[0] = %<LibGetTaskTimeFromTID(block)>;
+          %foreach idx = width
+            u[%<idx+1>] = %<LibBlockInputSignal(0, "", "", idx)>;
+          %endforeach
+          
+          if (fwrite(u, sizeof(real_T), %<width+1>, fp) != %<width+1>) {
+            %assign fnStr  = STRING(ParamSettings.Filename)
+            %assign errMsg = "\"Error writing to MAT-file %<fnStr>\""
+            %<RTMSetErrStat(errMsg)>;
+            return;
+          }
+          
+          if (((++%<LibBlockIWork(Count, "", "", 0)>)*%<width + 1>)+1 >= %<maxEls>) {
+            %assign fnStr  = STRING(ParamSettings.Filename)
+            (void)fprintf(stdout,
+            "*** The ToFile block will stop logging data before\n"
+            "    the simulation has ended, because it has reached\n"
+            "    the maximum number of elements (%<maxEls>)\n"
+            "    allowed in MAT-file %<fnStr>.\n");
+          }
+        }
+      }
+    %endif
+  %endif
+  %if (SLibIsERTCodeFormat()) && (NumContStates > 0) && SLibIsRateGrouping() && ...
+    (ISEQUAL(SLibGetNumericTID(block), 0) || ...
+    (ISEQUAL(SLibGetNumericTID(block), 1) && LibGetTID01EQ()))
+  }
+%endif
+%endfunction %% Outputs
+  
+
+%% Function: Terminate ========================================================
+%% Abstract:
+%%      Write record count to .mat file header and close the file
+%%
+%function Terminate(block, system) Output
+  %if Accelerator
+    %return ""
+  %endif
+
+  %assign nulldef = SLibGetNullDefinitionFromTfl()
+  %assign portDTypeId = LibBlockInputSignalDataTypeId(0)
+  %assign nChildren = LibDataTypeNumElements(portDTypeId)
+  %assign featureToFileBusLogging = FEVAL("slfeature", "ToFileBusLogging")
+  {
+    %if ParamSettings.useHDF5
+      const char *errMsg = %<nulldef>;
+      void *fp = (void *) %<LibBlockPWork(FilePtr, "", "", 0)>;
+      if(fp != %<nulldef>) {
+        %if featureToFileBusLogging == 1 && nChildren > 0
+          errMsg = rtwH5LoggingCollectionDestroyInstance(%<::CompiledModel.ErrorXMLMode>, fp);
+        %else
+          errMsg = rtwH5LoggingDestroyInstance(%<::CompiledModel.ErrorXMLMode>, fp);
+        %endif
+        if (errMsg != %<nulldef>) {
+          %<RTMSetErrStat("errMsg")>;
+          return;
+        }
+      }
+    %else
+      %assign fnStr = STRING(ParamSettings.Filename)
+      FILE *fp = (FILE *) %<LibBlockPWork(FilePtr, "", "", 0)>;
+      if (fp != %<nulldef>) {
+        
+      %assign fnStr = STRING(ParamSettings.Filename)
+      char fileName[%<RTWMaxStringLength>] = "%<fnStr>";
+      
+      %%  char fileName = "%<fnStr>";
+
+        %if isRSim
+          %if isRAccel
+            %assign blockPath = STRING(LibGetBlockPath(block))
+            const char *blockpath = "%<blockPath>";
+            rt_RAccelReplaceToFilename(blockpath,fileName);
+            rt_RAccelAddToFileSuffix(fileName);
+          %else
+            rt_RSimRemapToFileName(fileName);
+          %endif
+        %endif
+      
+        %assign matxName = ParamSettings.MatrixName
+        %assign width    = LibBlockInputSignalWidth(0)
+        %assign count    = LibBlockIWork(Count, "", "", 0)
+        %%
+        
+        if (fclose(fp) == EOF) {
+          %assign errMsg = "\"Error closing MAT-file %<fnStr>\""
+          %<RTMSetErrStat(errMsg)>;
+          return;
+        }
+        if ((fp = fopen(fileName, "r+b")) == %<nulldef>) {
+          %assign errMsg = "\"Error reopening MAT-file %<fnStr>\""
+          %<RTMSetErrStat(errMsg)>;
+          return;
+        }
+        if (rt_WriteMat4FileHeader(fp, %<width+1>, %<count>, "%<matxName>")) {
+          %assign errMsg = "\"Error writing header for %<matxName> to MAT-file %<fnStr>\""
+          %<RTMSetErrStat(errMsg)>;
+        }
+        if (fclose(fp) == EOF) {
+          %assign errMsg = "\"Error closing MAT-file %<fnStr>\""
+          %<RTMSetErrStat(errMsg)>;
+          return;
+        }
+        %<LibBlockPWork(FilePtr, "", "", 0)> = %<nulldef>;
+      }
+    %endif
+  }
+
+%endfunction %% Terminate
+
+%% [EOF] tofile.tlc

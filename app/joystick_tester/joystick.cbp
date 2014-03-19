@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="app/joy-tester" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="debug_linux32_x86_gcc">
+				<Option platforms="Unix;" />
+				<Option output="../../bin/joy_test_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/joy_test/debug/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add option="-DGPS_DEBUGGING" />
+					<Add option="-DWITH_STDIO" />
+				</Compiler>
+				<Linker>
+					<Add library="boost_system" />
+					<Add library="boost_filesystem" />
+					<Add library="boost_signals" />
+					<Add library="boost_program_options" />
+					<Add library="boost_chrono" />
+					<Add library="boost_timer" />
+					<Add library="boost_thread" />
+					<Add library="SDL2" />
+					<Add library="pthread" />
+					<Add library="dl" />
+					<Add library="stdc++" />
+					<Add directory="../../src/linux/SDL2-2.0.1/build/linux32" />
+				</Linker>
+			</Target>
+			<Target title="release_linux32_x86_gcc">
+				<Option platforms="Unix;" />
+				<Option output="../../bin/joy_test_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/joy_test/release/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="SDL2" />
+					<Add library="boost_system" />
+					<Add library="boost_filesystem" />
+					<Add library="boost_signals" />
+					<Add library="boost_program_options" />
+					<Add library="boost_chrono" />
+					<Add library="boost_timer" />
+					<Add library="boost_thread" />
+					<Add library="pthread" />
+					<Add library="dl" />
+					<Add library="stdc++" />
+					<Add directory="../../src/linux/SDL2-2.0.1/build/linux32" />
+				</Linker>
+			</Target>
+			<Target title="release_mac64_x86_gcc">
+				<Option platforms="Mac;" />
+				<Option output="../../bin/joy_test_mac64_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/joy_test/release/mac64/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="src/linux/sdl_joystick" />
+					<Add directory="/opt/local/include" />
+				</Compiler>
+				<Linker>
+					<Add option="-L/opt/local/lib" />
+					<Add option="-lSDLmain" />
+					<Add option="-Wl,-framework,AppKit" />
+					<Add option="-lSDL" />
+					<Add option="-Wl,-framework,Cocoa" />
+					<Add library="boost_system-mt" />
+					<Add library="boost_filesystem-mt" />
+					<Add library="boost_signals-mt" />
+					<Add library="boost_program_options-mt" />
+					<Add library="boost_chrono-mt" />
+					<Add library="boost_timer-mt" />
+					<Add library="boost_thread-mt" />
+					<Add library="SDL" />
+					<Add directory="/opt/local/lib" />
+				</Linker>
+			</Target>
+			<Target title="release_win32_x86_gcc">
+				<Option platforms="Windows;" />
+				<Option output="../../bin/joy_test_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/joy_test/release/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WIN32" />
+					<Add option="-DNDEBUG" />
+					<Add directory="../../src/windows/SDL2-2.0.1/include" />
+					<Add directory="../../src/windows/boost_1_49_0" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="SDL2" />
+					<Add directory="../../src/windows/SDL2-2.0.1/lib/x86" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="all" targets="debug_linux32_x86_gcc;release_linux32_x86_gcc;release_mac64_x86_gcc;release_win32_x86_gcc;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add option="-D_CONSOLE" />
+			<Add option="-DMODEL=tricopter_simulation_rtw" />
+			<Add option="-DNUMST=1" />
+			<Add option="-DNCSTATES=0" />
+			<Add option="-DHAVESTDIO" />
+			<Add option="-DONESTEPFCN=1" />
+			<Add option="-DTERMFCN=1" />
+			<Add option="-DMAT_FILE=0" />
+			<Add option="-DMULTI_INSTANCE_CODE=1" />
+			<Add option="-DINTEGER_CODE=0" />
+			<Add option="-DMT=0" />
+			<Add option="-DTID01EQ=0" />
+			<Add directory="../../src/cECF" />
+			<Add directory="../../src/linux/SDL2-2.0.1/include" />
+			<Add directory="../../src/matlab_r2011b" />
+			<Add directory="../../src/matlab_r2011b/rtw/c/src" />
+			<Add directory="../../src/matlab_r2011b/extern/include" />
+			<Add directory="../../src/matlab_r2011b/simulink/include" />
+			<Add directory="../../simulation/tricopter_simulation_rtw_ert_rtw" />
+			<Add directory="../../src/flightgearUDP" />
+			<Add directory="../../simulation" />
+			<Add directory="../../src/linux/sdl_joystick" />
+		</Compiler>
+		<Unit filename="testjoystick.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

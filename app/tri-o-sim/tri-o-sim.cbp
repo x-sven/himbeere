@@ -18,7 +18,6 @@
 					<Add option="-DDEBUG" />
 					<Add option="-DGPS_DEBUGGING" />
 					<Add option="-DWITH_STDIO" />
-					<Add directory="src/linux/sdl_joystick" />
 				</Compiler>
 				<Linker>
 					<Add library="boost_system" />
@@ -28,6 +27,11 @@
 					<Add library="boost_chrono" />
 					<Add library="boost_timer" />
 					<Add library="boost_thread" />
+					<Add library="SDL2" />
+					<Add library="pthread" />
+					<Add library="dl" />
+					<Add library="stdc++" />
+					<Add directory="../../src/linux/SDL2-2.0.1/build/linux32" />
 				</Linker>
 			</Target>
 			<Target title="release_linux32_x86_gcc">
@@ -39,10 +43,10 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add directory="src/linux/sdl_joystick" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="SDL2" />
 					<Add library="boost_system" />
 					<Add library="boost_filesystem" />
 					<Add library="boost_signals" />
@@ -50,6 +54,10 @@
 					<Add library="boost_chrono" />
 					<Add library="boost_timer" />
 					<Add library="boost_thread" />
+					<Add library="pthread" />
+					<Add library="dl" />
+					<Add library="stdc++" />
+					<Add directory="../../src/linux/SDL2-2.0.1/build/linux32" />
 				</Linker>
 			</Target>
 			<Target title="release_mac64_x86_gcc">
@@ -77,36 +85,81 @@
 					<Add library="boost_chrono-mt" />
 					<Add library="boost_timer-mt" />
 					<Add library="boost_thread-mt" />
+					<Add library="SDL" />
 					<Add directory="/opt/local/lib" />
+				</Linker>
+			</Target>
+			<Target title="release_win32_x86_gcc">
+				<Option platforms="Windows;" />
+				<Option output="../../bin/tri-o-sim_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/tri-o-sim/release/linux32/x86/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WIN32" />
+					<Add option="-DNDEBUG" />
+					<Add directory="../../src/windows/SDL2-2.0.1/include" />
+					<Add directory="../../src/windows/boost_1_49_0" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="SDL2" />
+					<Add directory="../../src/windows/SDL2-2.0.1/lib/x86" />
 				</Linker>
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="all" targets="debug_linux32_x86_gcc;release_linux32_x86_gcc;release_mac64_x86_gcc;" />
+			<Add alias="all" targets="debug_linux32_x86_gcc;release_linux32_x86_gcc;release_mac64_x86_gcc;release_win32_x86_gcc;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="../../src/ARDUINO" />
-			<Add directory="../../src/AP_GPS" />
-			<Add directory="../../src/i2cdevlib" />
-			<Add directory="../../src/linux/I2Cdev" />
-			<Add directory="../../src/linux/Logging" />
-			<Add directory="../../src/linux/Delay" />
-			<Add directory="../../src/linux/Millis" />
-			<Add directory="../../src/linux/HardwareSerial" />
-			<Add directory="../../src/linux/Drotek10dof" />
+			<Add option="-D_CONSOLE" />
+			<Add option="-DMODEL=tricopter_simulation_rtw" />
+			<Add option="-DNUMST=1" />
+			<Add option="-DNCSTATES=0" />
+			<Add option="-DHAVESTDIO" />
+			<Add option="-DONESTEPFCN=1" />
+			<Add option="-DTERMFCN=1" />
+			<Add option="-DMAT_FILE=0" />
+			<Add option="-DMULTI_INSTANCE_CODE=1" />
+			<Add option="-DINTEGER_CODE=0" />
+			<Add option="-DMT=0" />
+			<Add option="-DTID01EQ=0" />
 			<Add directory="../../src/cECF" />
-			<Add directory="../../src/mavlink/include/common" />
-			<Add directory="../../src/linux/DataLink" />
-			<Add directory="../../src/linux/SensorFusion" />
-			<Add directory="../../src/linux/BackgroundAction" />
-			<Add directory="../../src/linux/Wiring" />
+			<Add directory="../../src/linux/SDL2-2.0.1/include" />
+			<Add directory="../../src/matlab_r2011b" />
+			<Add directory="../../src/matlab_r2011b/rtw/c/src" />
+			<Add directory="../../src/matlab_r2011b/extern/include" />
+			<Add directory="../../src/matlab_r2011b/simulink/include" />
+			<Add directory="../../simulation/tricopter_simulation_rtw_ert_rtw" />
+			<Add directory="../../src/flightgearUDP" />
+			<Add directory="../../simulation" />
 			<Add directory="../../src/linux/sdl_joystick" />
 		</Compiler>
-		<Linker>
-			<Add library="SDL" />
-		</Linker>
+		<Unit filename="../../simulation/src/c_simulation.cpp" />
+		<Unit filename="../../simulation/src/c_simulation.h" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/rtwtypes.h" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/tricopter_simulation_rtw.cpp" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/tricopter_simulation_rtw.h" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/tricopter_simulation_rtw_capi.cpp" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/tricopter_simulation_rtw_capi.h" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/tricopter_simulation_rtw_data.cpp" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/tricopter_simulation_rtw_private.h" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/tricopter_simulation_rtw_types.h" />
+		<Unit filename="../../src/flightgearUDP/c_flightgear_base.cpp" />
+		<Unit filename="../../src/flightgearUDP/c_flightgear_base.hpp" />
+		<Unit filename="../../src/flightgearUDP/c_flightgear_sender_asio.cpp" />
+		<Unit filename="../../src/flightgearUDP/c_flightgear_sender_asio.hpp" />
+		<Unit filename="../../src/flightgearUDP/i_flightgear_sender.hpp" />
+		<Unit filename="../../src/flightgearUDP/net_fdm.hxx" />
+		<Unit filename="../../src/flightgearUDP/net_fdm_20.hxx" />
+		<Unit filename="../../src/flightgearUDP/net_fdm_24.hxx" />
+		<Unit filename="../../src/flightgearUDP/universal.h" />
 		<Unit filename="../../src/linux/sdl_joystick/c_joystick.cpp" />
 		<Unit filename="../../src/linux/sdl_joystick/c_joystick.hpp" />
 		<Unit filename="../../src/linux/sdl_joystick/c_joystick_manager.cpp" />

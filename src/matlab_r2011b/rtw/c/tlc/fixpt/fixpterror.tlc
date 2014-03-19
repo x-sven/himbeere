@@ -1,0 +1,123 @@
+%% 
+%% 
+%% 
+%%
+%% Copyright 1994-2011 The MathWorks, Inc.
+%%
+
+
+%% Function: FixPt_Error_Unless_CGIR_Forced_Off =============================
+%%
+%% Abstract: Throw an error when a section of TLC code
+%% is called, unless that call is in the contect for forced TLC
+%% testing.
+%%
+%% Code generation is moving from TLC to CGIR
+%% This move is occuring in pieces, so code generation currently
+%% relies on both CGIR and TLC.  
+%% 1) It is important to continue to test any TLC that will ship.
+%% 2) It is also important to prevent anything fully ported to
+%% CGIR from drifting back to into TLC usage.
+%% This functions is intended to support those competing goals.
+%%
+%% To achieve goal 1 of TLC coverage, MathWorks internal use only
+%% tests often force CGIR to be OFF.
+%% If this is the case, this function will return without error.
+%% Except for MathWorks internal use only testing, calls to this
+%% function will throw a fatal error.  Throwing the error supports goal 2.
+%%
+%function FixPt_Error_Unless_CGIR_Forced_Off() void
+  %%
+  %if !ISEQUAL(::CompiledModel.RTWCGIR,0)
+    %%
+    %%START_ASSERT
+    %openfile errTxt
+A regression from full CGIR support back to TLC usage has occurred.
+There was an improper call to a section of TLC code that remains solely for 
+the purpose of allowing other TLC code to be tested.  
+    %closefile errTxt
+    %<LibReportFatalError(errTxt)>\
+    %%END_ASSERT
+    %%
+  %endif
+  %return
+%endfunction
+
+
+%function FixPt_FloatingPointNotSupported(uDT) void
+    %%
+    %assign uIsFloat = FixPt_DataTypeIsFloat(uDT)
+    %%
+    %if uIsFloat
+      %%START_ASSERT
+      %assign errTxt = "Block: %<MaskBlockName> Floating point signals are not supported by this function."
+      %<LibReportFatalError(errTxt)>\
+      %%END_ASSERT
+    %endif
+%endfunction
+
+
+%function FixPt_FloatNotSupportedNamed(uDT,uDTName,fcnName) void
+    %%
+    %assign uIsFloat = FixPt_DataTypeIsFloat(uDT)
+    %%
+    %if uIsFloat
+      %%START_ASSERT
+      %assign errTxt = "Floating point data types are not supported for variable %<uDTName> by function %<fcnName>."
+      %<LibReportFatalError(errTxt)>\
+      %%END_ASSERT
+    %endif
+%endfunction
+
+
+%function FixPt_FixptNotSupportedNamed(uDT,uDTName,fcnName) void
+    %%
+    %assign uIsFloat = FixPt_DataTypeIsFloat(uDT)
+    %%
+    %if !uIsFloat
+      %%START_ASSERT
+      %assign errTxt = "Floating point data types are required for variable %<uDTName> by function %<fcnName>."
+      %<LibReportFatalError(errTxt)>\
+      %%END_ASSERT
+    %endif
+%endfunction
+
+
+%function FixPt_WordLengthLimitationCheck(uDT) void
+    %%
+    %assign uIsFixPt = fxpIsDataTypeFixPtNonBool(uDT) 
+    %%
+    %if uIsFixPt
+      %%
+      %if uDT.RequiredBits > LibMaxCodeGenWordSize()
+        %%
+        %assign w1 = uDT.RequiredBits
+        %assign w2 = IntegerSizes.LongNumBits
+        %assign w3 = LibMaxCodeGenWordSize()
+        %%
+        %%START_ASSERT
+        %openfile errTxt
+        
+An attempt has been made to generate code for an integer or fixed-point
+operation involving a word length of %<w1> bits. For integer and fixed-point
+data types, code generation is limited to word lengths of %<w3> bits or less.
+        %if IntegerSizes.LongNumBits < 32 
+This model has the additional limitation that generated code is restricted to
+word lengths of %<w2> bits or less. This additional limitation comes from this
+model's Configuration Parameters Hardware Implementation pane. That pane 
+specifies that the current target C Compiler only provides long integers with 
+%<w2> bits.
+        %endif
+Signals and parameters with excessively long word lengths usually cause errors
+earlier in the code generation process. It is therefore likely that this word 
+length violation is due to a variable used internal to a block.  The MATLAB 
+command window should currently contain a TLC Function Traceback listing. That
+listing can help identify the block using the excessively long word length.
+        %closefile errTxt
+        %<LibReportFatalError(errTxt)>\
+        %%END_ASSERT
+      %endif
+    %endif
+%endfunction
+
+

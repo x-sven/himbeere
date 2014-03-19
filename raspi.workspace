@@ -2,6 +2,7 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="Workspace">
 		<Project filename="src/i2cdevlib/i2cdevlib.cbp" />
+		<Project filename="src/matlab_r2011b/LIB_MATLAB.cbp" />
 		<Project filename="app/tri-o-sim/tri-o-sim.cbp" />
 		<Project filename="app/GPS_logger/gps_logger.cbp" />
 		<Project filename="app/IMU_logger/imu_logger.cbp" />
@@ -15,5 +16,7 @@
 		<Project filename="test/logging/boost_test/boost_test.cbp" />
 		<Project filename="app/wheatstone_benchmark/wheatstone_benchmark.cbp" />
 		<Project filename="app/control_tester/control_tester.cbp" />
+		<Project filename="src/flightgearUDP/asio_flightgear_sender.cbp" />
+		<Project filename="app/joystick_tester/joystick.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

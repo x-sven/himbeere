@@ -1,0 +1,210 @@
+%%
+%% $Revision: 1.1.6.11 $ 
+%%
+%% Abstract:
+%%   TLC file for generating pow functions via Target Function Library (TFL).
+%%
+%% Copyright 2007-2010 The MathWorks, Inc.
+
+%implements "genrtpow32" "C"
+
+%% Function: rt_pow_util32 =========================================================
+%% Abstract:
+%%      GENERATE entry point for Target Function Library TLC callbacks for
+%%      single-precision real-input/real-output versions.
+%%      Creates header and source file contents for POW functions.
+%%
+%function rt_pow32_util(fctInfo,fileH,fileC,supportNonFinites) void
+  
+  %assign RawPowFcnInfo = LibGenTwoInputFcnCallInfo("raw_pow", tSS_SINGLE, "xr", "yr")
+  %assign RawPowXrYr  = RawPowFcnInfo.Expr
+  %assign AbsFcnInfo  = SLibGenOneInputOneOutputFcnCallInfo("abs", tSS_SINGLE, tSS_SINGLE, "xr")
+  %assign AbsXr       = AbsFcnInfo.Expr
+  %assign AbsYr       = LibGenOneInputOneOutputFcnCall("abs", tSS_SINGLE, tSS_SINGLE, "yr")
+  %assign SqrtFcnInfo = SLibGenOneInputOneOutputFcnCallInfo("sqrt", tSS_SINGLE, tSS_SINGLE, "xr")
+  %assign SqrtXr      = SqrtFcnInfo.Expr
+  %assign FloorFcnInfo= SLibGenOneInputOneOutputFcnCallInfo("floor", tSS_SINGLE, tSS_SINGLE, "yr")
+  %assign FloorYr     = FloorFcnInfo.Expr
+  %if supportNonFinites
+    %assign rtInfInfo = SLibGetMathConstantInfo("rtInf", tSS_SINGLE)
+    %assign InfVal    = rtInfInfo.Expr
+    %assign rtNaNInfo = SLibGetMathConstantInfo("rtNaN", tSS_SINGLE)
+    %assign NaNVal    = rtNaNInfo.Expr
+    %assign xrIsNaN   = LibGenOneInputOneOutputFcnCall("rtIsNaN", tSS_SINGLE, tSS_BOOLEAN, "xr")
+    %assign yrIsNaN   = LibGenOneInputOneOutputFcnCall("rtIsNaN", tSS_SINGLE, tSS_BOOLEAN, "yr")
+    %assign ayrIsInf  = LibGenOneInputOneOutputFcnCall("rtIsInf", tSS_SINGLE, tSS_BOOLEAN, "ayr")
+  %endif
+  
+  %% Create header file contents
+  %openfile buf
+ /*
+  * %<fctInfo.FileName>.h
+  *
+  %<SLibCommonUtilHeaderInfo()>\
+  */
+  %closefile buf
+  %<SLibCacheUtilCodeToFile("util_hdr_banner", fileH, buf)>
+  
+  %openfile buf
+  #include "rtwtypes.h"
+  
+  %closefile buf
+  %<SLibCacheUtilCodeToFile("util_hdr_incl", fileH, buf)>
+
+  %assign msFcn = SLibGetMemSecCategoryForUtilityFcn()
+  %assign fcnName = fctInfo.FcnName
+  %openfile buf
+  %<FcnGenOpenExternCForCPP()>
+  %<SLibGetFcnMemSecPragmaOnDecl(fcnName, msFcn, "Pre")>\
+  %<LibExternInFcnDecls()>real32_T %<fctInfo.FcnName>(const real32_T xr, const real32_T yr);
+  %<SLibGetFcnMemSecPragmaOnDecl(fcnName, msFcn, "Post")>\
+  %<FcnGenCloseExternCForCPP()>
+  %closefile buf
+  %<SLibCacheUtilCodeToFile("util_hdr_decl", fileH, buf)>
+
+  %% Create source file contents
+  %openfile buf
+ /*
+  * %<fctInfo.FileName>.%<LangFileExt>
+  *
+  %<SLibCommonUtilHeaderInfo()>\
+  */
+  %closefile buf
+
+  %<SLibCacheUtilCodeToFile("util_src_banner", fileC, buf)>
+  
+  %assign hdr_name = fctInfo.FileName + ".h"
+  %openfile buf
+  #include "%<hdr_name>"
+  
+  %if supportNonFinites
+    %%Include the header files for NaN and Inf
+    #include %<rtInfInfo.HeaderFile>
+
+    %if rtNaNInfo.HeaderFile != rtInfInfo.HeaderFile
+      #include %<rtNaNInfo.HeaderFile>
+    %endif
+
+  %endif
+
+  %%Include the header file for mathlib
+  #include %<RawPowFcnInfo.HeaderFile>
+  
+  %if AbsFcnInfo.HeaderFile != RawPowFcnInfo.HeaderFile
+    #include %<AbsFcnInfo.HeaderFile>
+  %endif
+  
+  %if SqrtFcnInfo.HeaderFile != RawPowFcnInfo.HeaderFile && ...
+    SqrtFcnInfo.HeaderFile != AbsFcnInfo.HeaderFile
+    #include %<SqrtFcnInfo.HeaderFile>
+  %endif
+  
+  %if FloorFcnInfo.HeaderFile != RawPowFcnInfo.HeaderFile && ...
+    FloorFcnInfo.HeaderFile != AbsFcnInfo.HeaderFile && ...
+    FloorFcnInfo.HeaderFile != SqrtFcnInfo.HeaderFile
+    #include %<FloorFcnInfo.HeaderFile>
+  %endif
+  
+  %closefile buf
+  %<SLibCacheUtilCodeToFile("util_src_incl", fileC, buf)>
+
+  %openfile buf
+  %if GenCPP
+  extern "C" {
+  %endif
+  %assign fcnReturns = "real32_T"
+  %assign fcnParams = "const real32_T xr, const real32_T yr"
+  %openfile fcnAbstract
+  %if (supportNonFinites == TLC_TRUE)
+Calls single-precision version of POW, with guard against domain error 
+and guards against non-finites
+  %else
+Calls single-precision version of POW directly, with no guards against 
+domain error or non-finites
+  %endif
+  %closefile fcnAbstract
+  
+  %createrecord fcnRec {Name fcnName; Returns fcnReturns; Params fcnParams; Abstract fcnAbstract; ...
+    Category "utility"; GeneratedBy "genrtpow32.tlc"}
+  %<SLibDumpFunctionBanner(fcnRec)>
+  %undef fcnRec  
+  %<SLibGetFcnMemSecPragma(fcnName, msFcn, "Pre")>\
+  %<fcnReturns> %<fcnName>(%<fcnParams>)
+  {
+  %if supportNonFinites
+    real32_T ret, axr, ayr;
+    if(%<xrIsNaN> || %<yrIsNaN>) {
+      ret = %<NaNVal>;
+    } else {
+      axr = %<AbsXr>;
+      ayr = %<AbsYr>;
+      if(%<ayrIsInf>) {
+        if(axr == 1.0F) {
+          ret = %<NaNVal>;
+        } else if(axr > 1.0F) {
+          if(yr > 0.0F) {
+            ret = %<InfVal>;
+          } else {
+            ret = 0.0F;
+          }
+        } else {
+          if(yr > 0.0F) {
+            ret = 0.0F;
+          } else {
+            ret = %<InfVal>;
+          }
+        }
+      } else {
+        if(ayr == 0.0F) {
+          ret = 1.0F;
+        } else if(ayr == 1.0F) {
+          if(yr > 0.0F) {
+            ret = xr;
+          } else {
+            ret = 1.0F/xr;
+          }
+        } else if(yr == 2.0F) {
+          ret = xr*xr;
+        } else if(yr == 0.5F && xr >= 0.0F) {
+          ret = %<SqrtXr>;
+        } else if((xr < 0.0F) && (yr > %<FloorYr>)) {
+          ret = %<NaNVal>;
+        } else {
+          ret = %<RawPowXrYr>;
+        }
+      }
+    }
+    return ret;
+  %else
+    return(%<RawPowXrYr>);
+  %endif
+  } /* end %<fctInfo.FcnName> */
+  %<SLibGetFcnMemSecPragma(fcnName, msFcn, "Post")>\
+  
+  %if GenCPP
+  }
+  %endif
+  
+  %closefile buf
+  %<SLibCacheUtilCodeToFile("util_src_fcn_defn", fileC, buf)>
+
+%endfunction
+ 
+
+%% Function: rt_pow32_snf =======================================================
+%% Abstract:
+%%      GENERATE entry point for Target Function Library TLC callbacks. Creates
+%%      header and source file contents for pow_rc by calling rt_pow
+%%
+%function rt_pow32_snf(fctInfo,fileH,fileC) void
+  %<rt_pow32_util(fctInfo,fileH,fileC,TLC_TRUE)>
+%endfunction
+
+%% Function: rt_pow32 =======================================================
+%% Abstract:
+%%      GENERATE entry point for Target Function Library TLC callbacks. Creates
+%%      header and source file contents for pow_rc by calling rt_pow
+%%
+%function rt_pow32(fctInfo,fileH,fileC) void
+  %<rt_pow32_util(fctInfo,fileH,fileC,TLC_FALSE)>
+%endfunction

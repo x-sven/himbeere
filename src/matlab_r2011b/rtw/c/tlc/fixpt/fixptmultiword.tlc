@@ -1,0 +1,94 @@
+%% $Revision: 1.1.6.1 $
+%% $Date: 2010/04/21 17:32:42 $
+%%
+%% Copyright 1994-2010 The MathWorks, Inc.
+%%
+%% MultiWord TLC utilities
+
+%% Function: FixPt_MultiWordCompGT===================================================
+%% Abstract: 
+%%   This function calls cgir to compare fixed point data.
+%function FixPt_MultiWordCompGT(yLabel, yDT, u0Label, u0DT, u1Label, u1DT, roundMode, satMode) Output
+  %%
+  %<FixPt_WordLengthLimitationCheck(u0DT)>\
+  %<FixPt_WordLengthLimitationCheck(u1DT)>\
+  %%
+  %if FixPt_DataTypeIsMultiWord(u0DT) || ...
+    FixPt_DataTypeIsMultiWord(u1DT)
+    %%
+    %assign vecCGIR = FEVAL("rtwprivate", "rtwcgtlc", "FixPtGT", ...
+      yLabel, yDT, u0Label, u0DT, u1Label, u1DT, roundMode, satMode)
+    %%
+    %<vecCGIR[2]>\
+    %%
+  %else
+    %error "rtwcgtlc: FixPt_MultiWordCompGT only works for MultiWord Comparison"    
+  %endif
+  %%
+%endfunction  %% FixPt_MultiWordCompGT        
+
+%% Function: FixPt_MultiWordCompLT===================================================
+%% Abstract: 
+%%   This function calls cgir to compare fixed point data.
+%function FixPt_MultiWordCompLT(yLabel, yDT, u0Label, u0DT, u1Label, u1DT, roundMode, satMode) Output
+  %%
+  %<FixPt_WordLengthLimitationCheck(u0DT)>\
+  %<FixPt_WordLengthLimitationCheck(u1DT)>\
+  %%
+  %if FixPt_DataTypeIsMultiWord(u0DT) || ...
+    FixPt_DataTypeIsMultiWord(u1DT)
+    %%
+    %assign vecCGIR = FEVAL("rtwprivate", "rtwcgtlc", "FixPtLT", ...
+      yLabel, yDT, u0Label, u0DT, u1Label, u1DT, roundMode, satMode)
+    %%
+    %<vecCGIR[2]>\
+    %%
+  %else
+    %error "rtwcgtlc: FixPt_MultiWordCompLT only works for MultiWord Comparison"    
+  %endif
+  %%
+%endfunction  %% FixPt_MultiWordCompLT        
+
+%% Function: FixPt_MultiWordCompGE===================================================
+%% Abstract: 
+%%   This function calls cgir to compare fixed point data.
+%function FixPt_MultiWordCompGE(yLabel, yDT, u0Label, u0DT, u1Label, u1DT, roundMode, satMode) Output
+  %%
+  %<FixPt_WordLengthLimitationCheck(u0DT)>\
+  %<FixPt_WordLengthLimitationCheck(u1DT)>\
+  %%
+  %if FixPt_DataTypeIsMultiWord(u0DT) || ...
+    FixPt_DataTypeIsMultiWord(u1DT)
+    %%
+    %assign vecCGIR = FEVAL("rtwprivate", "rtwcgtlc", "FixPtGE", ...
+      yLabel, yDT, u0Label, u0DT, u1Label, u1DT, roundMode, satMode)
+    %%
+    %<vecCGIR[2]>\
+    %%
+  %else
+    %error "rtwcgtlc: FixPt_MultiWordCompGE only works for MultiWord Comparison"    
+  %endif
+  %%
+%endfunction  %% FixPt_MultiWordCompGE        
+
+%% Function: FixPt_MultiWordCompLE===================================================
+%% Abstract: 
+%%   This function calls cgir to compare fixed point data.
+%function FixPt_MultiWordCompLE(yLabel, yDT, u0Label, u0DT, u1Label, u1DT, roundMode, satMode) Output
+  %%
+  %<FixPt_WordLengthLimitationCheck(u0DT)>\
+  %<FixPt_WordLengthLimitationCheck(u1DT)>\
+  %%
+  %if FixPt_DataTypeIsMultiWord(u0DT) || ...
+    FixPt_DataTypeIsMultiWord(u1DT)
+    %%
+    %assign vecCGIR = FEVAL("rtwprivate", "rtwcgtlc", "FixPtLE", ...
+      yLabel, yDT, u0Label, u0DT, u1Label, u1DT, roundMode, satMode)
+    %%
+    %<vecCGIR[2]>\
+    %%
+  %else
+    %error "rtwcgtlc: FixPt_MultiWordCompLE only works for MultiWord Comparison"    
+  %endif
+  %%
+%endfunction  %% FixPt_MultiWordCompLE        

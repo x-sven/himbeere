@@ -1,0 +1,8 @@
+LIBRARY "libmwarpack.dll"
+EXPORTS
+dnaupd
+dneupd
+dsaupd
+dseupd
+znaupd
+zneupd
