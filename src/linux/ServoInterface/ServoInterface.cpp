@@ -34,11 +34,12 @@ bool ServoInterface::update(void)
     if(0 < numc )
     {
         // printf("Number bytes: %d \n",numc); fflush(stdout);
+
         for (int16_t i=0; i < numc; i++)
         {
 
             bytedata = m_stream->read();
-            //printf("0x%x ",bytedata);
+          //  printf("0x%x ",bytedata);
             switch(reciever_state)
             {
 
@@ -70,37 +71,34 @@ bool ServoInterface::update(void)
                 }
                 else
                 {
-                    rx_channel[(unsigned int)reciever_couter/2] |= bytedata;
+                    rx_channel[(unsigned int)(reciever_couter/2+0.5)] |= bytedata;
                 }
-
+              //  printf("|");
                 reciever_couter++;
 
-                if(bytedata==0xfe )
-                {
-                    reciever_couter=0;
-                    reciever_state=0;
-                }
-                if(bytedata==0xff)
-                {
-                    reciever_couter=0;
-                    reciever_state=1;
-                }
-
+//                if(bytedata==0xfe )
+//                {
+//                    reciever_couter=0;
+//                    reciever_state=0;
+//                }
+//                if(bytedata==0xff)
+//                {
+//                    reciever_couter=0;
+//                    reciever_state=1;
+//                }
 
                 if(reciever_couter>11) // 6x2 bytes in rx_channel
                 {
                     reciever_couter=0;
-                    reciever_state=3;
+                    reciever_state=0;
+                 //   printf("\n");
+                    //printf("%d %d %d %d %d %d\n",rx_channel[0],rx_channel[1],rx_channel[2],rx_channel[3],rx_channel[4],rx_channel[5]);
+
+                    // TODO (sven#1#): CRC check here?
+                    ret_val=true;
                 }
-                break;
-            case 3:
-//                    printf("\n");
-//                printf("%d %d %d %d %d %d\n",rx_channel[0],rx_channel[1],rx_channel[2],rx_channel[3],rx_channel[4],rx_channel[5]);
 
-// TODO (sven#1#): CRC check here?
 
-                reciever_state=0;
-                ret_val=true;
                 break;
             default:
                 ;
@@ -114,12 +112,13 @@ bool ServoInterface::update(void)
 
 uint16_t ServoInterface::get_channel(uint8_t channel)
 {
-    if(0 < channel) // && channel < num_ch_max
+    if(0 <= channel) // && channel < num_ch_max
     {
         return(rx_channel[channel]);
     }
     else
     {
+        printf("Error in get_channel()!\n");
         return(0);
     }
 }

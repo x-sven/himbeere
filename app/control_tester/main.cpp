@@ -49,7 +49,7 @@ void setup()
     command_buffer[1] = 0xfe;
 }
 
-void set_commands(uint16_t lat_us, uint16_t lon_us, uint16_t ped_us, uint16_t col_us)
+void set_commands(uint16_t ped_us, uint16_t col_us, uint16_t lon_us, uint16_t lat_us)
 {
     unsigned int ppm_min=900;
     unsigned int ppm_max=2100;
@@ -63,6 +63,7 @@ void set_commands(uint16_t lat_us, uint16_t lon_us, uint16_t ped_us, uint16_t co
     if(col_us<ppm_min || col_us >ppm_max)
             command_state=1;
 
+
     command_buffer[2] = (ped_us>>8) & 0xff;
     command_buffer[3] = ped_us & 0xff  ;
 
@@ -75,10 +76,15 @@ void set_commands(uint16_t lat_us, uint16_t lon_us, uint16_t ped_us, uint16_t co
     command_buffer[8] = (lat_us>>8) & 0xff;
     command_buffer[9] = lat_us & 0xff  ;
 
+
     unsigned short crc = crcsum(&command_buffer[2], 8, 0xffff);
 
     command_buffer[10] =  crc & 0xff;
     command_buffer[11] =  (crc>>8) & 0xff;
+
+
+    command_buffer[10] =   0xcc;
+    command_buffer[11] =   0xcc;
 
     Serial.write((uint8_t*)&command_buffer, 12);
 }
@@ -111,9 +117,13 @@ int main()
 
     while(execute)
     {
+        //   set_commands(1900,1900,1900,1900);
+
         // *********** 100Hz begin ***********
         if(fcci.update()){
             set_commands(fcci.get_channel(0),fcci.get_channel(1),fcci.get_channel(2),fcci.get_channel(3));
+            //set_commands(1900,1900,1900,1900);
+
         }
 
 //        float f_seconds_now = ((pt::microsec_clock::local_time()-initial_microseconds).total_microseconds()/1.e+6);
