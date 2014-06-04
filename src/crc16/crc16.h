@@ -27,6 +27,8 @@ int crcverify(const unsigned char* message,
 void crcappend(unsigned char* message,
 		      unsigned long length);
 
+unsigned short crcFast(unsigned char const message[], int nBytes);
+
 #ifdef __cplusplus
 }
 #endif

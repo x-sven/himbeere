@@ -1,15 +1,16 @@
 #include "ServoInterface.h"
+#include "../../src/crc16/crc16.h"
 
 ServoInterface::ServoInterface(Stream *stream):
-    num_channel_max(6),
+    num_channel_max(7),
     m_stream(NULL),
     reciever_state(0),
     reciever_couter(0),
     rx_channel(NULL)
 {
     rx_channel = (uint16_t*)malloc(num_channel_max*sizeof(uint16_t));
-
-    memset(rx_channel, 0, 6);
+    memset(rx_buffer, 0, 14);
+    memset(rx_channel, 0, 7);
     if(NULL != stream)
     {
         begin(stream);
@@ -30,6 +31,7 @@ bool ServoInterface::update(void)
     int16_t numc = 0;
     bool ret_val=false;
 
+
     numc = m_stream->available();
     if(0 < numc )
     {
@@ -39,7 +41,8 @@ bool ServoInterface::update(void)
         {
 
             bytedata = m_stream->read();
-          //  printf("0x%x ",bytedata);
+//            printf("%d (%d)",bytedata, reciever_state);
+
             switch(reciever_state)
             {
 
@@ -73,8 +76,9 @@ bool ServoInterface::update(void)
                 {
                     rx_channel[(unsigned int)(reciever_couter/2+0.5)] |= bytedata;
                 }
-              //  printf("|");
+                rx_buffer[reciever_couter]=bytedata;
                 reciever_couter++;
+
 
 //                if(bytedata==0xfe )
 //                {
@@ -87,14 +91,21 @@ bool ServoInterface::update(void)
 //                    reciever_state=1;
 //                }
 
-                if(reciever_couter>11) // 6x2 bytes in rx_channel
+                if(reciever_couter>13) // 6x2 + 2 bytes in rx_channel (+1 weil 1x reciever_couter++)
                 {
+
+//                    printf("\n");
+//                    printf("%d: %d %d %d %d %d %d %d\n",reciever_couter, rx_channel[0],rx_channel[1],rx_channel[2],rx_channel[3],rx_channel[4],rx_channel[5], rx_channel[6]);
                     reciever_couter=0;
                     reciever_state=0;
-                 //   printf("\n");
-                    //printf("%d %d %d %d %d %d\n",rx_channel[0],rx_channel[1],rx_channel[2],rx_channel[3],rx_channel[4],rx_channel[5]);
-
                     // TODO (sven#1#): CRC check here?
+
+                    const unsigned char* p_data = (unsigned char*)&rx_channel[0];
+
+                    if(rx_channel[6] != crcFast(rx_buffer,12))
+                    {
+                        printf("CRC error! (%d != %d)\n", rx_channel[6], crcFast(rx_buffer,12));
+                    }
                     ret_val=true;
                 }
 
@@ -118,7 +129,7 @@ uint16_t ServoInterface::get_channel(uint8_t channel)
     }
     else
     {
-        printf("Error in get_channel()!\n");
+        printf("Error in gert_channel()!\n");
         return(0);
     }
 }

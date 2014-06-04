@@ -121,8 +121,17 @@ int main()
 
         // *********** 100Hz begin ***********
         if(fcci.update()){
-            set_commands(fcci.get_channel(0),fcci.get_channel(1),fcci.get_channel(2),fcci.get_channel(3));
-            //set_commands(1900,1900,1900,1900);
+
+            printf("Servo channels: ");
+            for(uint8_t ch = 0; ch < fcci.num_channel_max; ch++)
+            {
+                printf("%d ", fcci.get_channel(ch));
+            }
+            printf("\n");
+
+
+            //set_commands(fcci.get_channel(0),fcci.get_channel(1),fcci.get_channel(2),fcci.get_channel(3));
+            set_commands(1900,1900,1900,1900);
 
         }
 
@@ -133,14 +142,8 @@ int main()
 //        printf("%.3f %.3f\n", f_seconds_now, yr);
 
         // ******** 10Hz begin ********
-        if (timer_100Hz > timer_10Hz)
+        //if (timer_100Hz > timer_10Hz)
         {
-            printf("Servo channels: ");
-            for(uint8_t ch = 0; ch < fcci.num_channel_max; ch++)
-            {
-                printf("%d ", fcci.get_channel(ch));
-            }
-            printf("\n");
 
             set_commands(0,0,0,0);
 

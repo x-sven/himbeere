@@ -42,11 +42,39 @@ static const unsigned short crc_table[256] = {
 
 /* CRC calculation macros */
 #define CRC_INIT 0xFFFF
+#define WIDTH  (8 * sizeof(unsigned short))
+#define TOPBIT (1 << (WIDTH - 1))
 
 inline void CRC(unsigned short crcval, unsigned char newchar)
 {
     crcval = (crcval >> 8) ^ crc_table[(crcval ^ newchar) & 0x00ff];
 }
+
+unsigned short crcFast(unsigned char const message[], int nBytes)
+{
+    unsigned char data;
+    unsigned short remainder = 0;
+    int byte;
+
+    /*
+     * Divide the message by the polynomial, a byte at a time.
+     */
+    for (byte = 0; byte < nBytes; ++byte)
+    {
+//        printf("%d  ",message[byte]);
+        data = message[byte] ^ (remainder >> (WIDTH - 8));
+        remainder = crc_table[data] ^ (remainder << 8);
+    }
+
+//    printf("%d \n",remainder);
+
+    /*
+     * The final remainder is the CRC.
+     */
+    return (remainder);
+
+}
+
 
 unsigned short
 crcsum(const unsigned char* message, unsigned long length,
