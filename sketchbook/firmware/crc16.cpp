@@ -52,8 +52,6 @@ unsigned short crcFast(unsigned char const message[], int nBytes)
 {
   unsigned char data;
   unsigned short remainder = 0;
-
-
   /*
      * Divide the message by the polynomial, a byte at a time.
    */
@@ -80,9 +78,7 @@ inline void CRC(unsigned short crcval, unsigned char newchar)
   crcval = (crcval >> 8) ^ crc_table[(crcval ^ newchar) & 0x00ff];
 }
 
-unsigned short
-crcsum(const unsigned char* message, unsigned long length,
-unsigned short crc)
+unsigned short crcsum(const unsigned char* message, unsigned long length, unsigned short crc)
 {
   unsigned long i;
 
@@ -93,8 +89,7 @@ unsigned short crc)
   return crc;
 }
 
-int
-crcverify(const unsigned char* message, unsigned long length)
+int crcverify(const unsigned char* message, unsigned long length)
 {
   /*
    * Returns true if the last two bytes in a message is the crc of the
@@ -107,8 +102,7 @@ crcverify(const unsigned char* message, unsigned long length)
     ((expected >> 8) & 0xff) == message[length - 1];
 }
 
-void
-crcappend(unsigned char* message, unsigned long length)
+void crcappend(unsigned char* message, unsigned long length)
 {
   unsigned long crc;
 

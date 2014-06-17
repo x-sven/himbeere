@@ -13,10 +13,15 @@ FG_SCENERY=$FG_ROOT/Scenery
     --disable-real-weather-fetch \
     --disable-sound \
     --disable-intro-music \
+    --disable-terrasync \
+    --airport=EDVE \
     --fdm=null \
     --bpp=32 \
     --atlas=socket,out,5,localhost,5505,udp \
     --native-fdm=socket,in,25,,5507,udp
+
+#    --enable-terrasync \
+
 
 #"C:\Program Files\FlightGear\bin\Win32\fgfs.exe" ^
 #  --fg-root="C:\Program Files\FlightGear\data" ^
