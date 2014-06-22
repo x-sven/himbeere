@@ -4,7 +4,11 @@
 #if !defined(__linux__)  && !defined(__APPLE__)
 #include <Arduino.h>
 #else
+#include <stdio.h>      /* printf, scanf, NULL */
+#include <stdlib.h>     /* malloc, free, rand */
 #include <iostream>
+#include <string.h>
+#include <stdint.h>
 #define boolean bool
 #endif
 
@@ -16,6 +20,7 @@ class cServoChannels
     cServoChannels(size_t size);
     ~cServoChannels();
     boolean valid();
+    size_t size(void);
     cServoChannels & operator=(cServoChannels const &other);
     unsigned int & operator[](size_t const &index);
 

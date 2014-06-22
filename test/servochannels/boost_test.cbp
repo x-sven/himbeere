@@ -7,9 +7,9 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="debug_linux32_x86_gcc">
-				<Option output="../../../bin/test_servochannel_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../../bin" />
-				<Option object_output="../../../tmp/bin/test/servochannel/debug/linux32/x86/" />
+				<Option output="../../bin/test_servochannel_linux32_x86_debug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/test/servochannel/debug/linux32/x86/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -18,9 +18,9 @@
 				</Compiler>
 			</Target>
 			<Target title="release_linux32_x86_gcc">
-				<Option output="../../../bin/test_servochannel_linux32_x86_release" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../../bin" />
-				<Option object_output="../../../tmp/bin/test/servochannel/release/linux32/x86/" />
+				<Option output="../../bin/test_servochannel_linux32_x86_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/test/servochannel/release/linux32/x86/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -32,9 +32,9 @@
 				</Linker>
 			</Target>
 			<Target title="release_linux32_arm_gcc">
-				<Option output="../../../bin/test_servochannel_linux32_arm_release" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../../bin" />
-				<Option object_output="../../../tmp/bin/test/servochannel/debug/linux32/arm/" />
+				<Option output="../../bin/test_servochannel_linux32_arm_release" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option object_output="../../tmp/bin/test/servochannel/debug/linux32/arm/" />
 				<Option type="1" />
 				<Option compiler="armlinuxgnueabihfgcc" />
 				<Compiler>
