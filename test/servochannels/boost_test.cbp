@@ -68,8 +68,13 @@
 			<Add library="rt" />
 		</Linker>
 		<Unit filename="boost_test_main.cpp" />
+		<Unit filename="c_parser.cpp" />
+		<Unit filename="c_parser.h" />
 		<Unit filename="c_servochannels.cpp" />
 		<Unit filename="c_servochannels.h" />
+		<Unit filename="crc16.cpp" />
+		<Unit filename="crc16.h" />
+		<Unit filename="messageparser_tests.cpp" />
 		<Unit filename="servochannel_tests.cpp" />
 		<Extensions>
 			<code_completion />

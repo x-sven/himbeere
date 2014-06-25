@@ -28,7 +28,7 @@ void test_servochannels_constructor(void)
 
     // copy
     channel_raspi_6 = channel_dummy_4;
-    BOOST_CHECK_EQUAL(channel_raspi_6.size(), 4); // now only 4!!!
+    BOOST_CHECK_EQUAL(channel_raspi_6.size(), 4); // is now only 4!!!
     BOOST_CHECK_EQUAL(channel_dummy_4.size(), 4);
 
     // valid

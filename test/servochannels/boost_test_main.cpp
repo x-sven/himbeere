@@ -10,6 +10,7 @@ using namespace std;
 
 /** DECLARATION **/
 void test_servochannels_constructor(void);
+void test_messageparser(void);
 
 /** REGISTRATION **/
 test_suite* init_unit_test_suite( int argc, char* argv[] )
@@ -18,6 +19,7 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )
     {;}
 
     framework::master_test_suite().add( BOOST_TEST_CASE( &test_servochannels_constructor ));
+    framework::master_test_suite().add( BOOST_TEST_CASE( &test_messageparser ));
 
 
     return 0;
