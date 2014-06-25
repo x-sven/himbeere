@@ -19,5 +19,6 @@
 		<Project filename="src/flightgearUDP/asio_flightgear_sender.cbp" />
 		<Project filename="app/joystick_tester/joystick.cbp" />
 		<Project filename="test/servochannels/boost_test.cbp" />
+		<Project filename="app/brainware/brainware.cbp" active="1" />
 	</Workspace>
 </CodeBlocks_workspace_file>

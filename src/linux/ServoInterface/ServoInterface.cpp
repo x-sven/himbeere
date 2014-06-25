@@ -100,7 +100,7 @@ bool ServoInterface::update(void)
                     reciever_state=0;
                     // TODO (sven#1#): CRC check here?
 
-                    const unsigned char* p_data = (unsigned char*)&rx_channel[0];
+//                    const unsigned char* p_data = (unsigned char*)&rx_channel[0];
 
                     if(rx_channel[6] != crcFast(rx_buffer,12))
                     {
