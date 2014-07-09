@@ -9,9 +9,9 @@
 
 #define private public
 
-#include "c_parser.h"
-#include "c_servochannels.h"
-#include "crc16.h"
+#include "cServochannels/c_parser.h"
+#include "cServochannels/c_servochannels.h"
+#include "crc16/crc16.h"
 
 using namespace std;
 
@@ -27,7 +27,6 @@ void test_messageparser(void)
                                0x00, 0x00}; //crc
 
     cParser parser;
-    cServoChannels channel_raspi_6(6);
 
     BOOST_CHECK(0 == parser.step);
     BOOST_CHECK(0 == parser.payload_counter);
@@ -61,19 +60,22 @@ void test_messageparser(void)
         BOOST_CHECK(message[11] == parser.rx_message[9]);
         BOOST_CHECK_EQUAL(parser.payload_counter, 0); // counter is set to 0 above 9
 
-    printf("%d  == %d? -> verify = %d\n", crcFast(&parser.rx_message[0],8),
-                                          crcFast(&message[2], 8),
-                                          crcverify(&parser.rx_message[0],10));
-
-    BOOST_CHECK_EQUAL(crcverify(&parser.rx_message[0],10), true);
-
-
-    //BOOST_CHECK_EQUAL(parser.payload_counter, 10);
+    BOOST_CHECK_EQUAL(crcFast(&parser.rx_message[0],8),crcFast(&message[2], 8));
 
     BOOST_CHECK_EQUAL(parser.b_new, true);
     BOOST_CHECK_EQUAL(parser.parse_errors, 0);
     BOOST_CHECK_EQUAL(parser.step, 0);
     BOOST_CHECK_EQUAL(parser.payload_counter, 0);
-    //if(parser.new_channels())
-    //    channel_raspi = parser.get_channels();
+
+    cServoChannels channel_raspi_6(6);
+
+    for(size_t ii=0; ii<channel_raspi_6.size();ii++)
+        BOOST_CHECK_EQUAL(channel_raspi_6.getChannel(ii), 0);
+
+    // get channels from parser
+    if(parser.new_channels())
+        channel_raspi_6 = parser.get_channels(); // channel_*_6 has now only 4 elements!
+
+    for(size_t ii=0; ii<channel_raspi_6.size();ii++)
+        BOOST_CHECK_EQUAL(channel_raspi_6.getChannel(ii), ii+1);
 }

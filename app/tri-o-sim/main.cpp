@@ -8,9 +8,9 @@
 #include "c_joystick_manager.hpp"
 
 #include "c_flightgear_sender_asio.hpp"
-c_flightgear_sender_asio FGM("192.168.1.58", 5507);
+c_flightgear_sender_asio FGM("192.168.1.60", 5507);
 
-#include "src/c_simulation.h"
+#include "c_simulation.h"
 c_simulation sim;
 
 using namespace std;
@@ -70,24 +70,24 @@ int main(int argc, char **argv )
         if(rate_divider > 4) // 20 Hz
         {
             FGM.set_attiude_quaternion(
-                sim.get_output()->motion.quaternion.q0,
-                sim.get_output()->motion.quaternion.q1,
-                sim.get_output()->motion.quaternion.q2,
-                sim.get_output()->motion.quaternion.q3);
+                sim.get_output()->motion.attitude.q0,
+                sim.get_output()->motion.attitude.q1,
+                sim.get_output()->motion.attitude.q2,
+                sim.get_output()->motion.attitude.q3);
 
             FGM.set_position_ned(
                 sim.get_output()->motion.pos.x,
                 sim.get_output()->motion.pos.y,
                 sim.get_output()->motion.pos.z,
-                53.123*3.14/180.,
-                10.456*3.14/180.,
-                60.);
+                52.319602*3.14/180.,            // BS runway
+                10.563912*3.14/180.,
+                100.);
             FGM.update();
 
-            cout << "x: "   << sim.get_output()->motion.pos.x
-                 << ", y: " << sim.get_output()->motion.pos.y
-                 << ", z: " << sim.get_output()->motion.pos.z
-                 << std::endl;
+//            cout << "x: "   << sim.get_output()->motion.pos.x
+//                 << ", y: " << sim.get_output()->motion.pos.y
+//                 << ", z: " << sim.get_output()->motion.pos.z
+//                 << std::endl;
 
             rate_divider = 0;
         }

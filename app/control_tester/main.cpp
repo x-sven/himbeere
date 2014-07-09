@@ -4,13 +4,13 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "Millis/millis.h"
+#include "millis.h"
 
 #include "HardwareSerial/HardwareSerial.h"
 #include "ServoInterface/ServoInterface.h"
 #include "ControlSystem/ControlSystem.h"
 
-#include "crc16.h"
+#include "crc16/crc16.h"
 
 using namespace std;
 
@@ -77,7 +77,7 @@ void set_commands(uint16_t ped_us, uint16_t col_us, uint16_t lon_us, uint16_t la
     command_buffer[9] = lat_us & 0xff  ;
 
 
-    unsigned short crc = crcsum(&command_buffer[2], 8, 0xffff);
+    unsigned short crc = crcFast(&command_buffer[2], 8);
 
     command_buffer[10] =  crc & 0xff;
     command_buffer[11] =  (crc>>8) & 0xff;

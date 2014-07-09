@@ -68,8 +68,8 @@
 		</Linker>
 		<Unit filename="../../../src/linux/Logging/Logging.cpp" />
 		<Unit filename="../../../src/linux/Logging/Logging.h" />
-		<Unit filename="../../../src/linux/Millis/millis.cpp" />
-		<Unit filename="../../../src/linux/Millis/millis.h" />
+		<Unit filename="../../../src/linux/millis.cpp" />
+		<Unit filename="../../../src/linux/millis.h" />
 		<Unit filename="boost_test_main.cpp" />
 		<Unit filename="logging_tests.cpp" />
 		<Unit filename="logging_thread_tests.cpp" />

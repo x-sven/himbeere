@@ -67,8 +67,8 @@
 		<Unit filename="../../src/i2cdevlib/MPU6050/MPU6050.h" />
 		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.cpp" />
 		<Unit filename="../../src/i2cdevlib/MS561101/MS561101BA.h" />
-		<Unit filename="../../src/linux/Delay/Delay.cpp" />
-		<Unit filename="../../src/linux/Delay/Delay.h" />
+		<Unit filename="../../src/linux/Delay.cpp" />
+		<Unit filename="../../src/linux/Delay.h" />
 		<Unit filename="../../src/linux/I2Cdev/I2Cdev.cpp" />
 		<Unit filename="../../src/linux/I2Cdev/I2Cdev.h" />
 		<Unit filename="main.cpp" />

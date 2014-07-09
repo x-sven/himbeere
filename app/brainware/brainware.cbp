@@ -54,22 +54,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add directory="../../src/ARDUINO" />
-			<Add directory="../../src/AP_GPS" />
-			<Add directory="../../src/i2cdevlib" />
 			<Add directory="../../src/linux" />
+			<Add directory="../../src/i2cdevlib" />
 			<Add directory="../../src/linux/I2Cdev" />
-			<Add directory="../../src/linux/Logging" />
-			<Add directory="../../src/linux/Delay" />
+			<Add directory="../../src" />
 			<Add directory="../../src/linux/Millis" />
-			<Add directory="../../src/linux/HardwareSerial" />
-			<Add directory="../../src/linux/Drotek10dof" />
-			<Add directory="../../src/cECF" />
-			<Add directory="../../src/mavlink/include/common" />
-			<Add directory="../../src/linux/DataLink" />
-			<Add directory="../../src/linux/SensorFusion" />
-			<Add directory="../../src/linux/BackgroundAction" />
 			<Add directory="../../src/linux/Wiring" />
-			<Add directory="../../src/crc16" />
 		</Compiler>
 		<Linker>
 			<Add library="boost_thread" />
@@ -81,7 +71,6 @@
 			<Add library="boost_timer" />
 			<Add library="pthread" />
 		</Linker>
-		<Unit filename="main.cpp" />
 		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
 		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />
 		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.h" />
@@ -102,9 +91,7 @@
 		<Unit filename="../../src/cECF/VectorMath.h" />
 		<Unit filename="../../src/cECF/boost_test/wiring.h" />
 		<Unit filename="../../src/cECF/st_Euler.h" />
-		<Unit filename="../../src/crc16/crc16.c">
-			<Option compilerVar="CC" />
-		</Unit>
+		<Unit filename="../../src/crc16/crc16.cpp" />
 		<Unit filename="../../src/crc16/crc16.h" />
 		<Unit filename="../../src/i2cdevlib/HMC5883L/HMC5883L.cpp" />
 		<Unit filename="../../src/i2cdevlib/HMC5883L/HMC5883L.h" />
@@ -116,10 +103,11 @@
 		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.h" />
 		<Unit filename="../../src/linux/ControlSystem/ControlSystem.cpp" />
 		<Unit filename="../../src/linux/ControlSystem/ControlSystem.h" />
+		<Unit filename="../../src/linux/ControlSystem/i_CTRL.h" />
 		<Unit filename="../../src/linux/DataLink/cDataLink.cpp" />
 		<Unit filename="../../src/linux/DataLink/cDataLink.h" />
-		<Unit filename="../../src/linux/Delay/Delay.cpp" />
-		<Unit filename="../../src/linux/Delay/Delay.h" />
+		<Unit filename="../../src/linux/Delay.cpp" />
+		<Unit filename="../../src/linux/Delay.h" />
 		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.cpp" />
 		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.h" />
 		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.cpp" />
@@ -128,14 +116,39 @@
 		<Unit filename="../../src/linux/I2Cdev/I2Cdev.h" />
 		<Unit filename="../../src/linux/Logging/Logging.cpp" />
 		<Unit filename="../../src/linux/Logging/Logging.h" />
-		<Unit filename="../../src/linux/Millis/millis.cpp" />
-		<Unit filename="../../src/linux/Millis/millis.h" />
 		<Unit filename="../../src/linux/SensorFusion/SensorFusion.cpp" />
 		<Unit filename="../../src/linux/SensorFusion/SensorFusion.h" />
+		<Unit filename="../../src/linux/Sensors/i_BARO.h" />
 		<Unit filename="../../src/linux/Sensors/i_IMU.h" />
+		<Unit filename="../../src/linux/Sensors/i_MAG.h" />
 		<Unit filename="../../src/linux/ServoInterface/ServoInterface.cpp" />
 		<Unit filename="../../src/linux/ServoInterface/ServoInterface.h" />
-		<Unit filename="../../src/linux/Wiring/wiring.h" />
+		<Unit filename="../../src/linux/cGPS/cGPS.cpp" />
+		<Unit filename="../../src/linux/cGPS/cGPS.h" />
+		<Unit filename="../../src/linux/cServochannels/c_parser.cpp" />
+		<Unit filename="../../src/linux/cServochannels/c_parser.h" />
+		<Unit filename="../../src/linux/cServochannels/c_servochannels.cpp" />
+		<Unit filename="../../src/linux/cServochannels/c_servochannels.h" />
+		<Unit filename="../../src/linux/millis.cpp" />
+		<Unit filename="../../src/linux/millis.h" />
+		<Unit filename="../../src/linux/wiring.h" />
+		<Unit filename="c_signal_register.cpp" />
+		<Unit filename="c_signal_register.h" />
+		<Unit filename="ctrl_module.cpp" />
+		<Unit filename="ctrl_module.h" />
+		<Unit filename="datalink_module.cpp" />
+		<Unit filename="datalink_module.h" />
+		<Unit filename="ecf_module.cpp" />
+		<Unit filename="ecf_module.h" />
+		<Unit filename="fcci_module.cpp" />
+		<Unit filename="fcci_module.h" />
+		<Unit filename="gps_module.cpp" />
+		<Unit filename="gps_module.h" />
+		<Unit filename="imu_module.cpp" />
+		<Unit filename="imu_module.h" />
+		<Unit filename="mag_module.cpp" />
+		<Unit filename="mag_module.h" />
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

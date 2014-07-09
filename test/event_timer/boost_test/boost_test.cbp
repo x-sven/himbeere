@@ -56,8 +56,7 @@
 			<Add option="-fexceptions" />
 			<Add directory=".." />
 			<Add directory="." />
-			<Add directory="../../../src/linux/Millis" />
-			<Add directory="../../../src/linux/Logging" />
+			<Add directory="../../../src/linux" />
 		</Compiler>
 		<Linker>
 			<Add library="boost_unit_test_framework" />
@@ -69,8 +68,8 @@
 		</Linker>
 		<Unit filename="../../../src/linux/Logging/Logging.cpp" />
 		<Unit filename="../../../src/linux/Logging/Logging.h" />
-		<Unit filename="../../../src/linux/Millis/millis.cpp" />
-		<Unit filename="../../../src/linux/Millis/millis.h" />
+		<Unit filename="../../../src/linux/millis.cpp" />
+		<Unit filename="../../../src/linux/millis.h" />
 		<Unit filename="asio_event_main.cpp" />
 		<Unit filename="boost_test_main.cpp" />
 		<Unit filename="logging_parser.cpp" />

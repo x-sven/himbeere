@@ -51,8 +51,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add option="-DBOOST_TEST_DYN_LINK" />
-			<Add directory="../../../src/mavlink/include/common" />
-			<Add directory="../../../src/linux/DataLink" />
+			<Add directory="../../../src" />
+			<Add directory="../../../src/linux" />
 			<Add directory=".." />
 			<Add directory="." />
 		</Compiler>

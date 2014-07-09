@@ -50,17 +50,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="../../src/AP_GPS" />
-			<Add directory="../../src/ARDUINO" />
+			<Add directory="../../src" />
 			<Add directory="../../src/linux" />
-			<Add directory="../../src/linux/Millis" />
-			<Add directory="../../src/linux/Logging" />
-			<Add directory="../../src/linux/HardwareSerial" />
 		</Compiler>
 		<Linker>
 			<Add library="boost_thread" />
 			<Add library="boost_system" />
 			<Add library="boost_filesystem" />
+			<Add library="boost_signals" />
 		</Linker>
 		<Unit filename="../../src/AP_GPS/AP_GPS.h" />
 		<Unit filename="../../src/AP_GPS/AP_GPS_MTK16.cpp" />
@@ -74,14 +71,15 @@
 		<Unit filename="../../src/ARDUINO/Stream.h" />
 		<Unit filename="../../src/ARDUINO/WString.cpp" />
 		<Unit filename="../../src/ARDUINO/WString.h" />
-		<Unit filename="../../src/linux/Delay/Delay.cpp" />
-		<Unit filename="../../src/linux/Delay/Delay.h" />
+		<Unit filename="../../src/linux/Delay.cpp" />
+		<Unit filename="../../src/linux/Delay.h" />
 		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.cpp" />
 		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.h" />
 		<Unit filename="../../src/linux/Logging/Logging.cpp" />
 		<Unit filename="../../src/linux/Logging/Logging.h" />
-		<Unit filename="../../src/linux/Millis/millis.cpp" />
-		<Unit filename="../../src/linux/Millis/millis.h" />
+		<Unit filename="../../src/linux/millis.cpp" />
+		<Unit filename="../../src/linux/millis.h" />
+		<Unit filename="../../src/linux/wiring.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

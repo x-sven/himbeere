@@ -4,7 +4,7 @@
 
 #include "HardwareSerial/HardwareSerial.h"
 
-#include "Millis/millis.h"
+#include "millis.h"
 
 using namespace std;
 

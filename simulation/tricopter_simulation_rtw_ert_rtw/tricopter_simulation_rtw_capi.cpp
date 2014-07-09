@@ -3,10 +3,10 @@
  *
  * Code generated for Simulink model 'tricopter_simulation_rtw'.
  *
- * Model version                  : 1.241
+ * Model version                  : 1.246
  * Simulink Coder version         : 8.1 (R2011b) 08-Jul-2011
- * TLC version                    : 8.1 (Jul  9 2011)
- * C/C++ source code generated on : Sun Mar 02 13:59:27 2014
+ * TLC version                    : 8.1 (Aug  6 2011)
+ * C/C++ source code generated on : Sun Apr 20 14:49:51 2014
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -25,13 +25,13 @@ static rtwCAPI_Signals rtBlockSignals[] = {
   /* addrMapIndex, sysNum, blockPath,
    * signalName, portNumber, dataTypeIndex, dimIndex, fxpIndex, sTimeIndex
    */
-  { 0, 0, "tricopter_simulation_rtw/Tricopter/Motordynamics 1/1-D Lookup Table",
+  { 0, 0, "tricopter_simulation_rtw/Tricopter/Motordynamics M1/1-D Lookup Table",
     "", 0, 0, 0, 0, 0 },
 
-  { 1, 0, "tricopter_simulation_rtw/Tricopter/Motordynamics 2/1-D Lookup Table",
+  { 1, 0, "tricopter_simulation_rtw/Tricopter/Motordynamics M2/1-D Lookup Table",
     "", 0, 0, 0, 0, 0 },
 
-  { 2, 0, "tricopter_simulation_rtw/Tricopter/Motordynamics 3/1-D Lookup Table",
+  { 2, 0, "tricopter_simulation_rtw/Tricopter/Motordynamics M3/1-D Lookup Table",
     "", 0, 0, 0, 0, 0 },
 
   { 3, 0, "tricopter_simulation_rtw/Tricopter/X-Moment/Gain",
@@ -43,101 +43,95 @@ static rtwCAPI_Signals rtBlockSignals[] = {
   { 5, 0, "tricopter_simulation_rtw/Tricopter/Y-Moment/Gain",
     "", 0, 0, 0, 0, 1 },
 
-  { 6, 0, "tricopter_simulation_rtw/Tricopter/Y-Moment/Gain1",
-    "", 0, 0, 0, 0, 1 },
-
-  { 7, 0, "tricopter_simulation_rtw/Tricopter/Y-Moment/Sqrt",
-    "", 0, 0, 0, 0, 1 },
-
-  { 8, 0,
+  { 6, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot/Selector",
     "", 0, 0, 1, 0, 1 },
 
-  { 9, 0,
+  { 7, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot/Selector1",
     "", 0, 0, 1, 0, 1 },
 
-  { 10, 0,
+  { 8, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot/Selector2",
     "", 0, 0, 1, 0, 1 },
 
-  { 11, 0,
+  { 9, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Detremine Force,  Mass & Inertia/Matrix Concatenation",
     "", 0, 0, 2, 0, 1 },
 
-  { 12, 0,
+  { 10, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/1//2",
     "", 0, 0, 3, 0, 1 },
 
-  { 13, 0,
+  { 11, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/CCC",
     "", 0, 0, 0, 0, 1 },
 
-  { 14, 0,
+  { 12, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/CCS",
     "", 0, 0, 0, 0, 1 },
 
-  { 15, 0,
+  { 13, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/CSC",
     "", 0, 0, 0, 0, 1 },
 
-  { 16, 0,
+  { 14, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/CSS",
     "", 0, 0, 0, 0, 1 },
 
-  { 17, 0,
+  { 15, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/SCC",
     "", 0, 0, 0, 0, 1 },
 
-  { 18, 0,
+  { 16, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/SCS",
     "", 0, 0, 0, 0, 1 },
 
-  { 19, 0,
+  { 17, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/SSC",
     "", 0, 0, 0, 0, 1 },
 
-  { 20, 0,
+  { 18, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/SSS",
     "", 0, 0, 0, 0, 1 },
 
-  { 21, 0,
+  { 19, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/Sum1",
     "", 0, 0, 0, 0, 1 },
 
-  { 22, 0,
+  { 20, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/Sum2",
     "", 0, 0, 0, 0, 1 },
 
-  { 23, 0,
+  { 21, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/Sum3",
     "", 0, 0, 0, 0, 1 },
 
-  { 24, 0,
+  { 22, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/Sum9",
     "", 0, 0, 0, 0, 1 },
 
-  { 25, 0,
+  { 23, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/cos(phi//2)",
     "", 0, 0, 0, 0, 1 },
 
-  { 26, 0,
+  { 24, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/cos(psi//2)",
     "", 0, 0, 0, 0, 1 },
 
-  { 27, 0,
+  { 25, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/cos(theta//2)",
     "", 0, 0, 0, 0, 1 },
 
-  { 28, 0,
+  { 26, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/sin(phi//2)",
     "", 0, 0, 0, 0, 1 },
 
-  { 29, 0,
+  { 27, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/sin(psi//2)",
     "", 0, 0, 0, 0, 1 },
 
-  { 30, 0,
+  { 28, 0,
     "tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad/sin(theta//2)",
     "", 0, 0, 0, 0, 1 },
 
@@ -170,36 +164,34 @@ static void tricopter_simulation_rtw_InitializeDataAddr(void* dataAddr[],
   BlockIO_tricopter_simulation_rt *tricopter_simulation_rtw_B)
 {
   dataAddr[0] = (void*) (&tricopter_simulation_rtw_B->DLookupTable);
-  dataAddr[1] = (void*) (&tricopter_simulation_rtw_B->DLookupTable_f);
-  dataAddr[2] = (void*) (&tricopter_simulation_rtw_B->DLookupTable_e);
+  dataAddr[1] = (void*) (&tricopter_simulation_rtw_B->DLookupTable_b);
+  dataAddr[2] = (void*) (&tricopter_simulation_rtw_B->DLookupTable_h);
   dataAddr[3] = (void*) (&tricopter_simulation_rtw_ConstB.Gain);
   dataAddr[4] = (void*) (&tricopter_simulation_rtw_ConstB.Sqrt);
   dataAddr[5] = (void*) (&tricopter_simulation_rtw_ConstB.Gain_a);
-  dataAddr[6] = (void*) (&tricopter_simulation_rtw_ConstB.Gain1);
-  dataAddr[7] = (void*) (&tricopter_simulation_rtw_ConstB.Sqrt_n);
-  dataAddr[8] = (void*) (&tricopter_simulation_rtw_ConstB.Selector[0]);
-  dataAddr[9] = (void*) (&tricopter_simulation_rtw_ConstB.Selector1[0]);
-  dataAddr[10] = (void*) (&tricopter_simulation_rtw_ConstB.Selector2[0]);
-  dataAddr[11] = (void*) (&tricopter_simulation_rtw_ConstB.MatrixConcatenation[0]);
-  dataAddr[12] = (void*) (&tricopter_simulation_rtw_ConstB.u[0]);
-  dataAddr[13] = (void*) (&tricopter_simulation_rtw_ConstB.CCC);
-  dataAddr[14] = (void*) (&tricopter_simulation_rtw_ConstB.CCS);
-  dataAddr[15] = (void*) (&tricopter_simulation_rtw_ConstB.CSC);
-  dataAddr[16] = (void*) (&tricopter_simulation_rtw_ConstB.CSS);
-  dataAddr[17] = (void*) (&tricopter_simulation_rtw_ConstB.SCC);
-  dataAddr[18] = (void*) (&tricopter_simulation_rtw_ConstB.SCS);
-  dataAddr[19] = (void*) (&tricopter_simulation_rtw_ConstB.SSC);
-  dataAddr[20] = (void*) (&tricopter_simulation_rtw_ConstB.SSS);
-  dataAddr[21] = (void*) (&tricopter_simulation_rtw_ConstB.Sum1);
-  dataAddr[22] = (void*) (&tricopter_simulation_rtw_ConstB.Sum2);
-  dataAddr[23] = (void*) (&tricopter_simulation_rtw_ConstB.Sum3);
-  dataAddr[24] = (void*) (&tricopter_simulation_rtw_ConstB.Sum9);
-  dataAddr[25] = (void*) (&tricopter_simulation_rtw_ConstB.cosphi2);
-  dataAddr[26] = (void*) (&tricopter_simulation_rtw_ConstB.cospsi2);
-  dataAddr[27] = (void*) (&tricopter_simulation_rtw_ConstB.costheta2);
-  dataAddr[28] = (void*) (&tricopter_simulation_rtw_ConstB.sinphi2);
-  dataAddr[29] = (void*) (&tricopter_simulation_rtw_ConstB.sinpsi2);
-  dataAddr[30] = (void*) (&tricopter_simulation_rtw_ConstB.sintheta2);
+  dataAddr[6] = (void*) (&tricopter_simulation_rtw_ConstB.Selector[0]);
+  dataAddr[7] = (void*) (&tricopter_simulation_rtw_ConstB.Selector1[0]);
+  dataAddr[8] = (void*) (&tricopter_simulation_rtw_ConstB.Selector2[0]);
+  dataAddr[9] = (void*) (&tricopter_simulation_rtw_ConstB.MatrixConcatenation[0]);
+  dataAddr[10] = (void*) (&tricopter_simulation_rtw_ConstB.u[0]);
+  dataAddr[11] = (void*) (&tricopter_simulation_rtw_ConstB.CCC);
+  dataAddr[12] = (void*) (&tricopter_simulation_rtw_ConstB.CCS);
+  dataAddr[13] = (void*) (&tricopter_simulation_rtw_ConstB.CSC);
+  dataAddr[14] = (void*) (&tricopter_simulation_rtw_ConstB.CSS);
+  dataAddr[15] = (void*) (&tricopter_simulation_rtw_ConstB.SCC);
+  dataAddr[16] = (void*) (&tricopter_simulation_rtw_ConstB.SCS);
+  dataAddr[17] = (void*) (&tricopter_simulation_rtw_ConstB.SSC);
+  dataAddr[18] = (void*) (&tricopter_simulation_rtw_ConstB.SSS);
+  dataAddr[19] = (void*) (&tricopter_simulation_rtw_ConstB.Sum1);
+  dataAddr[20] = (void*) (&tricopter_simulation_rtw_ConstB.Sum2);
+  dataAddr[21] = (void*) (&tricopter_simulation_rtw_ConstB.Sum3);
+  dataAddr[22] = (void*) (&tricopter_simulation_rtw_ConstB.Sum9);
+  dataAddr[23] = (void*) (&tricopter_simulation_rtw_ConstB.cosphi2);
+  dataAddr[24] = (void*) (&tricopter_simulation_rtw_ConstB.cospsi2);
+  dataAddr[25] = (void*) (&tricopter_simulation_rtw_ConstB.costheta2);
+  dataAddr[26] = (void*) (&tricopter_simulation_rtw_ConstB.sinphi2);
+  dataAddr[27] = (void*) (&tricopter_simulation_rtw_ConstB.sinpsi2);
+  dataAddr[28] = (void*) (&tricopter_simulation_rtw_ConstB.sintheta2);
 }
 
 /* Initialize Data Run-Time Dimension Buffer Address */
@@ -253,7 +245,7 @@ static uint_T rtDimensionArray[] = {
  *           - rtwCAPI_SampleTimeMap.samplePeriodPtr,                    *
  *           - rtwCAPI_SampleTimeMap.sampleOffsetPtr                     */
 static const real_T rtcapiStoredFloats[] = {
-  0.01, 0.0
+  0.005, 0.0
 };
 
 /* Fixed Point Map */
@@ -282,7 +274,7 @@ static rtwCAPI_ModelMappingStaticInfo mmiStatic = {
    *          elementMap, sampleTimeMap, dimensionArray},
    * TargetType: targetType
    */
-  { rtBlockSignals, 31,
+  { rtBlockSignals, 29,
     (NULL), 0,
     (NULL), 0 },
 

@@ -10,7 +10,7 @@
 #define GPS_h
 
 #include <inttypes.h>
-#include <Stream.h>
+#include <ARDUINO/Stream.h>
 
 #if defined(ARDUINO)
     #include <avr/pgmspace.h>

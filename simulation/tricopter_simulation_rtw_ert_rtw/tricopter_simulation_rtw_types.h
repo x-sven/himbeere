@@ -3,10 +3,10 @@
  *
  * Code generated for Simulink model 'tricopter_simulation_rtw'.
  *
- * Model version                  : 1.241
+ * Model version                  : 1.246
  * Simulink Coder version         : 8.1 (R2011b) 08-Jul-2011
- * TLC version                    : 8.1 (Jul  9 2011)
- * C/C++ source code generated on : Sun Mar 02 13:59:27 2014
+ * TLC version                    : 8.1 (Aug  6 2011)
+ * C/C++ source code generated on : Sun Apr 20 14:49:51 2014
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -53,15 +53,18 @@ typedef struct {
 
 #endif
 
-#ifndef _DEFINED_TYPEDEF_FOR_arNQuat_T_
-#define _DEFINED_TYPEDEF_FOR_arNQuat_T_
+#ifndef _DEFINED_TYPEDEF_FOR_arNAtt_T_
+#define _DEFINED_TYPEDEF_FOR_arNAtt_T_
 
 typedef struct {
+  real_T phi;
+  real_T theta;
+  real_T psi;
   real_T q0;
   real_T q1;
   real_T q2;
   real_T q3;
-} arNQuat_T;
+} arNAtt_T;
 
 #endif
 
@@ -115,7 +118,7 @@ typedef struct {
 typedef struct {
   arNAcc_T acc;
   arNRate_T rate;
-  arNQuat_T quaternion;
+  arNAtt_T attitude;
   argNPos_T pos;
   arNRateDot_T rate_dot;
   argNVel_T vel_geo;

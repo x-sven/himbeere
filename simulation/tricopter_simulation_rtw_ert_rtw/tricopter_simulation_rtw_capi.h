@@ -3,10 +3,10 @@
  *
  * Code generated for Simulink model 'tricopter_simulation_rtw'.
  *
- * Model version                  : 1.241
+ * Model version                  : 1.246
  * Simulink Coder version         : 8.1 (R2011b) 08-Jul-2011
- * TLC version                    : 8.1 (Jul  9 2011)
- * C/C++ source code generated on : Sun Mar 02 13:59:27 2014
+ * TLC version                    : 8.1 (Aug  6 2011)
+ * C/C++ source code generated on : Sun Apr 20 14:49:51 2014
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: 32-bit Generic

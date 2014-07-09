@@ -140,9 +140,15 @@
 			<Add directory="../../src/flightgearUDP" />
 			<Add directory="../../simulation" />
 			<Add directory="../../src/linux/sdl_joystick" />
+			<Add directory="../../src/simulation" />
 		</Compiler>
-		<Unit filename="../../simulation/src/c_simulation.cpp" />
-		<Unit filename="../../simulation/src/c_simulation.h" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/rtGetInf.cpp" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/rtGetInf.h" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/rtGetNaN.cpp" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/rtGetNaN.h" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/rt_defines.h" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/rt_nonfinite.cpp" />
+		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/rt_nonfinite.h" />
 		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/rtwtypes.h" />
 		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/tricopter_simulation_rtw.cpp" />
 		<Unit filename="../../simulation/tricopter_simulation_rtw_ert_rtw/tricopter_simulation_rtw.h" />
@@ -164,6 +170,8 @@
 		<Unit filename="../../src/linux/sdl_joystick/c_joystick.hpp" />
 		<Unit filename="../../src/linux/sdl_joystick/c_joystick_manager.cpp" />
 		<Unit filename="../../src/linux/sdl_joystick/c_joystick_manager.hpp" />
+		<Unit filename="../../src/simulation/c_simulation.cpp" />
+		<Unit filename="../../src/simulation/c_simulation.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

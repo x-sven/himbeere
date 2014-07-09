@@ -3,10 +3,10 @@
  *
  * Code generated for Simulink model 'tricopter_simulation_rtw'.
  *
- * Model version                  : 1.241
+ * Model version                  : 1.246
  * Simulink Coder version         : 8.1 (R2011b) 08-Jul-2011
- * TLC version                    : 8.1 (Jul  9 2011)
- * C/C++ source code generated on : Sun Mar 02 13:59:27 2014
+ * TLC version                    : 8.1 (Aug  6 2011)
+ * C/C++ source code generated on : Sun Apr 20 14:49:51 2014
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -24,7 +24,12 @@
 #include <math.h>
 #include <string.h>
 #include <stddef.h>
+#include <float.h>
 #include "rtwtypes.h"
+#include "rt_nonfinite.h"
+#include "rtGetInf.h"
+#include "rtGetNaN.h"
+#include "rt_defines.h"
 #endif                                 /* tricopter_simulation_rtw_COMMON_INCLUDES_ */
 
 #include "tricopter_simulation_rtw_types.h"
@@ -49,98 +54,102 @@
 
 /* Block signals (auto storage) */
 typedef struct {
-  real_T DLookupTable;                 /* '<S37>/1-D Lookup Table' */
-  real_T DLookupTable_f;               /* '<S38>/1-D Lookup Table' */
-  real_T DLookupTable_e;               /* '<S39>/1-D Lookup Table' */
+  real_T DLookupTable;                 /* '<S36>/1-D Lookup Table' */
+  real_T DLookupTable_b;               /* '<S37>/1-D Lookup Table' */
+  real_T DLookupTable_h;               /* '<S38>/1-D Lookup Table' */
 } BlockIO_tricopter_simulation_rt;
 
 /* Block states (auto storage) for system '<Root>' */
 typedef struct {
-  real_T Delay_DSTATE;                 /* '<S39>/Delay' */
-  real_T UnitDelay_DSTATE;             /* '<S51>/Unit Delay' */
-  real_T UnitDelay1_DSTATE;            /* '<S51>/Unit Delay1' */
-  real_T DiscreteTimeIntegrator1_DSTATE;/* '<S51>/Discrete-Time Integrator1' */
-  real_T DiscreteTimeIntegrator_DSTATE;/* '<S51>/Discrete-Time Integrator' */
+  real_T Delay_DSTATE;                 /* '<S38>/Delay' */
+  real_T UnitDelay_DSTATE;             /* '<S50>/Unit Delay' */
+  real_T UnitDelay1_DSTATE;            /* '<S50>/Unit Delay1' */
+  real_T DiscreteTimeIntegrator1_DSTATE;/* '<S50>/Discrete-Time Integrator1' */
+  real_T DiscreteTimeIntegrator_DSTATE;/* '<S50>/Discrete-Time Integrator' */
   real_T Rates_DSTATE[3];              /* '<S4>/Rates' */
-  real_T Delay_DSTATE_d;               /* '<S37>/Delay' */
-  real_T UnitDelay_DSTATE_f;           /* '<S49>/Unit Delay' */
-  real_T UnitDelay1_DSTATE_p;          /* '<S49>/Unit Delay1' */
-  real_T DiscreteTimeIntegrator1_DSTAT_m;/* '<S49>/Discrete-Time Integrator1' */
+  real_T UnitDelay_DSTATE_g;           /* '<S51>/Unit Delay' */
+  real_T UnitDelay1_DSTATE_n;          /* '<S51>/Unit Delay1' */
+  real_T DiscreteTimeIntegrator1_DSTAT_m;/* '<S51>/Discrete-Time Integrator1' */
+  real_T DiscreteTimeIntegrator_DSTATE_m;/* '<S51>/Discrete-Time Integrator' */
+  real_T Delay_DSTATE_j;               /* '<S36>/Delay' */
+  real_T UnitDelay_DSTATE_n;           /* '<S48>/Unit Delay' */
+  real_T UnitDelay1_DSTATE_j;          /* '<S48>/Unit Delay1' */
+  real_T DiscreteTimeIntegrator1_DSTAT_i;/* '<S48>/Discrete-Time Integrator1' */
+  real_T DiscreteTimeIntegrator_DSTATE_h;/* '<S48>/Discrete-Time Integrator' */
+  real_T Delay_DSTATE_c;               /* '<S37>/Delay' */
+  real_T UnitDelay_DSTATE_i;           /* '<S49>/Unit Delay' */
+  real_T UnitDelay1_DSTATE_nn;         /* '<S49>/Unit Delay1' */
+  real_T DiscreteTimeIntegrator1_DSTAT_f;/* '<S49>/Discrete-Time Integrator1' */
   real_T DiscreteTimeIntegrator_DSTATE_e;/* '<S49>/Discrete-Time Integrator' */
-  real_T Delay_DSTATE_l;               /* '<S38>/Delay' */
-  real_T UnitDelay_DSTATE_i;           /* '<S50>/Unit Delay' */
-  real_T UnitDelay1_DSTATE_l;          /* '<S50>/Unit Delay1' */
-  real_T DiscreteTimeIntegrator1_DSTAT_n;/* '<S50>/Discrete-Time Integrator1' */
-  real_T DiscreteTimeIntegrator_DSTATE_a;/* '<S50>/Discrete-Time Integrator' */
-  real_T FixPtUnitDelay1_DSTATE[4];    /* '<S25>/FixPt Unit Delay1' */
+  real_T FixPtUnitDelay1_DSTATE[4];    /* '<S24>/FixPt Unit Delay1' */
   real_T Velocity_DSTATE[3];           /* '<S4>/Velocity' */
   real_T Position_DSTATE[3];           /* '<S4>/Position' */
   real_T Memory1_PreviousInput[3];     /* '<S2>/Memory1' */
   real_T Memory_PreviousInput[3];      /* '<S2>/Memory' */
-  uint8_T FixPtUnitDelay2_DSTATE;      /* '<S25>/FixPt Unit Delay2' */
-  uint8_T DiscreteTimeIntegrator1_SYSTEM_;/* '<S51>/Discrete-Time Integrator1' */
-  uint8_T DiscreteTimeIntegrator_SYSTEM_E;/* '<S51>/Discrete-Time Integrator' */
-  uint8_T DiscreteTimeIntegrator1_SYSTE_b;/* '<S49>/Discrete-Time Integrator1' */
-  uint8_T DiscreteTimeIntegrator_SYSTEM_c;/* '<S49>/Discrete-Time Integrator' */
-  uint8_T DiscreteTimeIntegrator1_SYSTE_d;/* '<S50>/Discrete-Time Integrator1' */
-  uint8_T DiscreteTimeIntegrator_SYSTEM_o;/* '<S50>/Discrete-Time Integrator' */
+  uint8_T FixPtUnitDelay2_DSTATE;      /* '<S24>/FixPt Unit Delay2' */
+  uint8_T DiscreteTimeIntegrator1_SYSTEM_;/* '<S50>/Discrete-Time Integrator1' */
+  uint8_T DiscreteTimeIntegrator_SYSTEM_E;/* '<S50>/Discrete-Time Integrator' */
+  uint8_T DiscreteTimeIntegrator1_SYSTE_a;/* '<S51>/Discrete-Time Integrator1' */
+  uint8_T DiscreteTimeIntegrator_SYSTEM_i;/* '<S51>/Discrete-Time Integrator' */
+  uint8_T DiscreteTimeIntegrator1_SYSTE_o;/* '<S48>/Discrete-Time Integrator1' */
+  uint8_T DiscreteTimeIntegrator_SYSTEM_k;/* '<S48>/Discrete-Time Integrator' */
+  uint8_T DiscreteTimeIntegrator1_SYSTE_m;/* '<S49>/Discrete-Time Integrator1' */
+  uint8_T DiscreteTimeIntegrator_SYSTE_ka;/* '<S49>/Discrete-Time Integrator' */
 } D_Work_tricopter_simulation_rtw;
 
 /* Invariant block signals (auto storage) */
 typedef const struct tag_ConstBlockIO_tricopter_simu {
-  real_T u[3];                         /* '<S23>/1//2' */
-  real_T cosphi2;                      /* '<S23>/cos(phi//2)' */
-  real_T costheta2;                    /* '<S23>/cos(theta//2)' */
-  real_T cospsi2;                      /* '<S23>/cos(psi//2)' */
-  real_T CCC;                          /* '<S23>/CCC' */
-  real_T sinphi2;                      /* '<S23>/sin(phi//2)' */
-  real_T sintheta2;                    /* '<S23>/sin(theta//2)' */
-  real_T sinpsi2;                      /* '<S23>/sin(psi//2)' */
-  real_T SSS;                          /* '<S23>/SSS' */
-  real_T Sum9;                         /* '<S23>/Sum9' */
-  real_T SCC;                          /* '<S23>/SCC' */
-  real_T CSS;                          /* '<S23>/CSS' */
-  real_T Sum2;                         /* '<S23>/Sum2' */
-  real_T CSC;                          /* '<S23>/CSC' */
-  real_T SCS;                          /* '<S23>/SCS' */
-  real_T Sum1;                         /* '<S23>/Sum1' */
-  real_T CCS;                          /* '<S23>/CCS' */
-  real_T SSC;                          /* '<S23>/SSC' */
-  real_T Sum3;                         /* '<S23>/Sum3' */
-  real_T MatrixConcatenation[18];      /* '<S15>/Matrix Concatenation' */
-  real_T Selector[9];                  /* '<S13>/Selector' */
-  real_T Gain;                         /* '<S43>/Gain' */
-  real_T Sqrt;                         /* '<S43>/Sqrt' */
-  real_T Gain_a;                       /* '<S45>/Gain' */
-  real_T Gain1;                        /* '<S45>/Gain1' */
-  real_T Sqrt_n;                       /* '<S45>/Sqrt' */
-  real_T Selector1[9];                 /* '<S13>/Selector1' */
-  real_T Selector2[9];                 /* '<S13>/Selector2' */
+  real_T u[3];                         /* '<S22>/1//2' */
+  real_T cosphi2;                      /* '<S22>/cos(phi//2)' */
+  real_T costheta2;                    /* '<S22>/cos(theta//2)' */
+  real_T cospsi2;                      /* '<S22>/cos(psi//2)' */
+  real_T CCC;                          /* '<S22>/CCC' */
+  real_T sinphi2;                      /* '<S22>/sin(phi//2)' */
+  real_T sintheta2;                    /* '<S22>/sin(theta//2)' */
+  real_T sinpsi2;                      /* '<S22>/sin(psi//2)' */
+  real_T SSS;                          /* '<S22>/SSS' */
+  real_T Sum9;                         /* '<S22>/Sum9' */
+  real_T SCC;                          /* '<S22>/SCC' */
+  real_T CSS;                          /* '<S22>/CSS' */
+  real_T Sum2;                         /* '<S22>/Sum2' */
+  real_T CSC;                          /* '<S22>/CSC' */
+  real_T SCS;                          /* '<S22>/SCS' */
+  real_T Sum1;                         /* '<S22>/Sum1' */
+  real_T CCS;                          /* '<S22>/CCS' */
+  real_T SSC;                          /* '<S22>/SSC' */
+  real_T Sum3;                         /* '<S22>/Sum3' */
+  real_T MatrixConcatenation[18];      /* '<S14>/Matrix Concatenation' */
+  real_T Selector[9];                  /* '<S12>/Selector' */
+  real_T Gain;                         /* '<S42>/Gain' */
+  real_T Sqrt;                         /* '<S42>/Sqrt' */
+  real_T Gain_a;                       /* '<S44>/Gain' */
+  real_T Selector1[9];                 /* '<S12>/Selector1' */
+  real_T Selector2[9];                 /* '<S12>/Selector2' */
 } ConstBlockIO_tricopter_simulati;
 
 /* Constant parameters (auto storage) */
 typedef struct {
   /* Expression: [-60 60]*pi/180
-   * Referenced by: '<S46>/1-D Lookup Table'
+   * Referenced by: '<S45>/1-D Lookup Table'
    */
   real_T DLookupTable_tableDat[2];
 
   /* Pooled Parameter (Expression: [900 2100])
    * Referenced by:
+   *   '<S36>/1-D Lookup Table'
    *   '<S37>/1-D Lookup Table'
    *   '<S38>/1-D Lookup Table'
-   *   '<S39>/1-D Lookup Table'
-   *   '<S46>/1-D Lookup Table'
+   *   '<S45>/1-D Lookup Table'
    */
-  real_T pooled12[2];
+  real_T pooled16[2];
 
-  /* Pooled Parameter (Expression: [0 7000]*pi/30)
+  /* Pooled Parameter (Expression: [min_rpm max_rpm]*pi/30)
    * Referenced by:
+   *   '<S36>/1-D Lookup Table'
    *   '<S37>/1-D Lookup Table'
    *   '<S38>/1-D Lookup Table'
-   *   '<S39>/1-D Lookup Table'
    */
-  real_T pooled17[2];
+  real_T pooled21[2];
 } ConstParam_tricopter_simulation;
 
 /* External inputs (root inport signals with auto storage) */
@@ -164,8 +173,8 @@ struct RT_MODEL_tricopter_simulation_r {
    */
   struct {
     rtwCAPI_ModelMappingInfo mmi;
-    void* dataAddress[31];
-    int32_T* vardimsAddress[31];
+    void* dataAddress[29];
+    int32_T* vardimsAddress[29];
   } DataMapInfo;
 };
 
@@ -255,46 +264,46 @@ class tricopter_simulation_rtwModelClass {
  * '<S9>'   : 'tricopter_simulation_rtw/EQM/vec2bus4'
  * '<S10>'  : 'tricopter_simulation_rtw/EQM/vec2bus5'
  * '<S11>'  : 'tricopter_simulation_rtw/EQM/vec2bus6'
- * '<S12>'  : 'tricopter_simulation_rtw/EQM/vec2bus7'
- * '<S13>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot'
- * '<S14>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Cross'
- * '<S15>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Detremine Force,  Mass & Inertia'
- * '<S16>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem'
- * '<S17>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot/Cross'
- * '<S18>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot/Subsystem'
- * '<S19>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot/Subsystem1'
- * '<S20>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration'
- * '<S21>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quadternions to Direct Cosine Matrix'
- * '<S22>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quaternions to Euler Angles '
- * '<S23>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad'
- * '<S24>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration'
- * '<S25>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Unit Delay Resettable External IC'
- * '<S26>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration/Magnitude 3d'
- * '<S27>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration/Normalization'
- * '<S28>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration/Quaternion Product'
- * '<S29>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration/Normalization/Vector norm'
- * '<S30>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quaternions to Euler Angles /Modulo 2pi [-pi;pi]'
- * '<S31>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quaternions to Euler Angles /Modulo 2pi [-pi;pi]1'
- * '<S32>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quaternions to Euler Angles /Modulo 2pi [-pi;pi]2'
- * '<S33>'  : 'tricopter_simulation_rtw/KK-Controller/MATLAB Function'
- * '<S34>'  : 'tricopter_simulation_rtw/Tricopter/Gravitation'
- * '<S35>'  : 'tricopter_simulation_rtw/Tricopter/Luftwiderstand'
- * '<S36>'  : 'tricopter_simulation_rtw/Tricopter/Luftwiderstand (Drehung)'
- * '<S37>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics 1'
- * '<S38>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics 2'
- * '<S39>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics 3'
- * '<S40>'  : 'tricopter_simulation_rtw/Tricopter/Thrust 1'
- * '<S41>'  : 'tricopter_simulation_rtw/Tricopter/Thrust 2'
- * '<S42>'  : 'tricopter_simulation_rtw/Tricopter/Thrust 3'
- * '<S43>'  : 'tricopter_simulation_rtw/Tricopter/X-Moment'
- * '<S44>'  : 'tricopter_simulation_rtw/Tricopter/Y-Force'
- * '<S45>'  : 'tricopter_simulation_rtw/Tricopter/Y-Moment'
- * '<S46>'  : 'tricopter_simulation_rtw/Tricopter/Yaw-Servodynamics'
- * '<S47>'  : 'tricopter_simulation_rtw/Tricopter/Z-Force'
- * '<S48>'  : 'tricopter_simulation_rtw/Tricopter/Z-Moment'
- * '<S49>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics 1/Nonlinear Actuator (Second Order, discrete)'
- * '<S50>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics 2/Nonlinear Actuator (Second Order, discrete)'
- * '<S51>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics 3/Nonlinear Actuator (Second Order, discrete)'
+ * '<S12>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot'
+ * '<S13>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Cross'
+ * '<S14>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Detremine Force,  Mass & Inertia'
+ * '<S15>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem'
+ * '<S16>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot/Cross'
+ * '<S17>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot/Subsystem'
+ * '<S18>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Calulate omega_dot/Subsystem1'
+ * '<S19>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration'
+ * '<S20>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quadternions to Direct Cosine Matrix'
+ * '<S21>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quaternions to Euler Angles '
+ * '<S22>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/euler2quad'
+ * '<S23>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration'
+ * '<S24>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Unit Delay Resettable External IC'
+ * '<S25>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration/Magnitude 3d'
+ * '<S26>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration/Normalization'
+ * '<S27>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration/Quaternion Product'
+ * '<S28>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Body Rates Integration/Rate Integration/Normalization/Vector norm'
+ * '<S29>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quaternions to Euler Angles /Modulo 2pi [-pi;pi]'
+ * '<S30>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quaternions to Euler Angles /Modulo 2pi [-pi;pi]1'
+ * '<S31>'  : 'tricopter_simulation_rtw/EQM/Variable Mass 6DoF (Quaternion)/Subsystem/Quaternions to Euler Angles /Modulo 2pi [-pi;pi]2'
+ * '<S32>'  : 'tricopter_simulation_rtw/KK-Controller/MATLAB Function'
+ * '<S33>'  : 'tricopter_simulation_rtw/Tricopter/Gravitation'
+ * '<S34>'  : 'tricopter_simulation_rtw/Tricopter/Luftwiderstand'
+ * '<S35>'  : 'tricopter_simulation_rtw/Tricopter/Luftwiderstand (Drehung)'
+ * '<S36>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics M1'
+ * '<S37>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics M2'
+ * '<S38>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics M3'
+ * '<S39>'  : 'tricopter_simulation_rtw/Tricopter/Propeller M1'
+ * '<S40>'  : 'tricopter_simulation_rtw/Tricopter/Propeller M2'
+ * '<S41>'  : 'tricopter_simulation_rtw/Tricopter/Propeller M3'
+ * '<S42>'  : 'tricopter_simulation_rtw/Tricopter/X-Moment'
+ * '<S43>'  : 'tricopter_simulation_rtw/Tricopter/Y-Force'
+ * '<S44>'  : 'tricopter_simulation_rtw/Tricopter/Y-Moment'
+ * '<S45>'  : 'tricopter_simulation_rtw/Tricopter/Yaw-Servodynamics'
+ * '<S46>'  : 'tricopter_simulation_rtw/Tricopter/Z-Force'
+ * '<S47>'  : 'tricopter_simulation_rtw/Tricopter/Z-Moment'
+ * '<S48>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics M1/Nonlinear Actuator (Second Order, discrete)'
+ * '<S49>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics M2/Nonlinear Actuator (Second Order, discrete)'
+ * '<S50>'  : 'tricopter_simulation_rtw/Tricopter/Motordynamics M3/Nonlinear Actuator (Second Order, discrete)'
+ * '<S51>'  : 'tricopter_simulation_rtw/Tricopter/Yaw-Servodynamics/Nonlinear Actuator (Second Order, discrete)'
  */
 #endif                                 /* RTW_HEADER_tricopter_simulation_rtw_h_ */
 

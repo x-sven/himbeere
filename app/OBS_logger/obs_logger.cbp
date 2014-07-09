@@ -53,21 +53,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="../../src/ARDUINO" />
-			<Add directory="../../src/AP_GPS" />
+			<Add directory="../../src" />
+			<Add directory="../../src/linux" />
 			<Add directory="../../src/i2cdevlib" />
 			<Add directory="../../src/linux/I2Cdev" />
-			<Add directory="../../src/linux/Logging" />
-			<Add directory="../../src/linux/Delay" />
-			<Add directory="../../src/linux/Millis" />
-			<Add directory="../../src/linux/HardwareSerial" />
-			<Add directory="../../src/linux/Drotek10dof" />
-			<Add directory="../../src/cECF" />
-			<Add directory="../../src/mavlink/include/common" />
-			<Add directory="../../src/linux/DataLink" />
-			<Add directory="../../src/linux/SensorFusion" />
-			<Add directory="../../src/linux/BackgroundAction" />
-			<Add directory="../../src/linux/Wiring" />
 		</Compiler>
 		<Linker>
 			<Add library="boost_thread" />
@@ -109,8 +98,8 @@
 		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.h" />
 		<Unit filename="../../src/linux/DataLink/cDataLink.cpp" />
 		<Unit filename="../../src/linux/DataLink/cDataLink.h" />
-		<Unit filename="../../src/linux/Delay/Delay.cpp" />
-		<Unit filename="../../src/linux/Delay/Delay.h" />
+		<Unit filename="../../src/linux/Delay.cpp" />
+		<Unit filename="../../src/linux/Delay.h" />
 		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.cpp" />
 		<Unit filename="../../src/linux/Drotek10dof/Drotek10dof.h" />
 		<Unit filename="../../src/linux/HardwareSerial/HardwareSerial.cpp" />
@@ -119,12 +108,12 @@
 		<Unit filename="../../src/linux/I2Cdev/I2Cdev.h" />
 		<Unit filename="../../src/linux/Logging/Logging.cpp" />
 		<Unit filename="../../src/linux/Logging/Logging.h" />
-		<Unit filename="../../src/linux/Millis/millis.cpp" />
-		<Unit filename="../../src/linux/Millis/millis.h" />
 		<Unit filename="../../src/linux/SensorFusion/SensorFusion.cpp" />
 		<Unit filename="../../src/linux/SensorFusion/SensorFusion.h" />
 		<Unit filename="../../src/linux/Sensors/i_IMU.h" />
-		<Unit filename="../../src/linux/Wiring/wiring.h" />
+		<Unit filename="../../src/linux/millis.cpp" />
+		<Unit filename="../../src/linux/millis.h" />
+		<Unit filename="../../src/linux/wiring.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

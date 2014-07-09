@@ -56,6 +56,8 @@
 			<Add option="-fexceptions" />
 			<Add directory=".." />
 			<Add directory="." />
+			<Add directory="../../src" />
+			<Add directory="../../src/linux" />
 			<Add directory="../../../src/linux/Millis" />
 			<Add directory="../../../src/linux/Logging" />
 		</Compiler>
@@ -67,13 +69,13 @@
 			<Add library="pthread" />
 			<Add library="rt" />
 		</Linker>
+		<Unit filename="../../src/crc16/crc16.cpp" />
+		<Unit filename="../../src/crc16/crc16.h" />
+		<Unit filename="../../src/linux/cServochannels/c_parser.cpp" />
+		<Unit filename="../../src/linux/cServochannels/c_parser.h" />
+		<Unit filename="../../src/linux/cServochannels/c_servochannels.cpp" />
+		<Unit filename="../../src/linux/cServochannels/c_servochannels.h" />
 		<Unit filename="boost_test_main.cpp" />
-		<Unit filename="c_parser.cpp" />
-		<Unit filename="c_parser.h" />
-		<Unit filename="c_servochannels.cpp" />
-		<Unit filename="c_servochannels.h" />
-		<Unit filename="crc16.cpp" />
-		<Unit filename="crc16.h" />
 		<Unit filename="messageparser_tests.cpp" />
 		<Unit filename="servochannel_tests.cpp" />
 		<Extensions>

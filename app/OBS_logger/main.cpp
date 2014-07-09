@@ -17,24 +17,25 @@ using namespace std;
 namespace po = boost::program_options;
 namespace pt = boost::posix_time;
 
-#include "I2Cdev.h"
+#include "I2Cdev/I2Cdev.h"
 #include "MPU6050/MPU6050.h"
 #include "HMC5883L/HMC5883L.h"
 #include "MS561101/MS561101BA.h"
-#include "Logging.h"
-#include "Drotek10dof.h"
-#include "HardwareSerial.h"
-#include "AP_GPS.h"
+#include "Logging/Logging.h"
+#include "Drotek10dof/Drotek10dof.h"
+#include "HardwareSerial/HardwareSerial.h"
+#include "AP_GPS/AP_GPS.h"
 #include "Delay.h"
 #include "millis.h"
-#include "st_Euler.h"
-#include "SensorFusion.h"
+#include "cECF/st_Euler.h"
+#include "SensorFusion/SensorFusion.h"
 
-#include "cDataLink.h"
+#include "DataLink/cDataLink.h"
 
 #define DEBUGMSG(s) cout<<(s)
 
-HardwareSerial Serial("/dev/ttyAMA0");
+//HardwareSerial Serial("/dev/ttyAMA0");
+HardwareSerial Serial("/dev/ttyUSB0");
 
 AP_GPS_MTK16 gps(&Serial);
 long gps_timing_buffer = 0;
@@ -85,31 +86,31 @@ void trap(int signal)
 void OutputASCII(void)
 {
 
-    // display values
-    DEBUGMSG("a/g/m/p/T:\t");
-    DEBUGMSG(imu10dof.ax);
-    DEBUGMSG("\t");
-    DEBUGMSG(imu10dof.ay);
-    DEBUGMSG("\t");
-    DEBUGMSG(imu10dof.az);
-    DEBUGMSG("\t");
-    DEBUGMSG(imu10dof.gx);
-    DEBUGMSG("\t");
-    DEBUGMSG(imu10dof.gy);
-    DEBUGMSG("\t");
-    DEBUGMSG(imu10dof.gz);
-    DEBUGMSG("\t");
-    DEBUGMSG(imu10dof.mx);
-    DEBUGMSG("\t");
-    DEBUGMSG(imu10dof.my);
-    DEBUGMSG("\t");
-    DEBUGMSG(imu10dof.mz);
-    DEBUGMSG("\t");
-    DEBUGMSG((float)imu10dof.pressure/100.);
-    DEBUGMSG("\t");
-    DEBUGMSG((float)imu10dof.temp/100.);
-    DEBUGMSG("\t");
-    DEBUGMSG("\n");
+//    // display values
+//    DEBUGMSG("a/g/m/p/T:\t");
+//    DEBUGMSG(imu10dof.ax);
+//    DEBUGMSG("\t");
+//    DEBUGMSG(imu10dof.ay);
+//    DEBUGMSG("\t");
+//    DEBUGMSG(imu10dof.az);
+//    DEBUGMSG("\t");
+//    DEBUGMSG(imu10dof.gx);
+//    DEBUGMSG("\t");
+//    DEBUGMSG(imu10dof.gy);
+//    DEBUGMSG("\t");
+//    DEBUGMSG(imu10dof.gz);
+//    DEBUGMSG("\t");
+//    DEBUGMSG(imu10dof.mx);
+//    DEBUGMSG("\t");
+//    DEBUGMSG(imu10dof.my);
+//    DEBUGMSG("\t");
+//    DEBUGMSG(imu10dof.mz);
+//    DEBUGMSG("\t");
+//    DEBUGMSG((float)imu10dof.pressure/100.);
+//    DEBUGMSG("\t");
+//    DEBUGMSG((float)imu10dof.temp/100.);
+//    DEBUGMSG("\t");
+//    DEBUGMSG("\n");
 }
 
 //***************************************
@@ -189,10 +190,16 @@ void imu_log(void)
             float acc[3] = {0., 0., 9.81};
             float gyro[3]= {0., 0., 0.};
             float mag[3] = {0., 0., 0.};
+            float pressure = 0;
+            float temperature = 0;
+
             pt::ptime time;
 
             imu10dof.getScaledIMU(&acc[0], &acc[1], &acc[2], &gyro[0], &gyro[1], &gyro[2], &time);
             imu10dof.getScaledMAG(&mag[0], &mag[1], &mag[2]);
+
+            imu10dof.getPressure_pa(&pressure);
+            imu10dof.getTemperature_deg(&temperature);
 
             pt::time_duration difftime = time - pt::from_time_t(0);
 
@@ -208,8 +215,8 @@ void imu_log(void)
                          << mag[0] << "\t"
                          << mag[1] << "\t"
                          << mag[2] << "\t"
-                         << (float)imu10dof.pressure/100. << "\t"
-                         << (float)imu10dof.temp/100. << "\t"
+                         << pressure << "\t"
+                         << temperature << "\t"
                          << (float)imu10dof.getTimingAverage() << "\t"
                          << endl
                         );
@@ -402,7 +409,7 @@ int main(int argc, char **argv )
 
     //start threads
     imu10dof.begin(100,50,SCHED_FIFO);
-    imu10dof.getIMUConfigString("# ");
+    std::cout << imu10dof.getConfigString("# ");
 
     // set properties of main thread
     struct sched_param thread_param;
@@ -428,10 +435,15 @@ int main(int argc, char **argv )
             imu10dof.getScaledIMU(&acc[0], &acc[1], &acc[2], &gyro[0], &gyro[1], &gyro[2]);
             imu10dof.getScaledMAG(&mag[0], &mag[1], &mag[2]);
 
+            float pressure = 0;
+            float temperature = 0;
+            imu10dof.getPressure_pa(&pressure);
+            imu10dof.getTemperature_deg(&temperature);
+
             GCSlink.SendImuMsg(acc[0] , acc[1] , acc[2],
                                gyro[0], gyro[1], gyro[2],
                                mag[0] , mag[1] , mag[2],
-                               (float)imu10dof.pressure/100., (float)imu10dof.temp/100.,
+                               pressure, temperature,
                                0., //p_alt
                                0xffff); //update flags
         }

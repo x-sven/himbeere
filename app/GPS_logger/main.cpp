@@ -7,7 +7,7 @@
 #include "HardwareSerial/HardwareSerial.h"
 #include "AP_GPS.h"
 
-#include "Millis/millis.h"
+#include "millis.h"
 #include "Logging/Logging.h"
 
 using namespace std;

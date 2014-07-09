@@ -1,1 +1,0 @@
-fgfs --prop:/sim/model/path=Models/tri.ac --native-fdm=socket,in,30,,5507,udp --fdm=external --fg-root=D:\Games\FlightGear
