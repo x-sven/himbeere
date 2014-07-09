@@ -54,7 +54,7 @@
 			<Add option="-DBOOST_TEST_DYN_LINK" />
 			<Add directory="../../../i2cdevlib" />
 			<Add directory="../../I2Cdev" />
-			<Add directory="../../Delay" />
+			<Add directory="../.." />
 			<Add directory=".." />
 			<Add directory="." />
 		</Compiler>
@@ -70,8 +70,8 @@
 		<Unit filename="../../../i2cdevlib/MPU6050/MPU6050.h" />
 		<Unit filename="../../../i2cdevlib/MS561101/MS561101BA.cpp" />
 		<Unit filename="../../../i2cdevlib/MS561101/MS561101BA.h" />
-		<Unit filename="../../Delay/Delay.cpp" />
-		<Unit filename="../../Delay/Delay.h" />
+		<Unit filename="../../Delay.cpp" />
+		<Unit filename="../../Delay.h" />
 		<Unit filename="../../I2Cdev/I2Cdev.cpp" />
 		<Unit filename="../../I2Cdev/I2Cdev.h" />
 		<Unit filename="../Drotek10dof.cpp" />

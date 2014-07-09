@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>test/src/Drotek10dof build log</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<body>
+<tt>
+Build started on: <u>27-04-2013 at 18:21.12</u><br />
+Build ended on: <u>27-04-2013 at 18:22.02</u><p />
+<b>-------------- Build: release_linux32_arm_gcc in test/src/Drotek10dof (compiler: arm-unknown-linux-gnueabi-gcc)---------------</b><br />
+arm-unknown-linux-gnueabi-g++ -Wall -fexceptions -DBOOST_TEST_DYN_LINK  -O2 -g -D_STDC_PREDEF_H    -I../../../i2cdevlib -I../../I2Cdev -I../../Delay -I.. -I. -I/opt/cross/x-tools/arm-unknown-linux-gnueabi/include  -c /home/sven/_Programming/2012_raspberry_interface/himbeere/src/linux/Drotek10dof/boost_test/Drotek10dof_tests.cpp -o ../../../../tmp/bin/test/drotek/debug/linux32/arm/linux/Drotek10dof/boost_test/Drotek10dof_tests.o<br />
+In file included from /opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/smart_ptr/shared_ptr.hpp:30:0,<br />
+                 from /opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/shared_ptr.hpp:17,<br />
+                 from /opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/test/predicate_result.hpp:24,<br />
+                 from /opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/test/test_tools.hpp:19,<br />
+                 from /opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/test/unit_test.hpp:19,<br />
+                 from /home/sven/_Programming/2012_raspberry_interface/himbeere/src/linux/Drotek10dof/boost_test/Drotek10dof_tests.cpp:1:<br />
+<font color="#0000ff">/opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/checked_delete.hpp: In instantiation of 'void boost::checked_delete(T*) [with T = boost::error_info&lt;boost::tag_original_exception_type, const std::type_info*&gt;]':</font><br />
+<font color="#0000ff">/opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/smart_ptr/detail/shared_count.hpp:95:13:   required from 'boost::detail::shared_count::shared_count(Y*) [with Y = boost::error_info&lt;boost::tag_original_exception_type, const std::type_info*&gt;]'</font><br />
+<font color="#0000ff">/opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/smart_ptr/shared_ptr.hpp:183:50:   required from 'boost::shared_ptr&lt;T&gt;::shared_ptr(Y*) [with Y = boost::error_info&lt;boost::tag_original_exception_type, const std::type_info*&gt;; T = boost::error_info&lt;boost::tag_original_exception_type, const std::type_info*&gt;]'</font><br />
+<font color="#0000ff">/opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/exception/info.hpp:171:69:   required from 'const E&amp; boost::exception_detail::set_info(const E&amp;, const boost::error_info&lt;Tag, T&gt;&amp;) [with E = boost::unknown_exception; Tag = boost::tag_original_exception_type; T = const std::type_info*]'</font><br />
+<font color="#0000ff">/opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/exception/info.hpp:192:46:   required from 'typename boost::enable_if&lt;boost::exception_detail::derives_boost_exception&lt;E&gt;, const E&amp;&gt;::type boost::operator&lt;&lt;(const E&amp;, const boost::error_info&lt;Tag, T&gt;&amp;) [with E = boost::unknown_exception; Tag = boost::tag_original_exception_type; T = const std::type_info*; typename boost::enable_if&lt;boost::exception_detail::derives_boost_exception&lt;E&gt;, const E&amp;&gt;::type = const boost::unknown_exception&amp;]'</font><br />
+<font color="#0000ff">/opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/exception/detail/exception_ptr.hpp:182:13:   required from 'void boost::unknown_exception::add_original_type(const E&amp;) [with E = std::exception]'</font><br />
+<font color="#0000ff">/opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/exception/detail/exception_ptr.hpp:161:32:   required from here</font><br />
+<font color="#0000ff">/opt/cross/x-tools/arm-unknown-linux-gnueabi/include/boost/checked_delete.hpp:34:5: warning: deleting object of polymorphic class type 'boost::error_info&lt;boost::tag_original_exception_type, const std::type_info*&gt;' which has non-virtual destructor might cause undefined behaviour [-Wdelete-non-virtual-dtor]</font><br />
+arm-unknown-linux-gnueabi-g++ -L/opt/cross/x-tools/arm-unknown-linux-gnueabi/lib  -o ../../../../bin/test_drotek_linux32_arm_release ../../../../tmp/bin/test/drotek/debug/linux32/arm/i2cdevlib/HMC5883L/HMC5883L.o ../../../../tmp/bin/test/drotek/debug/linux32/arm/i2cdevlib/MPU6050/MPU6050.o ../../../../tmp/bin/test/drotek/debug/linux32/arm/i2cdevlib/MS561101/MS561101BA.o ../../../../tmp/bin/test/drotek/debug/linux32/arm/linux/Delay/Delay.o ../../../../tmp/bin/test/drotek/debug/linux32/arm/linux/I2Cdev/I2Cdev.o ../../../../tmp/bin/test/drotek/debug/linux32/arm/linux/Drotek10dof/Drotek10dof.o ../../../../tmp/bin/test/drotek/debug/linux32/arm/linux/Drotek10dof/boost_test/boost_test_main.o ../../../../tmp/bin/test/drotek/debug/linux32/arm/linux/Drotek10dof/boost_test/Drotek10dof_tests.o   -s  -lboost_unit_test_framework -lboost_thread -lboost_system -lboost_signals<br />
+Output size is 139,59 KB<br />
+<font color="#0000ff">Process terminated with status 0 (0 minutes, 50 seconds)</font><br />
+<font color="#0000ff">0 errors, 8 warnings (0 minutes, 50 seconds)</font><br />
+</tt>
+</body>
+</html>

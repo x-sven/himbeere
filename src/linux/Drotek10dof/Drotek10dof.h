@@ -10,7 +10,14 @@
 #include <HMC5883L/HMC5883L.h>
 #include <MS561101/MS561101BA.h>
 
-class Drotek10dof
+#include "Sensors/i_IMU.h"
+#include "Sensors/i_MAG.h"
+#include "Sensors/i_BARO.h"
+
+class Drotek10dof:
+    public iIMU,
+    public iMAG,
+    public iBARO
 {
     public:
         Drotek10dof(std::string _device = "/dev/i2c-1");
@@ -20,13 +27,10 @@ class Drotek10dof
 
         void end(void);
 
-        boost::signal<void (void)>  signal_imudata;
-        boost::signal<void (void)>  signal_magdata;
-        boost::signal<void (void)>  signal_barodata;
-
         float getTimingAverage(void); //returns calculation time average w.r.t. a second
 
-        void getIMUConfigString(const char* prefix);
+        std::string getConfigString(const char* prefix);
+        std::string getString(void);
 
         void getScaledIMU(float *ax, float *ay, float *az, float *rx, float *ry, float *rz);
         void getScaledMAG(float *mx, float *my, float *mz);
@@ -39,6 +43,22 @@ class Drotek10dof
         void run_mag_calibration(void);
         void run_mag_calibration(uint16_t runtime); //seconds
 
+        //iIMU
+        void getAccel_mss (float *ax, float *ay, float *az) { float dummy; getScaledIMU(ax, ay, az, &dummy, &dummy, &dummy); };
+        void getRates_rads(float *rx, float *ry, float *rz) { float dummy; getScaledIMU(&dummy, &dummy, &dummy, rx, ry, rz); };
+        //iMAG
+        void getField_Gauss(float *mx, float *my, float *mz){ getScaledMAG(mx, my, mz);};
+        //iBARO
+        void getPressure_pa(float *p)       { float dummy; getScaledBaro(p, &dummy);};
+        void getTemperature_deg(float *T)   { float dummy; getScaledBaro(&dummy, T);};
+
+    protected:
+    private:
+
+        MPU6050 *imu;
+        HMC5883L *mag;
+        MS561101BA *baro;
+
         boost::posix_time::ptime time_imu;
         int16_t ax, ay, az;
         int16_t gx, gy, gz;
@@ -48,13 +68,6 @@ class Drotek10dof
 
         boost::posix_time::ptime time_baro;
         int32_t pressure, temp;
-
-    protected:
-    private:
-
-        MPU6050 *imu;
-        HMC5883L *mag;
-        MS561101BA *baro;
 
         void loop(void);
 

@@ -26,7 +26,7 @@
 #include <boost/thread.hpp>
 #include <boost/signal.hpp>
 
-#include "mavlink.h"
+#include "mavlink/include/common/mavlink.h"
 
 class cDataLink
 {

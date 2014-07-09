@@ -1,3 +1,6 @@
+
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include "Logging.h"
 
 
@@ -14,27 +17,20 @@ Logging::Logging()
 {
     //ctor
     active_buffer = &string_buffer_1;
+    m_prescale = m_prescale_counter = 1;
+    m_headline_str = "# Please define a headline before Logging.begin()!\n";
 }
 
 bool Logging::FreeSpace(boost::filesystem::path p)
 {
     bool retval = false;
-    try
+    boost::filesystem::space_info s = boost::filesystem::space(p);
+    if(s.available > 50000000) //approx 48MB
     {
-        boost::filesystem::space_info s = boost::filesystem::space(p);
-        if(s.available > 50000000) //approx 48MB
-        {
-            retval = true;
+        retval = true;
 #if defined(DEBUG)
-            std::cout << s.available   << " Bytes available for logging." << std::endl;
+        std::cout << s.available   << " Bytes available for logging." << std::endl;
 #endif// (DEBUG)
-        }
-    }
-    catch (boost::filesystem::filesystem_error &e)
-    {
-#if defined(DEBUG)
-        std::cerr << e.what() << std::endl;
-#endif //DEBUG
     }
     return(retval);
 }
@@ -61,9 +57,9 @@ bool Logging::NewFile(const char* basename)
 
     if( FreeSpace("/") )
     {
-        //_logfile.open (logfile.str().c_str(), ios::out);
         _logfile = fopen(logfile.str().c_str(),"w");
         _logfilename = logfile.str().c_str();
+        write((const char*)m_headline_str.c_str());
         retval = true;
     }
 
@@ -97,6 +93,12 @@ void Logging::begin(const char* basename)
     }
 }
 
+void Logging::begin(const char* basename, unsigned short prescale)
+{
+    m_prescale = m_prescale_counter = prescale;
+    begin(basename);
+}
+
 //void Logging::record(const char* data)
 //{
 //    //if( FreeSpace("/") )
@@ -119,12 +121,37 @@ void Logging::write(std::ostream &data)
     this->write_buffer((const char*)s.str().c_str()); // with buffer
 }
 
+void Logging::header(const std::string str)
+{
+    if(0 < str.length())
+    {
+        m_headline_str.clear();
+        m_headline_str.append("time_s\ttime_us\t");
+        m_headline_str.append(str);
+    }
+}
+
+void Logging::data(const std::string str)
+{
+    if(0 == --m_prescale_counter)
+    {
+        boost::posix_time::time_duration difftime = boost::posix_time::microsec_clock::local_time()
+                                                    - boost::posix_time::from_time_t(0);
+
+        this->write(std::ostringstream().flush()
+                    << difftime.total_seconds()       << "\t"
+                    << difftime.fractional_seconds()  << "\t"
+                    << str);
+        m_prescale_counter = m_prescale;
+    }
+}
+
 void Logging::write_buffer(const char* data)
 {
-    //mutex_buffer.lock();
+    //mutex_buffer.lock(); // not required because of buffer switching
     *active_buffer += data;
     //mutex_buffer.unlock();
-    if(4*1024 < active_buffer->length()) //write 4 kbyte blocks
+    if(4*1024  < active_buffer->length()) //write 4 kbyte blocks: 4*1024
     {
         thread_trigger.notify_all();
     }
@@ -166,22 +193,17 @@ void Logging::end(void)
     thread_trigger.notify_all();
     background_thread.join();
 
-//    if (_logfile.is_open())
-//    {
-//        _logfile.close();
-    fclose(_logfile);
-//#if defined(DEBUG)
-//        if (_logfile.is_open())
-//            Debug("Could not close logfile: %s, is still open!", _logfilename.c_str());
-//#endif //DEBUG
-//    }
-//#if defined(DEBUG)
-//    else
-//    {
-//        if (_logfile.is_open())
-//            Debug("Could not close logfile: %s, because not open.", _logfilename.c_str());
-//    }
-//#endif //DEBUG
+    if (NULL != _logfile)
+    {
+        fclose(_logfile);
+        _logfile = NULL;
+    }
+#if defined(DEBUG)
+    else
+    {
+        Debug("Could not close logfile: %s, because not open!?", _logfilename.c_str());
+    }
+#endif //DEBUG
 }
 
 Logging::~Logging()

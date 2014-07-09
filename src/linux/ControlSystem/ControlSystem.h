@@ -1,11 +1,12 @@
 // Control.h
-//This Class calculates the contol signals
+//This Class calculates a control signals
 
 #ifndef _Control_H_
 #define _Control_H_
 
+#include "ControlSystem/i_CTRL.h"
 
-class ControlSystem
+class ControlSystem: public iCTRL
 {
   public:
         ControlSystem(); //Constructor
@@ -15,9 +16,10 @@ class ControlSystem
         float  getGainKi(void);
         void   setGainKd(float Kd);
         float  getGainKd(void);
-        void   setServoMinMax(float i_min, float i_max);
+        void   setServoMinMax(float f_min, float f_max);
         void   setErrorMinMax(float f_min, float f_max);
-        float  getServoCmd(float cmd, float state, float i_offset);
+        float  getControl(float cmd, float state, float offset);
+
 
   private:
         float f_Kp;

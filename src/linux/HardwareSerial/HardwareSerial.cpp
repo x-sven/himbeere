@@ -52,42 +52,33 @@ inline void store_char(unsigned char c, ring_buffer *buffer)
 
 void HardwareSerial::receive_loop(void)
 {
-    try
+    while(thread_running)
     {
-        while(thread_running)
+        unsigned char c[SERIAL_BUFFER_SIZE];
+        memset(c, 0, SERIAL_BUFFER_SIZE);
+        ssize_t nchars_read = 0;
+
+        if(fd != -1)
         {
-            unsigned char c[SERIAL_BUFFER_SIZE];
-            memset(c, 0, SERIAL_BUFFER_SIZE);
-            ssize_t nchars_read = 0;
+            /* unistd.h: Read NBYTES into BUF from FD.  Return the
+                         number read, -1 for errors or 0 for EOF.*/
+            /* It follows a BLOCKING read from fd*/
 
-            if(fd != -1)
+            nchars_read = ::read(fd, &c, 1);
+
+            for(uint16_t ii=0; ii<nchars_read; ii++ )
             {
-                /* unistd.h: Read NBYTES into BUF from FD.  Return the
-                             number read, -1 for errors or 0 for EOF.*/
-                /* It follows a BLOCKING read from fd*/
-
-                nchars_read = ::read(fd, &c, 1);
-
-                for(uint16_t ii=0; ii<nchars_read; ii++ )
-                {
-                    store_char(c[ii], _rx_buffer);
-                }
-            }
-            else
-            {
-                std::cout << "serial interface: file descriptor not valid" << std::endl;
-                boost::this_thread::sleep(boost::posix_time::milliseconds(100)); // don't waste too much time with error messages
+                store_char(c[ii], _rx_buffer);
+                signal_newdata();
             }
         }
-        std::cout << "leaving serial receive_loop thread" << std::endl;
-
+        else
+        {
+            std::cout << "serial interface: file descriptor not valid" << std::endl;
+            boost::this_thread::sleep(boost::posix_time::milliseconds(100)); // don't waste too much time with error messages
+        }
     }
-    catch(boost::thread_interrupted const& )
-    {
-        //clean resources
-        std::cout << "receive_loop thread interrupted" << std::endl;
-    }
-
+    std::cout << "leaving serial receive_loop thread" << std::endl;
 }
 
 
@@ -204,23 +195,23 @@ void HardwareSerial::begin(unsigned long baudrate)
                 thread_running = true;
                 receiving_thread = boost::thread( boost::bind(&HardwareSerial::receive_loop, this) );
             }
-            #if defined(DEBUG)
+#if defined(DEBUG)
             else
             {
                 std::cout << "Could not apply configuration"
                           << " in HardwareSerial::begin()!"
                           << std::endl << fflush(stdout);
             }
-            #endif // DEBUG
+#endif // DEBUG
         }// if tcgetattr()
-        #if defined(DEBUG)
+#if defined(DEBUG)
         else
         {
             std::cout << "Could not get tcgetattr()"
                       << " in HardwareSerial::begin()!"
                       << std::endl << fflush(stdout);
         }
-        #endif // DEBUG
+#endif // DEBUG
     }// if fd
     else
     {
@@ -230,9 +221,9 @@ void HardwareSerial::begin(unsigned long baudrate)
 
 void HardwareSerial::end()
 {
-    #if defined(DEBUG)
+#if defined(DEBUG)
     std::cout << "Time to interrupt the serial thread_loop()..." << std::endl;
-    #endif
+#endif
     thread_running = false;
 
     // wait for transmission of outgoing data

@@ -1,7 +1,7 @@
 #ifndef CSERVOINTERFACECLASS_H
 #define CSERVOINTERFACECLASS_H
 
-#include "Stream.h"
+#include "ARDUINO/Stream.h"
 
 class ServoInterface
 {
@@ -20,7 +20,7 @@ class ServoInterface
         uint8_t reciever_couter;
         uint16_t *rx_channel;
 
-            unsigned char rx_buffer[14];
+        unsigned char rx_buffer[14];
 
 
 // TODO (sven#1#): Failsafe values?

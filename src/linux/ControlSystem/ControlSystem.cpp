@@ -61,7 +61,7 @@ void ControlSystem::setErrorMinMax(float f_min, float f_max){
 }
 
 
-float ControlSystem::getServoCmd(float f_cmd, float f_state, float f_offset){
+float ControlSystem::getControl(float f_cmd, float f_state, float f_offset){
 
   float f_ctrl_err = constrain( (f_cmd - f_state), f_ErrorMin, f_ErrorMax);
   //proportional

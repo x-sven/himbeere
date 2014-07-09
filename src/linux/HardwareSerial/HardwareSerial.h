@@ -25,9 +25,11 @@
 #include <inttypes.h>
 #include <termios.h>
 
+#include <boost/signal.hpp>
 #include <boost/thread.hpp>
+#include <boost/thread/condition_variable.hpp>
 
-#include "Stream.h"
+#include "ARDUINO/Stream.h"
 
 
 #define SERIAL_BUFFER_SIZE 256
@@ -55,6 +57,7 @@ class HardwareSerial : public Stream
 
   public:
     HardwareSerial( const char* device);
+    virtual ~HardwareSerial(){};
     void begin(unsigned long);
     void end();
     virtual int available(void);
@@ -63,6 +66,9 @@ class HardwareSerial : public Stream
     virtual void flush(void);
     virtual size_t write(uint8_t);
     using Print::write; // pull in write(str) and write(buf, size) from Print
+
+    boost::signal<void (void)>  signal_newdata;
+
 };
 
 #endif // header guard
