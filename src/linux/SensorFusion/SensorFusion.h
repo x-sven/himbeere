@@ -28,6 +28,7 @@ class SensorFusion: public ECFClass, public BackgroundAction
     private:
         iIMU* m_the_imu;
         iMAG* m_the_mag;
+
 };
 
 #endif // SENSORFUSION_H

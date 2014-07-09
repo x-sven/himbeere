@@ -23,7 +23,7 @@ void ecf_module::ecf_logging(void)
     ecflog.begin("logfile_ecf.log", 5); // prescale = 5 -> 20Hz);
 }
 
-ecf_module::ecf_module(iIMU* p_imu, iMAG* p_mag)
+ecf_module::ecf_module(iIMU* p_imu, iMAG* p_mag, gps_module* p_gps)
 {
     if(NULL != p_imu)
     {
@@ -36,6 +36,10 @@ ecf_module::ecf_module(iIMU* p_imu, iMAG* p_mag)
         ecf.register_mag(p_mag);
         p_mag->signal_magdata.connect(boost::bind(&SensorFusion::mag_update, &ecf) );
     }
+//    if(NULL != p_gps)
+//    {
+        m_the_gps=p_gps;
+//    }
 
     ecf_logging();
     ecf.signal_newdata.connect( boost::bind(&ecf_module::ecf_log,this) );

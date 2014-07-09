@@ -60,6 +60,41 @@ void ctrl_module::loop(void)
 void ctrl_module::update(void)
 {
 // TODO (sven#1#): We should update control here!
+
+    float vel_scale = 5.0;
+    float psi = 0.0;
+
+
+
+    uint16_t ped_us, col_us,  lon_us, lat_us;
+
+    uint16_t pilot[3] = {lon_us, lat_us, col_us};
+
+
+    float vel_cmd[3] = {vel_scale*((float)lon_us-1500.)/500.,
+                        vel_scale*((float)lat_us-1500.)/500.,
+                        vel_scale*((float)col_us-1500.)/500.};
+
+    float T_rot[3][3] = {{std::cos(psi),-std::sin(psi), 0.0},
+                         {std::sin(psi), std::cos(psi), 0.0},
+                         {0.0, 0.0, 1.0 }};
+
+    float vel_geo[3] = {0., 0., 0.};
+    float vel_err[3] = {0., 0., 0.};
+
+    for(size_t ii=0; ii<3; ii++)
+    {
+        vel_geo[ii] = 0.0;
+        for(size_t jj=0; jj<3; jj++)
+        {
+            vel_geo[ii] += T_rot[ii][jj]*vel_cmd[jj];
+        }
+    }
+
+    for(size_t ii=0;ii<3;ii++)
+        vel_err[ii]=vel_geo[ii] - m_sf->g
+
+
 }
 
 

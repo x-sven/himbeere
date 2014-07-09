@@ -9,7 +9,7 @@ class ecf_module
 {
     public:
         ecf_module();
-        ecf_module(iIMU*, iMAG*);
+        ecf_module(iIMU*, iMAG*, gps_module* m_the_gps);
         SensorFusion* get_sf_ptr(){return(&ecf);};
         ~ecf_module();
     protected:
