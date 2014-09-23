@@ -73,6 +73,6 @@ float ControlSystem::getControl(float f_cmd, float f_state, float f_offset){
   float f_dTerm = f_Kd * (f_ctrl_err - f_last_error);
   f_last_error = f_ctrl_err;
   //PID control
-  return( constrain( (float)((f_pTerm + f_iTerm + f_dTerm) + f_offset) , f_ServoMin, f_ServoMax) );
+  return(constrain( (float)((f_pTerm + f_iTerm + f_dTerm) + f_offset) , f_ServoMin, f_ServoMax)  );
 }
 

@@ -139,7 +139,7 @@ float ECFClass::get_speed_ms(uint8_t axis)
 }
 
 /**************************************************/
-void ECFClass::set_speed_msdeg(float vel_north, float vel_east, float vel_down)
+void ECFClass::set_speed_ms(float vel_north, float vel_east, float vel_down)
 {
     f_vel_north_ms = vel_north;
     f_vel_east_ms  = vel_east;

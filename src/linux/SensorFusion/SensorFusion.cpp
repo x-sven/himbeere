@@ -84,7 +84,7 @@ void SensorFusion::gps_update(void)
     float vel_down  = 0.;
 
     m_the_gps->velocity_ned_ms(&vel_north, &vel_east, &vel_down);
-    set_speed_msdeg(vel_north, vel_east, vel_down);
+    set_speed_ms(vel_north, vel_east, vel_down);
 
 //    float gps_heading_deg = 0.01745329252*(ground_course * 0.01); // in rad
 //    float gps_speed_cm_s   = ground_speed * 0.01;                 // in meter

@@ -65,13 +65,31 @@
 			<Add library="boost_unit_test_framework" />
 			<Add library="boost_filesystem" />
 			<Add library="boost_system" />
+			<Add library="boost_signals" />
 			<Add library="boost_thread" />
 			<Add library="pthread" />
 			<Add library="rt" />
 		</Linker>
+		<Unit filename="../../app/brainware/ctrl_module.cpp" />
+		<Unit filename="../../app/brainware/ctrl_module.h" />
+		<Unit filename="../../app/brainware/ecf_module.cpp" />
+		<Unit filename="../../app/brainware/ecf_module.h" />
+		<Unit filename="../../src/cECF/ECF.cpp" />
+		<Unit filename="../../src/cECF/ECF.h" />
+		<Unit filename="../../src/cECF/MatrixMath.cpp" />
+		<Unit filename="../../src/cECF/MatrixMath.h" />
+		<Unit filename="../../src/cECF/VectorMath.cpp" />
+		<Unit filename="../../src/cECF/VectorMath.h" />
+		<Unit filename="../../src/cECF/st_Euler.h" />
+		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.cpp" />
+		<Unit filename="../../src/linux/BackgroundAction/BackgroundAction.h" />
 		<Unit filename="../../src/linux/ControlSystem/ControlSystem.cpp" />
 		<Unit filename="../../src/linux/ControlSystem/ControlSystem.h" />
 		<Unit filename="../../src/linux/ControlSystem/i_CTRL.h" />
+		<Unit filename="../../src/linux/Logging/Logging.cpp" />
+		<Unit filename="../../src/linux/Logging/Logging.h" />
+		<Unit filename="../../src/linux/SensorFusion/SensorFusion.cpp" />
+		<Unit filename="../../src/linux/SensorFusion/SensorFusion.h" />
 		<Unit filename="boost_test_main.cpp" />
 		<Unit filename="controlsystem_tests.cpp" />
 		<Extensions>

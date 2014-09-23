@@ -36,7 +36,7 @@ public:
 
 // NOTE (Sven#1#): Better to use other velocity representation here!?
 //  void set_speed_msdeg(float ground_speed, float ground_course, float speed_3d);
-  void set_speed_msdeg(float vel_north, float vel_east, float vel_down);
+  void set_speed_ms(float vel_north, float vel_east, float vel_down);
 
   void update(void);
   stEuler_t get_euler_angles_rad(void);

@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "ctrl_module.h"
 
+#ifndef constrain
+    #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
+#endif
+
 ctrl_module::ctrl_module()
 {
     m_sf = NULL;
@@ -16,16 +20,20 @@ void ctrl_module::begin(void)
 {
     set_default_gains();
     start_thread();
-    m_in_ped_us=m_in_col_us=m_in_lon_us=m_in_lat_us=0;
-    m_out_ped_us=m_out_col_us=m_out_lon_us=m_out_lat_us=0;
+    m_in_ped_us=m_in_col_us=m_in_lon_us=m_in_lat_us=1500;
+    m_out_ped_us=m_out_col_us=m_out_lon_us=m_out_lat_us=1500;
 }
 
 void ctrl_module::set_default_gains(void)
 {
     CtrlLoops[Ctrl_Loop_Vel_U].setGainKp(1.0);
+    CtrlLoops[Ctrl_Loop_Vel_U].setServoMinMax(-1.57,1.57);
     CtrlLoops[Ctrl_Loop_Vel_V].setGainKp(1.0);
+    CtrlLoops[Ctrl_Loop_Vel_V].setServoMinMax(-1.57,1.57);
     CtrlLoops[Ctrl_Loop_Vel_W].setGainKp(1.0);
+    CtrlLoops[Ctrl_Loop_Vel_W].setServoMinMax(-1.57,1.57);
     CtrlLoops[Ctrl_Loop_Yaw_angle].setGainKp(1.0);
+    CtrlLoops[Ctrl_Loop_Yaw_angle].setServoMinMax(-1.57,1.57);
 }
 
 void ctrl_module::start_thread(void)
@@ -74,6 +82,7 @@ void ctrl_module::update(void)
                        };
     // Yaw rotation matrix
     float psi = m_sf->get_euler_angles_rad().yaw;
+
     float T_rot[3][3] =
     {
         {std::cos(psi),-std::sin(psi), 0.0},
@@ -81,20 +90,37 @@ void ctrl_module::update(void)
         {0.0, 0.0, 1.0 }
     };
     // geodetic velocity command from pilot wrt. vehicles yaw angle
-    float vel_geo[3] = {0., 0., 0.};
+    float vel_geo_cmd[3] = {0., 0., 0.};
     for(size_t ii=0; ii<3; ii++)
     {
-        vel_geo[ii] = 0.0;
+        vel_geo_cmd[ii] = 0.0;
         for(size_t jj=0; jj<3; jj++)
         {
-            vel_geo[ii] += T_rot[ii][jj]*vel_cmd[jj];
+            vel_geo_cmd[ii] += T_rot[ii][jj]*vel_cmd[jj];
         }
     }
+
+    //error velocity in geo = scaled stick in geo - sensor vel in geo
+    float vel_error_geo[3] = {0., 0., 0.};
+    for(int ii=0;ii<3;ii++)
+       vel_error_geo[ii]=vel_geo_cmd[ii]-m_sf->get_speed_ms(ii);
+
+    float vel_error_body_star[3] = {0., 0., 0.};
+    //Transform from geo to body*
+    for(size_t ii=0; ii<3; ii++)
+    {
+        for(size_t jj=0; jj<3; jj++)
+        {
+            vel_error_body_star[ii] += T_rot[jj][ii]*vel_error_geo[jj];
+        }
+    }
+
     // vel. error, defined as: err=cmd-state
-    float ctrl_cmd[Ctrl_Loop_max_number];
+    float ctrl_cmd[3];
     for(size_t ii=Ctrl_Loop_Vel_U; ii < Ctrl_Loop_Vel_W; ii++)
     {
-        ctrl_cmd[ii] = CtrlLoops[ii].getControl(vel_geo[ii], m_sf->get_speed_ms(ii), 0.0f);
+        ctrl_cmd[ii] = CtrlLoops[ii].getControl(0.0f, vel_error_body_star[ii], 0.0f);
+        //constrain(ctrl_cmd[ii], -1.0f, 1.0f);
     }
     // ToDo: ctrl_cmd[Ctrl_Loop_Yaw_angle] = CtrlLoops[Ctrl_Loop_Yaw_angle].getControl(???, m_sf->get_euler_angles_rad().yaw, 0.0f);
     m_out_ped_us = (uint16_t)m_in_ped_us;
