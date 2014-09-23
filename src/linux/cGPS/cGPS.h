@@ -9,8 +9,10 @@
 // includes from: src
 #include "AP_GPS/AP_GPS.h"
 #include "ARDUINO/Stream.h"
+#include "Sensors/i_GPS.h"
 
-class cGPS: public AP_GPS_MTK16
+
+class cGPS: public AP_GPS_MTK16, public iGPS
 {
     public:
 

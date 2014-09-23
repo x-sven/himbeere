@@ -13,7 +13,7 @@ datalink_module::datalink_module(): cDataLink()
     datalink_module::start();
 }
 
-datalink_module::datalink_module(iIMU* _imu, iMAG* _mag, iBARO* _baro, cGPS* _gps, SensorFusion* _sf)
+datalink_module::datalink_module(iIMU* _imu, iMAG* _mag, iBARO* _baro, iGPS* _gps, SensorFusion* _sf)
 {
     m_imu = _imu;
     m_mag = _mag;
@@ -92,10 +92,10 @@ void datalink_module::send_messages(void)
     // GPS Message
     if(NULL != m_gps)
     {
-        cDataLink::SendGpsMsg( m_gps->fix, m_gps->latitude, m_gps->longitude, m_gps->altitude,
-                               m_gps->hdop, 65535,
-                               m_gps->ground_speed , m_gps->ground_course,
-                               m_gps->num_sats);
+//        cDataLink::SendGpsMsg( m_gps->fix, m_gps->latitude, m_gps->longitude, m_gps->altitude,
+//                               m_gps->hdop, 65535,
+//                               m_gps->ground_speed , m_gps->ground_course,
+//                               m_gps->num_sats);
     }
 #if defined(DEBUG)
     else

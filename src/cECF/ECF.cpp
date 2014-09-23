@@ -53,9 +53,9 @@ ECFClass::ECFClass(void):f_g_const(9.81)
     }//for jj
 
     G_Dt=0.01;
-    f_ground_course = 0.0;
-    f_ground_speed = 0.0;
-    f_speed_3d = 0.0;
+    f_ground_course_deg = 0.0;
+    f_ground_speed_ms = 0.0;
+    f_speed_3d_ms = 0.0;
     f_declination = 0.0;
     mag_enabled = false;
 
@@ -119,11 +119,35 @@ float ECFClass::get_CorrectedRate_rads(uint8_t axis)
 }
 
 /**************************************************/
-void ECFClass::set_speed_msdeg(float ground_speed, float ground_course, float speed_3d)
+float ECFClass::get_speed_ms(uint8_t axis)
 {
-    f_ground_speed = ground_speed;
-    f_ground_course = ground_course;
-    f_speed_3d = speed_3d;
+    float ret = 0.0;
+    if(axis < 3)
+        switch(axis)
+        {
+        case 0:
+            ret = f_vel_north_ms;
+            break;
+        case 1:
+            ret = f_vel_east_ms;
+            break;
+        case 2:
+            ret = f_vel_down_ms;
+            break;
+        }
+    return(ret);
+}
+
+/**************************************************/
+void ECFClass::set_speed_msdeg(float vel_north, float vel_east, float vel_down)
+{
+    f_vel_north_ms = vel_north;
+    f_vel_east_ms  = vel_east;
+    f_vel_down_ms  = vel_down;
+
+    f_ground_speed_ms   = sqrt(vel_north*vel_north+f_vel_east_ms*f_vel_east_ms);
+    f_ground_course_deg = atan2(f_vel_east_ms, f_vel_north_ms);
+    f_speed_3d_ms       = sqrt(vel_north*vel_north+f_vel_east_ms*f_vel_east_ms+f_vel_down_ms*f_vel_down_ms);
 }
 
 
@@ -143,7 +167,7 @@ void ECFClass::Matrix_update(void)
     Vector_Add(&Omega[0], &Gyro_Vector[0], &Omega_I[0]);  //adding Integrator term
     Vector_Add(&Omega_Vector[0], &Omega[0], &Omega_P[0]); //adding proportional term
 #if USE_GPS
- //   Accel_adjust();    //Remove centrifugal acceleration.
+//   Accel_adjust();    //Remove centrifugal acceleration.
 #endif /*USE_GPS*/
 
     Update_Matrix[0][0]= 0.0;
@@ -368,10 +392,10 @@ void ECFClass::Drift_correction(void)
     }
     else  // Use GPS Ground course to correct yaw gyro drift
     {
-        if(f_ground_speed>=SPEEDFILT)
+        if(f_ground_speed_ms>=SPEEDFILT)
         {
-            Heading_X = cos(ToRad(f_ground_course));
-            Heading_Y = sin(ToRad(f_ground_course));
+            Heading_X = cos(ToRad(f_ground_course_deg));
+            Heading_Y = sin(ToRad(f_ground_course_deg));
 
             errorCourse= -(DCM_Matrix[0][0]*Heading_Y) +(DCM_Matrix[1][0]*Heading_X);  //Calculating YAW error
             Vector_Scale(errorYaw,&DCM_Matrix[2][0],errorCourse); //Applys the yaw correction to the XYZ rotation of the aircraft, depeding its attitude.
@@ -413,9 +437,9 @@ void ECFClass::Accel_adjust(void)
     float vel_g[3];
 
     //assumtion: slip angle = 0
-    vel_g[0] = f_ground_speed*cos(ToRad(f_ground_course));
-    vel_g[1] = f_ground_speed*sin(ToRad(f_ground_course));
-    vel_g[2] = sqrt(vel_g[0]*vel_g[0] + vel_g[1]*vel_g[1]) - f_speed_3d;
+    vel_g[0] = f_ground_speed_ms*cos(ToRad(f_ground_course_deg));
+    vel_g[1] = f_ground_speed_ms*sin(ToRad(f_ground_course_deg));
+    vel_g[2] = sqrt(vel_g[0]*vel_g[0] + vel_g[1]*vel_g[1]) - f_speed_3d_ms;
 
     Vector_Cross_Product(&centrifugal_accel_vector[0],&Omega[0],&vel_g[0]); // delta_acc = omega x V
     Vector_Add(&Accel_Vector[0], &Accel_Vector[0], &centrifugal_accel_vector[0]);// acc = acc + delta_acc

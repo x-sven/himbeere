@@ -3,13 +3,12 @@
 
 #include "SensorFusion/SensorFusion.h"
 #include "Logging/Logging.h"
-#include "Sensors/i_IMU.h"
 
 class ecf_module
 {
     public:
         ecf_module();
-        ecf_module(iIMU*, iMAG*, gps_module* m_the_gps);
+        ecf_module(iIMU*, iMAG*, iGPS*);
         SensorFusion* get_sf_ptr(){return(&ecf);};
         ~ecf_module();
     protected:

@@ -77,7 +77,7 @@ int main(int argc, char **argv )
     imu_module m_imu;
     //std::cout << m_imu.get_imu_ptr()->getIMUConfigString("# ");
 
-    ecf_module m_ecf(m_imu.get_imu_ptr(), m_imu.get_mag_ptr(), m_gps.gps);
+    ecf_module m_ecf(m_imu.get_imu_ptr(), m_imu.get_mag_ptr(), NULL);
 
     // TODO (sven#1#): ctrl commands from DataLink or fcci!?
     ctrl_module m_ctrl(m_ecf.get_sf_ptr());
@@ -87,7 +87,7 @@ int main(int argc, char **argv )
     datalink_module m_datalink(m_imu.get_imu_ptr(),
                                m_imu.get_mag_ptr(),
                                m_imu.get_baro_ptr(),
-                               m_gps.gps,
+                               m_gps.get_gps_ptr(),
                                m_ecf.get_sf_ptr());
 
 

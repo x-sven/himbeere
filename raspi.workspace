@@ -20,5 +20,7 @@
 		<Project filename="test/logging/boost_test/boost_test.cbp" />
 		<Project filename="src/flightgearUDP/asio_flightgear_sender.cbp" />
 		<Project filename="test/servochannels/boost_test.cbp" />
+		<Project filename="../../2014_ardupilot_git/AP_reference.cbp" />
+		<Project filename="test/controlsystem/boost_test.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

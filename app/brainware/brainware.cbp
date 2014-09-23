@@ -119,12 +119,11 @@
 		<Unit filename="../../src/linux/SensorFusion/SensorFusion.cpp" />
 		<Unit filename="../../src/linux/SensorFusion/SensorFusion.h" />
 		<Unit filename="../../src/linux/Sensors/i_BARO.h" />
+		<Unit filename="../../src/linux/Sensors/i_GPS.h" />
 		<Unit filename="../../src/linux/Sensors/i_IMU.h" />
 		<Unit filename="../../src/linux/Sensors/i_MAG.h" />
 		<Unit filename="../../src/linux/ServoInterface/ServoInterface.cpp" />
 		<Unit filename="../../src/linux/ServoInterface/ServoInterface.h" />
-		<Unit filename="../../src/linux/cGPS/cGPS.cpp" />
-		<Unit filename="../../src/linux/cGPS/cGPS.h" />
 		<Unit filename="../../src/linux/cServochannels/c_parser.cpp" />
 		<Unit filename="../../src/linux/cServochannels/c_parser.h" />
 		<Unit filename="../../src/linux/cServochannels/c_servochannels.cpp" />

@@ -11,7 +11,7 @@ class ctrl_module
         ctrl_module(SensorFusion*);
 
 // TODO (sven#1#): Better with cServoChannels!? ...
-        void getControl(uint16_t ped_us, uint16_t col_us, uint16_t lon_us, uint16_t lat_us);
+        void getControl(uint16_t *ped_us, uint16_t *col_us, uint16_t *lon_us, uint16_t *lat_us);
 
 //        iCTRL* get_ctrl_ptr(){return(&CtrlLoop);};
 
@@ -21,7 +21,16 @@ class ctrl_module
 
     protected:
     private:
-        ControlSystem CtrlLoop;
+    enum Ctrl_Loop
+    {
+        Ctrl_Loop_Vel_U = 0,
+        Ctrl_Loop_Vel_V,
+        Ctrl_Loop_Vel_W,
+        Ctrl_Loop_Yaw_angle,
+        Ctrl_Loop_max_number
+    };
+
+        ControlSystem CtrlLoops[Ctrl_Loop_max_number];
         SensorFusion* m_sf;
 
         void begin(void);
@@ -32,6 +41,10 @@ class ctrl_module
 
         boost::thread the_thread;
         bool thread_running;
+
+        uint16_t m_in_ped_us, m_in_col_us, m_in_lon_us, m_in_lat_us;
+        uint16_t m_out_ped_us, m_out_col_us, m_out_lon_us, m_out_lat_us;
+
 };
 
 #endif // CTRL_MODULE_H

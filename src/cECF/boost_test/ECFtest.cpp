@@ -276,9 +276,9 @@ BOOST_AUTO_TEST_CASE( Accel_adjust_test )
     BOOST_CHECK_SMALL(ECF.Omega[1], (float)1e-6);
     BOOST_CHECK_SMALL(ECF.Omega[2], (float)1e-6);
 
-    ECF.f_ground_speed  = 10.0;
-    ECF.f_ground_course = 0.0;
-    ECF.f_speed_3d      = 10.0;
+    ECF.f_ground_speed_ms  = 10.0;
+    ECF.f_ground_course_deg = 0.0;
+    ECF.f_speed_3d_ms      = 10.0;
 
     ECF.Omega[2]        = 2.0;  // omega_z = 2rad/s
     ECF.Accel_Vector[1] = 5.0;  // acc_y = 5m/s2
@@ -287,8 +287,8 @@ BOOST_AUTO_TEST_CASE( Accel_adjust_test )
     BOOST_CHECK_CLOSE_FRACTION(ECF.Accel_Vector[1], (float)( 5.0+(10.0*2.0)), 1e-6 );
     BOOST_CHECK_CLOSE_FRACTION(ECF.Accel_Vector[2], (float)-9.81, (float)1e-6);
 
-    ECF.f_ground_speed = 8.0;
-    ECF.f_speed_3d     = 8.0;
+    ECF.f_ground_speed_ms = 8.0;
+    ECF.f_speed_3d_ms     = 8.0;
 
     ECF.Omega[1]=-3.0;
     ECF.Omega[2]= 0.0;

@@ -80,7 +80,7 @@ void fcci_module::loop(void)
             }
             if(true == bControlUpdated)
             {
-                m_ctrl->getControl(ped_us, col_us, lon_us, lat_us);
+                m_ctrl->getControl(&ped_us, &col_us, &lon_us, &lat_us);
                 fcci_module::send_commands(ped_us, col_us, lon_us, lat_us);
                 bControlUpdated = false;
             }

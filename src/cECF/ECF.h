@@ -10,8 +10,8 @@
 #include <math.h>
 #include "st_Euler.h"
 
-#define ToRad(x) (x*0.01745329252)  // *pi/180
-#define ToDeg(x) (x*57.2957795131)  // *180/pi
+#define ToRad(x) (x*0.01745329252f)  // *pi/180
+#define ToDeg(x) (x*57.2957795131f)  // *180/pi
 
 #define USE_GPS 1
 /*Min Speed Filter for Yaw drift Correction*/
@@ -32,9 +32,12 @@ public:
   float get_Acceleration_mss(uint8_t axis);
   float get_GyroRate_rads(uint8_t axis);
   float get_CorrectedRate_rads(uint8_t axis);
+  float get_speed_ms(uint8_t axis);
 
 // NOTE (Sven#1#): Better to use other velocity representation here!?
-  void set_speed_msdeg(float ground_speed, float ground_course, float speed_3d);
+//  void set_speed_msdeg(float ground_speed, float ground_course, float speed_3d);
+  void set_speed_msdeg(float vel_north, float vel_east, float vel_down);
+
   void update(void);
   stEuler_t get_euler_angles_rad(void);
   stEuler_t get_euler_angles_from_acc_rad(void);
@@ -73,9 +76,13 @@ private:
     float errorRollPitch[3];
     float errorYaw[3];
 
-    float f_ground_speed;
-    float f_ground_course;
-    float f_speed_3d;
+    float f_ground_speed_ms;    // horizontal speed in m/s
+    float f_ground_course_deg;  // ground course angle in deg
+    float f_speed_3d_ms;        // total speed in m/s, not from any sensor!
+
+    float f_vel_north_ms;   // speed in north direction in m/s
+    float f_vel_east_ms;    // speed in east direction in m/s
+    float f_vel_down_ms;    // speed in down direction in m/s
 
     const float f_g_const;
 

@@ -5,10 +5,6 @@ namespace pt = boost::posix_time;
 
 #include "SensorFusion.h"
 
-#include "Sensors/i_IMU.h"
-
-
-
 SensorFusion::SensorFusion()
 {
     BackgroundAction::signal_trigger.connect( boost::bind(&ECFClass::update, this) );
@@ -43,6 +39,11 @@ void SensorFusion::register_mag(iMAG* _mag)
 {
     m_the_mag = _mag;
 }
+
+void SensorFusion::register_gps(iGPS* _gps)
+{
+    m_the_gps = _gps;
+}
 //***************************************
 void SensorFusion::imu_update(void)
 {
@@ -74,6 +75,25 @@ void SensorFusion::mag_update(void)
     m_the_mag->getField_Gauss(&mag[0], &mag[1], &mag[2]);
     //Orientation!?
     set_MagVector_Gauss(mag[0], mag[1], mag[2]);
+}
+
+void SensorFusion::gps_update(void)
+{
+    float vel_north = 0.;
+    float vel_east  = 0.;
+    float vel_down  = 0.;
+
+    m_the_gps->velocity_ned_ms(&vel_north, &vel_east, &vel_down);
+    set_speed_msdeg(vel_north, vel_east, vel_down);
+
+//    float gps_heading_deg = 0.01745329252*(ground_course * 0.01); // in rad
+//    float gps_speed_cm_s   = ground_speed * 0.01;                 // in meter
+//
+//    _velocity_north = gps_speed * cos(gps_heading);
+//    _velocity_east  = gps_speed * sin(gps_heading);
+//
+//    // no good way to get descent rate
+//    _velocity_down  = 0;
 }
 
 
