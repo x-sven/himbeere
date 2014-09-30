@@ -86,6 +86,8 @@
 		<Unit filename="../../src/linux/ControlSystem/ControlSystem.cpp" />
 		<Unit filename="../../src/linux/ControlSystem/ControlSystem.h" />
 		<Unit filename="../../src/linux/ControlSystem/i_CTRL.h" />
+		<Unit filename="../../src/linux/Delay.cpp" />
+		<Unit filename="../../src/linux/Delay.h" />
 		<Unit filename="../../src/linux/Logging/Logging.cpp" />
 		<Unit filename="../../src/linux/Logging/Logging.h" />
 		<Unit filename="../../src/linux/SensorFusion/SensorFusion.cpp" />

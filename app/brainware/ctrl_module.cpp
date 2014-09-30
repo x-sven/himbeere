@@ -19,21 +19,23 @@ ctrl_module::ctrl_module(SensorFusion* _sf)
 void ctrl_module::begin(void)
 {
     set_default_gains();
-    start_thread();
     m_in_ped_us=m_in_col_us=m_in_lon_us=m_in_lat_us=1500;
     m_out_ped_us=m_out_col_us=m_out_lon_us=m_out_lat_us=1500;
+
+    update(); // run once for initialization
+    start_thread();
 }
 
 void ctrl_module::set_default_gains(void)
 {
-    CtrlLoops[Ctrl_Loop_Vel_U].setGainKp(1.0);
-    CtrlLoops[Ctrl_Loop_Vel_U].setServoMinMax(-1.57,1.57);
-    CtrlLoops[Ctrl_Loop_Vel_V].setGainKp(1.0);
-    CtrlLoops[Ctrl_Loop_Vel_V].setServoMinMax(-1.57,1.57);
-    CtrlLoops[Ctrl_Loop_Vel_W].setGainKp(1.0);
-    CtrlLoops[Ctrl_Loop_Vel_W].setServoMinMax(-1.57,1.57);
-    CtrlLoops[Ctrl_Loop_Yaw_angle].setGainKp(1.0);
-    CtrlLoops[Ctrl_Loop_Yaw_angle].setServoMinMax(-1.57,1.57);
+    CtrlLoops[eCtrl_Loop_Vel_U].setGainKp(1.0);
+    CtrlLoops[eCtrl_Loop_Vel_U].setServoMinMax(-1.57,1.57);
+    CtrlLoops[eCtrl_Loop_Vel_V].setGainKp(1.0);
+    CtrlLoops[eCtrl_Loop_Vel_V].setServoMinMax(-1.57,1.57);
+    CtrlLoops[eCtrl_Loop_Vel_W].setGainKp(1.0);
+    CtrlLoops[eCtrl_Loop_Vel_W].setServoMinMax(-1.57,1.57);
+    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKp(1.0);
+    CtrlLoops[eCtrl_Loop_Yaw_angle].setServoMinMax(-1.57,1.57);
 }
 
 void ctrl_module::start_thread(void)
@@ -117,16 +119,16 @@ void ctrl_module::update(void)
 
     // vel. error, defined as: err=cmd-state
     float ctrl_cmd[3];
-    for(size_t ii=Ctrl_Loop_Vel_U; ii < Ctrl_Loop_Vel_W; ii++)
+    for(size_t ii=eCtrl_Loop_Vel_U; ii <= eCtrl_Loop_Vel_W; ii++)
     {
         ctrl_cmd[ii] = CtrlLoops[ii].getControl(0.0f, vel_error_body_star[ii], 0.0f);
         //constrain(ctrl_cmd[ii], -1.0f, 1.0f);
     }
-    // ToDo: ctrl_cmd[Ctrl_Loop_Yaw_angle] = CtrlLoops[Ctrl_Loop_Yaw_angle].getControl(???, m_sf->get_euler_angles_rad().yaw, 0.0f);
+    // ToDo: ctrl_cmd[eCtrl_Loop_Yaw_angle] = CtrlLoops[eCtrl_Loop_Yaw_angle].getControl(???, m_sf->get_euler_angles_rad().yaw, 0.0f);
     m_out_ped_us = (uint16_t)m_in_ped_us;
-    m_out_lon_us = (uint16_t)((ctrl_cmd[Ctrl_Loop_Vel_U] * 500.f) + 1500.f);
-    m_out_lat_us = (uint16_t)((ctrl_cmd[Ctrl_Loop_Vel_V] * 500.f) + 1500.f);
-    m_out_col_us = (uint16_t)((ctrl_cmd[Ctrl_Loop_Vel_W] * 500.f) + 1500.f);
+    m_out_lon_us = (uint16_t)((ctrl_cmd[eCtrl_Loop_Vel_U] * 500.f) + 1500.f);
+    m_out_lat_us = (uint16_t)((ctrl_cmd[eCtrl_Loop_Vel_V] * 500.f) + 1500.f);
+    m_out_col_us = (uint16_t)((ctrl_cmd[eCtrl_Loop_Vel_W] * 500.f) + 1500.f);
     signal_newdata();
 }
 
@@ -141,5 +143,5 @@ void ctrl_module::getControl(uint16_t *ped_us, uint16_t *col_us, uint16_t *lon_u
 
 ctrl_module::~ctrl_module()
 {
-    //dtor
+    thread_running = false;
 }

@@ -15,7 +15,7 @@ class ctrl_module
 
 //        iCTRL* get_ctrl_ptr(){return(&CtrlLoop);};
 
-        virtual ~ctrl_module();
+        ~ctrl_module();
 
         boost::signal<void (void)>  signal_newdata;
 
@@ -23,14 +23,14 @@ class ctrl_module
     private:
     enum Ctrl_Loop
     {
-        Ctrl_Loop_Vel_U = 0,
-        Ctrl_Loop_Vel_V,
-        Ctrl_Loop_Vel_W,
-        Ctrl_Loop_Yaw_angle,
-        Ctrl_Loop_max_number
+        eCtrl_Loop_Vel_U = 0,
+        eCtrl_Loop_Vel_V,
+        eCtrl_Loop_Vel_W,
+        eCtrl_Loop_Yaw_angle,
+        eCtrl_Loop_max_number
     };
 
-        ControlSystem CtrlLoops[Ctrl_Loop_max_number];
+        ControlSystem CtrlLoops[eCtrl_Loop_max_number];
         SensorFusion* m_sf;
 
         void begin(void);
