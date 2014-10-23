@@ -53,7 +53,9 @@
 
 /* This assumes you have the mavlink headers on your include path
  or in the same folder as this source file */
-#include <mavlink.h>
+
+#include <mavlink/include/common/mavlink.h>
+
 
 #define BUFFER_LENGTH 2041 // minimum buffer size that can be used with qnx (I don't know why)
 
@@ -238,11 +240,11 @@ uint64_t microsSinceEpoch()
 }
 #endif
 
-#include "cDataLink.h"
+#include "DataLink/cDataLink.h"
 BOOST_AUTO_TEST_CASE( cDataLink_test )
 {
     //cDataLink GCSlink("192.168.0.190");
-    cDataLink GCSlink("192.168.2.57");
+    cDataLink GCSlink("129.247.48.80");
     for(int ii=0; ii < 3*60; ii++) // N*60 seconds
     {
         GCSlink.SendStatusMsg(500, 12600); // load in percent*10, voltage in millivolt
@@ -265,46 +267,74 @@ BOOST_AUTO_TEST_CASE( cDataLink_test )
 void handleMessage(mavlink_message_t* msg)
 {
 
+#define AP_MAX_NAME_SIZE 16
+    char param_name[AP_MAX_NAME_SIZE] = "Hurz";
+    float value = 42.;
+    mavlink_message_t send_msg;
+
     //uint8_t result = MAV_RESULT_UNSUPPORTED;
     switch (msg->msgid)
     {
-        case MAVLINK_MSG_ID_COMMAND_LONG:
-        {
-            // decode
-            mavlink_command_long_t packet;
-            mavlink_msg_command_long_decode(msg, &packet);
+    case MAVLINK_MSG_ID_COMMAND_LONG:
+    {
+        // decode
+        mavlink_command_long_t packet;
+        mavlink_msg_command_long_decode(msg, &packet);
 
-            switch(packet.command)
+        switch(packet.command)
+        {
+        case MAV_CMD_PREFLIGHT_CALIBRATION:
+            if (packet.param1 == 1 ||
+                    packet.param2 == 1 ||
+                    packet.param3 == 1)
             {
-            case MAV_CMD_PREFLIGHT_CALIBRATION:
-                if (packet.param1 == 1 ||
-                        packet.param2 == 1 ||
-                        packet.param3 == 1)
-                {
-                    //action 1-2-3
-                    printf("Magnetometer calibration!\n");
-                }
-                if (packet.param4 == 1)
-                {
-                    //action 4
-                }
-                if (packet.param5 == 1)
-                {
-                    //action 5
-                }
+                //action 1-2-3
+                printf("Magnetometer calibration!\n");
+            }
+            if (packet.param4 == 1)
+            {
+                //action 4
+            }
+            if (packet.param5 == 1)
+            {
+                //action 5
+            }
 //                result = MAV_RESULT_ACCEPTED;
-                break;
-            default:
+            break;
+        case MAVLINK_MSG_ID_PARAM_REQUEST_LIST:
+
+            int bytes_sent;
+            uint16_t len;
+
+            uint8_t buf[2048];
+
+            //(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
+            //const char *param_id, float param_value, uint8_t param_type, uint16_t param_count, uint16_t param_index)
+            mavlink_msg_param_value_pack(
+                1, MAV_COMP_ID_ALL,
+                &send_msg,
+                param_name,
+                value,
+                MAV_PARAM_TYPE_REAL32,
+                1,      // param_count = Anzahl der Parameter
+                1);     // param_index = Nummer f. aktellen Parameter
+
+            len = mavlink_msg_to_send_buffer(buf, &msg);
+            bytes_sent = sendto(sock, buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+            (void)bytes_sent; //avoid compiler warning
+
+            break;
+        default:
 //                result = MAV_RESULT_UNSUPPORTED;
-                break;
-            } // switch packet.command
+            break;
+        } // switch packet.command
 //            mavlink_msg_command_ack_send(chan,
 //                                         packet.command,
 //                                         result);
-            break;
-        } // case MAVLINK_MSG_ID_COMMAND_LONG
-        default:
-            break;
+        break;
+    } // case MAVLINK_MSG_ID_COMMAND_LONG
+    default:
+        break;
     }// switch msgid
 
 }

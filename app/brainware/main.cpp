@@ -90,6 +90,10 @@ int main(int argc, char **argv )
                                m_gps.get_gps_ptr(),
                                m_ecf.get_sf_ptr());
 
+    //m_ctrl.setDataLink(m_datalink.signal_mag_calibration);
+
+    m_datalink.signal_mag_calibration.connect( boost::bind(&imu_module::run_mag_calibration, &m_imu) );
+    //GCSlink.signal_mag_calibration.connect( boost::bind(&Drotek10dof::run_mag_calibration, &imu10dof) );
 
 
     options.logging_rate = 1000; // max. default logging rate. // TODO (sven#2#): Nice but not used!

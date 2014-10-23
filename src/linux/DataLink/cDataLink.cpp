@@ -135,6 +135,9 @@ void cDataLink::receive_loop(void)
 
 void cDataLink::handleMessage(mavlink_message_t* msg)
 {
+
+    printf("msg->msgid: %d\n", msg->msgid);
+
     //uint8_t result = MAV_RESULT_UNSUPPORTED;
     switch (msg->msgid)
     {
