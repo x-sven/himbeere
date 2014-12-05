@@ -62,6 +62,8 @@
 			<Add library="boost_signals" />
 			<Add library="boost_system" />
 		</Linker>
+		<Unit filename="../../../src/cParameter/cParameter.cpp" />
+		<Unit filename="../../../src/cParameter/cParameter.h" />
 		<Unit filename="../../../src/linux/DataLink/cDataLink.cpp" />
 		<Unit filename="../../../src/linux/DataLink/cDataLink.h" />
 		<Unit filename="../../../src/mavlink/include/checksum.h" />

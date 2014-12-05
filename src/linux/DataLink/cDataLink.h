@@ -28,6 +28,7 @@
 
 #include "mavlink/include/common/mavlink.h"
 
+
 class cDataLink
 {
     public:
@@ -58,8 +59,8 @@ class cDataLink
         int sock;
         struct sockaddr_in gcAddr;
 
-        uint8_t buf[2048];
-        mavlink_message_t msg;
+        uint8_t m_buf[2048];
+        mavlink_message_t m_msg;
 
         boost::thread heartbeat_thread;
         bool execute_heartbeat_thread;

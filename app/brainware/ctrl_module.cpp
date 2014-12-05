@@ -2,7 +2,7 @@
 #include "ctrl_module.h"
 
 #ifndef constrain
-    #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
+#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 #endif
 
 ctrl_module::ctrl_module()
@@ -22,14 +22,32 @@ void ctrl_module::begin(void)
     m_in_ped_us=m_in_col_us=m_in_lon_us=m_in_lat_us=1500;
     m_out_ped_us=m_out_col_us=m_out_lon_us=m_out_lat_us=1500;
 
-    update(); // run once for initialization
+    if(NULL != m_sf)
+    {
+        update(); // run once for initialization
+    }
     start_thread();
+}
+
+void ctrl_module::set_gain(std::string name, float value)
+{
+    if (strcmp(name.c_str(), "XY"))
+    {
+        CtrlLoops[eCtrl_Loop_Vel_U].setGainKp(value);
+    }
+    else
+    {
+        std::cerr << "Gain does not exist in ctrl_module! (" << name << ")" << std::endl;
+    }
+
 }
 
 void ctrl_module::set_default_gains(void)
 {
-    CtrlLoops[eCtrl_Loop_Vel_U].setGainKp(1.0);
-    CtrlLoops[eCtrl_Loop_Vel_U].setServoMinMax(-1.57,1.57);
+    const uint16_t CTRL_ID = 0;
+    CtrlLoops[eCtrl_Loop_Vel_U].setGainKp(cParameter::create_instance(1.0, "ctrl_u_gain_p", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_U].setServoMinMax(cParameter::create_instance(-1.57, "ctrl_u_int_min", CTRL_ID)->get_value(),
+            cParameter::create_instance( 1.57, "ctrl_u_int_max",CTRL_ID)->get_value());
     CtrlLoops[eCtrl_Loop_Vel_V].setGainKp(1.0);
     CtrlLoops[eCtrl_Loop_Vel_V].setServoMinMax(-1.57,1.57);
     CtrlLoops[eCtrl_Loop_Vel_W].setGainKp(1.0);
@@ -63,9 +81,11 @@ void ctrl_module::loop(void)
 
     while(thread_running)
     {
-        update();
-        signal_newdata();
-
+        if(NULL != m_sf)
+        {
+            update();
+            signal_newdata();
+        }
         boost::this_thread::sleep(timer - boost::posix_time::microsec_clock::local_time());
         timer += interval_50Hz; // update timer
     }
@@ -104,8 +124,8 @@ void ctrl_module::update(void)
 
     //error velocity in geo = scaled stick in geo - sensor vel in geo
     float vel_error_geo[3] = {0., 0., 0.};
-    for(int ii=0;ii<3;ii++)
-       vel_error_geo[ii]=vel_geo_cmd[ii]-m_sf->get_speed_ms(ii);
+    for(int ii=0; ii<3; ii++)
+        vel_error_geo[ii]=vel_geo_cmd[ii]-m_sf->get_speed_ms(ii);
 
     float vel_error_body_star[3] = {0., 0., 0.};
     //Transform from geo to body*

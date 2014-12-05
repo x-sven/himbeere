@@ -1,4 +1,5 @@
 #include "cDataLink.h"
+#include "cParameter/cParameter.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <bitset>
@@ -87,14 +88,14 @@ void cDataLink::heartbeat_loop(void)
     while(execute_heartbeat_thread)
     {
         /*Send Heartbeat */
-        mavlink_msg_heartbeat_pack(1, MAV_COMP_ID_SYSTEM_CONTROL, &msg,
+        mavlink_msg_heartbeat_pack(1, MAV_COMP_ID_SYSTEM_CONTROL, &m_msg,
                                    MAV_TYPE_TRICOPTER,
                                    MAV_AUTOPILOT_GENERIC,
                                    mav_mode,
                                    0, //custom mode bitfield
                                    mav_state);
-        len = mavlink_msg_to_send_buffer(buf, &msg);
-        bytes_sent = sendto(sock, buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+        len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+        bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
         (void)bytes_sent; //avoid compiler warning
         boost::this_thread::sleep(boost::posix_time::time_duration(boost::posix_time::milliseconds(500)));
     }
@@ -136,7 +137,13 @@ void cDataLink::receive_loop(void)
 void cDataLink::handleMessage(mavlink_message_t* msg)
 {
 
-    printf("msg->msgid: %d\n", msg->msgid);
+    printf("handleMessage: msg->msgid: %d\n", msg->msgid);
+    uint16_t len;
+    int bytes_sent;
+
+#define AP_MAX_NAME_SIZE 16
+    char param_name[AP_MAX_NAME_SIZE] = "Hurz";
+    float value = 42.;
 
     //uint8_t result = MAV_RESULT_UNSUPPORTED;
     switch (msg->msgid)
@@ -171,6 +178,65 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
 //                                         result);
         break;
     } // case MAVLINK_MSG_ID_COMMAND_LONG
+    case MAVLINK_MSG_ID_PARAM_REQUEST_LIST:
+    {
+        // Start sending parameters
+        //  mavlink_missionlib_send_gcs_string("PM SENDING LIST");
+        printf("MAVLINK_MSG_ID_PARAM_REQUEST_LIST!\n");
+
+        for(std::set<cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
+        {
+            mavlink_msg_param_value_pack(
+                1, MAV_COMP_ID_SYSTEM_CONTROL,
+                msg,
+                (*it)->get_name().c_str(),
+                (*it)->get_value(),
+                MAV_PARAM_TYPE_REAL32,
+                cParameter::get_instances()->size(),      // param_count = Anzahl der Parameter
+                std::distance(cParameter::get_instances()->begin(),it) + 1);     // param_index = Nummer f. aktellen Parameter
+            len = mavlink_msg_to_send_buffer(m_buf, msg);
+            bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
+            (void)bytes_sent; //avoid compiler warning
+        }
+
+        FRAGE: Warum werden die Parameter nicht korrekt zur GCS zurück geschickt?
+        Welche Antwort muss auf die MSG-IDS 20, 21,23 "wirklich" erfolgen?
+
+        break;
+    }
+    case MAVLINK_MSG_ID_PARAM_SET:
+        //(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
+        //const char *param_id, float param_value, uint8_t param_type, uint16_t param_count, uint16_t param_index)
+
+        printf("MAVLINK_MSG_ID_PARAM_SET!\n");
+
+        mavlink_param_set_t set;
+        mavlink_msg_param_set_decode(msg, &set);
+
+        printf("parameter: %s\n", set.param_id);
+
+        for(std::set<cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
+        {
+            if(strcmp((*it)->get_name().c_str(),set.param_id))
+            {
+                printf("parameter: %s set to: %f\n", set.param_id, set.param_value);
+                (*it)->set_value(set.param_value);
+                // Report back new value
+                mavlink_msg_param_value_pack(
+                    1, MAV_COMP_ID_SYSTEM_CONTROL,
+                    msg,
+                    (*it)->get_name().c_str(),
+                    (*it)->get_value(),
+                    MAV_PARAM_TYPE_REAL32,
+                    cParameter::get_instances()->size(),      // param_count = Anzahl der Parameter
+                    std::distance(cParameter::get_instances()->begin(),it) + 1);     // param_index = Nummer f. aktellen Parameter
+                len = mavlink_msg_to_send_buffer(m_buf, msg);
+                bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
+                (void)bytes_sent; //avoid compiler warning
+            }
+        }
+
+        break;
     default:
         break;
     }// switch msgid
@@ -199,7 +265,7 @@ void cDataLink::SendStatusMsg(int load, int millivoltage)
     onboard_control_sensors_health  = onboard_control_sensors_present;
 
     /* Send Status */
-    mavlink_msg_sys_status_pack(1, MAV_COMP_ID_ALL, &msg,
+    mavlink_msg_sys_status_pack(1, MAV_COMP_ID_ALL, &m_msg,
                                 onboard_control_sensors_present.to_ulong(), //sensors present (uint32_bitmask)
                                 onboard_control_sensors_enabled.to_ulong(), //sensors enabled
                                 onboard_control_sensors_health.to_ulong(),  //sensors health
@@ -208,8 +274,8 @@ void cDataLink::SendStatusMsg(int load, int millivoltage)
                                 -1,    // current in mA (-1 = no data)
                                 -1,    // remainig capacity
                                 0, 0, 0, 0, 0, 0); //communication and autopilot errors
-    len = mavlink_msg_to_send_buffer(buf, &msg);
-    bytes_sent = sendto(sock, buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
     (void)bytes_sent; //avoid compiler warning
 
 }
@@ -223,7 +289,7 @@ void cDataLink::SendImuMsg(float ax, float ay, float az,
     uint16_t len;
 
     /* Send high res imu */
-    mavlink_msg_highres_imu_pack(1, MAV_COMP_ID_IMU, &msg, microsSinceEpoch(),
+    mavlink_msg_highres_imu_pack(1, MAV_COMP_ID_IMU, &m_msg, microsSinceEpoch(),
                                  ax, ay, az,    //ax, ay, az
                                  rx, ry, rz,    //rx, ry, rz
                                  mx, my, mz,    // mx, my, mz
@@ -232,8 +298,8 @@ void cDataLink::SendImuMsg(float ax, float ay, float az,
                                  p_alt,         //pressure_alt
                                  T,             //temperature
                                  update_mask);  //bitmask of sensor updates
-    len = mavlink_msg_to_send_buffer(buf, &msg);
-    bytes_sent = sendto(sock, buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
     (void)bytes_sent; //avoid compiler warning
 }
 
@@ -245,15 +311,15 @@ void cDataLink::SendGpsMsg(unsigned short fix_type, long lat, long lon, long alt
     uint16_t len;
 
     /* Send GPS raw int */
-    mavlink_msg_gps_raw_int_pack(1, MAV_COMP_ID_GPS, &msg, microsSinceEpoch(),
+    mavlink_msg_gps_raw_int_pack(1, MAV_COMP_ID_GPS, &m_msg, microsSinceEpoch(),
                                  fix_type,          //fix_type
                                  lat, lon, alt,  //lat, lon, alt
                                  vdop, hdop,  // hdop, vdop
                                  vel,      //vel*100
                                  course,       //course deg*100
                                  sats);         //visible satellites
-    len = mavlink_msg_to_send_buffer(buf, &msg);
-    bytes_sent = sendto(sock, buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
     (void)bytes_sent; //avoid compiler warning
 }
 
@@ -264,11 +330,11 @@ void cDataLink::SendAttMsg(float roll, float pitch, float yaw,
     uint16_t len;
 
     /* Send attitude */
-    mavlink_msg_attitude_pack(1, MAV_COMP_ID_ALL, &msg, microsSinceEpoch(),
+    mavlink_msg_attitude_pack(1, MAV_COMP_ID_ALL, &m_msg, microsSinceEpoch(),
                               roll, pitch, yaw,
                               rollspeed, pitchspeed, yawspeed);
-    len = mavlink_msg_to_send_buffer(buf, &msg);
-    bytes_sent = sendto(sock, buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
     (void)bytes_sent; //avoid compiler warning
 }
 

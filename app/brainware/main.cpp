@@ -73,26 +73,28 @@ int main(int argc, char **argv )
    // register Ctrl-C signal
     signal(SIGINT, &trap);
 
-    gps_module m_gps;
-    imu_module m_imu;
-    //std::cout << m_imu.get_imu_ptr()->getIMUConfigString("# ");
+//    gps_module m_gps;
+//    imu_module m_imu;
+//
+//    //std::cout << m_imu.get_imu_ptr()->getIMUConfigString("# ");
+//
+//    ecf_module m_ecf(m_imu.get_imu_ptr(), m_imu.get_mag_ptr(), NULL);
+//
+//    // TODO (sven#1#): ctrl commands from DataLink or fcci!?
+//    ctrl_module m_ctrl(m_ecf.get_sf_ptr());
+    ctrl_module m_ctrl;
+//    fcci_module m_fcci(&m_ctrl); // Ihhhhh!
 
-    ecf_module m_ecf(m_imu.get_imu_ptr(), m_imu.get_mag_ptr(), NULL);
-
-    // TODO (sven#1#): ctrl commands from DataLink or fcci!?
-    ctrl_module m_ctrl(m_ecf.get_sf_ptr());
-
-    fcci_module m_fcci(&m_ctrl); // Ihhhhh!
-
-    datalink_module m_datalink(m_imu.get_imu_ptr(),
-                               m_imu.get_mag_ptr(),
-                               m_imu.get_baro_ptr(),
-                               m_gps.get_gps_ptr(),
-                               m_ecf.get_sf_ptr());
-
+//    datalink_module m_datalink(m_imu.get_imu_ptr(),
+//                               m_imu.get_mag_ptr(),
+//                               m_imu.get_baro_ptr(),
+//                               m_gps.get_gps_ptr(),
+//                               m_ecf.get_sf_ptr());
+    //datalink_module m_datalink(NULL,NULL,NULL,NULL,NULL);
+    datalink_module m_datalink;
     //m_ctrl.setDataLink(m_datalink.signal_mag_calibration);
 
-    m_datalink.signal_mag_calibration.connect( boost::bind(&imu_module::run_mag_calibration, &m_imu) );
+//    m_datalink.signal_mag_calibration.connect( boost::bind(&imu_module::run_mag_calibration, &m_imu) );
     //GCSlink.signal_mag_calibration.connect( boost::bind(&Drotek10dof::run_mag_calibration, &imu10dof) );
 
 

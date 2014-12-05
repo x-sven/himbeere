@@ -3,6 +3,7 @@
 
 #include "ControlSystem/ControlSystem.h"
 #include "SensorFusion/SensorFusion.h"
+#include "cParameter/cParameter.h"
 
 class ctrl_module
 {
@@ -14,7 +15,7 @@ class ctrl_module
         void getControl(uint16_t *ped_us, uint16_t *col_us, uint16_t *lon_us, uint16_t *lat_us);
 
 //        iCTRL* get_ctrl_ptr(){return(&CtrlLoop);};
-
+        void set_gain(std::string name, float value);
         ~ctrl_module();
 
         boost::signal<void (void)>  signal_newdata;
@@ -31,6 +32,7 @@ class ctrl_module
     };
 
         ControlSystem CtrlLoops[eCtrl_Loop_max_number];
+
         SensorFusion* m_sf;
 
         void begin(void);

@@ -241,8 +241,26 @@ uint64_t microsSinceEpoch()
 #endif
 
 #include "DataLink/cDataLink.h"
+
+#include "cParameter/cParameter.h"
+
 BOOST_AUTO_TEST_CASE( cDataLink_test )
 {
+
+    cParameter::create_instance(1, 42.2, "Hurz1");
+    {
+        cParameter::create_instance(42, 42.2, "Hurz42");
+    }
+    cParameter::create_instance(2, 42.1, "Hurz2");
+    //cParameter::get_instances()->insert()
+
+
+    for(std::set<cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
+    {
+        printf("ID: %d\t", (*it)->get_id());
+        printf(" : %s\t", (*it)->get_name().c_str());
+        printf(" : %f\n", (*it)->get_value());
+    }
     //cDataLink GCSlink("192.168.0.190");
     cDataLink GCSlink("129.247.48.80");
     for(int ii=0; ii < 3*60; ii++) // N*60 seconds
@@ -301,29 +319,29 @@ void handleMessage(mavlink_message_t* msg)
             }
 //                result = MAV_RESULT_ACCEPTED;
             break;
-        case MAVLINK_MSG_ID_PARAM_REQUEST_LIST:
-
-            int bytes_sent;
-            uint16_t len;
-
-            uint8_t buf[2048];
-
-            //(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-            //const char *param_id, float param_value, uint8_t param_type, uint16_t param_count, uint16_t param_index)
-            mavlink_msg_param_value_pack(
-                1, MAV_COMP_ID_ALL,
-                &send_msg,
-                param_name,
-                value,
-                MAV_PARAM_TYPE_REAL32,
-                1,      // param_count = Anzahl der Parameter
-                1);     // param_index = Nummer f. aktellen Parameter
-
-            len = mavlink_msg_to_send_buffer(buf, &msg);
-            bytes_sent = sendto(sock, buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
-            (void)bytes_sent; //avoid compiler warning
-
-            break;
+//        case MAVLINK_MSG_ID_PARAM_REQUEST_LIST:
+//
+//            int bytes_sent;
+//            uint16_t len;
+//
+//            uint8_t buf[2048];
+//
+//            //(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
+//            //const char *param_id, float param_value, uint8_t param_type, uint16_t param_count, uint16_t param_index)
+//            mavlink_msg_param_value_pack(
+//                1, MAV_COMP_ID_ALL,
+//                &send_msg,
+//                param_name,
+//                value,
+//                MAV_PARAM_TYPE_REAL32,
+//                1,      // param_count = Anzahl der Parameter
+//                1);     // param_index = Nummer f. aktellen Parameter
+//
+//            len = mavlink_msg_to_send_buffer(buf, &msg);
+//            bytes_sent = sendto(sock, buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+//            (void)bytes_sent; //avoid compiler warning
+//
+//            break;
         default:
 //                result = MAV_RESULT_UNSUPPORTED;
             break;

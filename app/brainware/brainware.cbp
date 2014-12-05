@@ -91,6 +91,8 @@
 		<Unit filename="../../src/cECF/VectorMath.h" />
 		<Unit filename="../../src/cECF/boost_test/wiring.h" />
 		<Unit filename="../../src/cECF/st_Euler.h" />
+		<Unit filename="../../src/cParameter/cParameter.cpp" />
+		<Unit filename="../../src/cParameter/cParameter.h" />
 		<Unit filename="../../src/crc16/crc16.cpp" />
 		<Unit filename="../../src/crc16/crc16.h" />
 		<Unit filename="../../src/i2cdevlib/HMC5883L/HMC5883L.cpp" />
