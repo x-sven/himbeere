@@ -45,15 +45,18 @@ void ctrl_module::set_gain(std::string name, float value)
 void ctrl_module::set_default_gains(void)
 {
     const uint16_t CTRL_ID = 0;
-    CtrlLoops[eCtrl_Loop_Vel_U].setGainKp(cParameter::create_instance(1.0, "ctrl_u_gain_p", CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_U].setServoMinMax(cParameter::create_instance(-1.57, "ctrl_u_int_min", CTRL_ID)->get_value(),
-            cParameter::create_instance( 1.57, "ctrl_u_int_max",CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_V].setGainKp(1.0);
-    CtrlLoops[eCtrl_Loop_Vel_V].setServoMinMax(-1.57,1.57);
-    CtrlLoops[eCtrl_Loop_Vel_W].setGainKp(1.0);
-    CtrlLoops[eCtrl_Loop_Vel_W].setServoMinMax(-1.57,1.57);
-    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKp(1.0);
-    CtrlLoops[eCtrl_Loop_Yaw_angle].setServoMinMax(-1.57,1.57);
+    CtrlLoops[eCtrl_Loop_Vel_U].setGainKp         ( cParameter::set( 1.0 , "ctrl_u_gain_p" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_U].setServoMinMax    ( cParameter::set(-1.57, "ctrl_u_int_min", CTRL_ID)->get_value(),
+                                                    cParameter::set( 1.57, "ctrl_u_int_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_V].setGainKp         ( cParameter::set( 1.0 , "ctrl_v_gain_p" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_V].setServoMinMax    ( cParameter::set(-1.57, "ctrl_v_int_min", CTRL_ID)->get_value(),
+                                                    cParameter::set( 1.57, "ctrl_v_int_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_W].setGainKp         ( cParameter::set( 1.0 , "ctrl_w_gain_p" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_W].setServoMinMax    ( cParameter::set(-1.57, "ctrl_w_int_min", CTRL_ID)->get_value(),
+                                                    cParameter::set( 1.57, "ctrl_w_int_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKp     ( cParameter::set( 1.0 , "ctrl_yaw_gain_p" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Yaw_angle].setServoMinMax( cParameter::set(-1.57, "ctrl_yaw_int_min", CTRL_ID)->get_value(),
+                                                    cParameter::set( 1.57, "ctrl_yaw_int_max", CTRL_ID)->get_value());
 }
 
 void ctrl_module::start_thread(void)

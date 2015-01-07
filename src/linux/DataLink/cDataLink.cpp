@@ -4,6 +4,8 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <bitset>
 
+#define MAVLINK_MSG_ID_PARAM_REQUEST_READ 20
+
 enum control_sensors
 {
     gyro,                       //0: 3D
@@ -145,6 +147,9 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
     char param_name[AP_MAX_NAME_SIZE] = "Hurz";
     float value = 42.;
 
+    mavlink_param_set_t set;
+    mavlink_msg_param_set_decode(msg, &set);
+
     //uint8_t result = MAV_RESULT_UNSUPPORTED;
     switch (msg->msgid)
     {
@@ -178,55 +183,24 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
 //                                         result);
         break;
     } // case MAVLINK_MSG_ID_COMMAND_LONG
-    case MAVLINK_MSG_ID_PARAM_REQUEST_LIST:
+    case MAVLINK_MSG_ID_PARAM_REQUEST_READ:
     {
-        // Start sending parameters
-        //  mavlink_missionlib_send_gcs_string("PM SENDING LIST");
-        printf("MAVLINK_MSG_ID_PARAM_REQUEST_LIST!\n");
 
-        for(std::set<cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
+        printf("MAVLINK_MSG_ID_PARAM_REQUEST_READ!\n");
+        printf("...requested parameter: %s\n", set.param_id);
+
+Hier stimmt was nicht... set.param_id wird nicht ausgegeben!
+Daher funktioniert das strcmp() auch nicht???
+
+        for(std::map<std::string, cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
         {
-            mavlink_msg_param_value_pack(
-                1, MAV_COMP_ID_SYSTEM_CONTROL,
-                msg,
-                (*it)->get_name().c_str(),
-                (*it)->get_value(),
-                MAV_PARAM_TYPE_REAL32,
-                cParameter::get_instances()->size(),      // param_count = Anzahl der Parameter
-                std::distance(cParameter::get_instances()->begin(),it) + 1);     // param_index = Nummer f. aktellen Parameter
-            len = mavlink_msg_to_send_buffer(m_buf, msg);
-            bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
-            (void)bytes_sent; //avoid compiler warning
-        }
-
-        FRAGE: Warum werden die Parameter nicht korrekt zur GCS zurück geschickt?
-        Welche Antwort muss auf die MSG-IDS 20, 21,23 "wirklich" erfolgen?
-
-        break;
-    }
-    case MAVLINK_MSG_ID_PARAM_SET:
-        //(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-        //const char *param_id, float param_value, uint8_t param_type, uint16_t param_count, uint16_t param_index)
-
-        printf("MAVLINK_MSG_ID_PARAM_SET!\n");
-
-        mavlink_param_set_t set;
-        mavlink_msg_param_set_decode(msg, &set);
-
-        printf("parameter: %s\n", set.param_id);
-
-        for(std::set<cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
-        {
-            if(strcmp((*it)->get_name().c_str(),set.param_id))
+            if(strcmp(it->second->get_name().c_str(),set.param_id))
             {
-                printf("parameter: %s set to: %f\n", set.param_id, set.param_value);
-                (*it)->set_value(set.param_value);
-                // Report back new value
                 mavlink_msg_param_value_pack(
                     1, MAV_COMP_ID_SYSTEM_CONTROL,
                     msg,
-                    (*it)->get_name().c_str(),
-                    (*it)->get_value(),
+                    it->second->get_name().c_str(),
+                    it->second->get_value(),
                     MAV_PARAM_TYPE_REAL32,
                     cParameter::get_instances()->size(),      // param_count = Anzahl der Parameter
                     std::distance(cParameter::get_instances()->begin(),it) + 1);     // param_index = Nummer f. aktellen Parameter
@@ -234,9 +208,74 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
                 bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
                 (void)bytes_sent; //avoid compiler warning
             }
+            //boost::this_thread::sleep(boost::posix_time::milliseconds(10));
         }
 
+
         break;
+    }
+    case MAVLINK_MSG_ID_PARAM_REQUEST_LIST:
+    {
+        // Start sending parameters
+        //  mavlink_missionlib_send_gcs_string("PM SENDING LIST");
+        printf("MAVLINK_MSG_ID_PARAM_REQUEST_LIST!\n");
+
+        for(std::map<std::string, cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
+        {
+            printf("send msg %d", std::distance(cParameter::get_instances()->begin(),it) + 1);
+            mavlink_msg_param_value_pack(
+                1, MAV_COMP_ID_SYSTEM_CONTROL,
+                msg,
+                it->second->get_name().c_str(),
+                it->second->get_value(),
+                MAV_PARAM_TYPE_REAL32,
+                cParameter::get_instances()->size(),      // param_count = Anzahl der Parameter
+                std::distance(cParameter::get_instances()->begin(),it) + 1);     // param_index = Nummer f. aktellen Parameter
+            len = mavlink_msg_to_send_buffer(m_buf, msg);
+            bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
+            (void)bytes_sent; //avoid compiler warning
+            boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+        }
+
+//        FRAGE: Warum werden die Parameter nicht korrekt zur GCS zurück geschickt?
+//       Welche Antwort muss auf die MSG-IDS 20, 21,23 "wirklich" erfolgen?
+
+        break;
+    }
+    case MAVLINK_MSG_ID_PARAM_SET:
+        {
+        //(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
+        //const char *param_id, float param_value, uint8_t param_type, uint16_t param_count, uint16_t param_index)
+
+        printf("MAVLINK_MSG_ID_PARAM_SET!\n");
+        printf("...will set parameter: %s\n", set.param_id);
+
+//        for(std::map<std::string, cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
+//        {
+//            if(strcmp(it->second->get_name().c_str(),set.param_id))
+//            {
+            std::map<std::string, cParameter*>::iterator it=cParameter::get_instances()->find(set.param_id);
+            if(it != cParameter::get_instances()->end())
+            {
+                printf("parameter: %s set to: %f\n", it->second->get_name().c_str(), set.param_value);
+                it->second->set_value(set.param_value);
+                // Report back new value
+                mavlink_msg_param_value_pack(
+                    1, MAV_COMP_ID_SYSTEM_CONTROL,
+                    msg,
+                    it->second->get_name().c_str(),
+                    it->second->get_value(),
+                    MAV_PARAM_TYPE_REAL32,
+                    cParameter::get_instances()->size(),      // param_count = Anzahl der Parameter
+                    std::distance(cParameter::get_instances()->begin(),it) + 1);     // param_index = Nummer f. aktellen Parameter
+                len = mavlink_msg_to_send_buffer(m_buf, msg);
+                bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
+                (void)bytes_sent; //avoid compiler warning
+            }
+//            }
+        }
+        break;
+
     default:
         break;
     }// switch msgid

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <string>
-#include <set>
+#include <map>
 
 
 
@@ -16,13 +16,13 @@ class cParameter
         std::string get_name()  {return name;};
         float get_value()       {return value;};
         void set_value(float _value) {value=_value;};
-        static cParameter* create_instance(float _value, std::string _name, uint16_t _comp_id, uint16_t _sys_id);
-        static cParameter* create_instance(float _value, std::string _name, uint16_t _comp_id);
-        static cParameter* create_instance(float _value, std::string _name);
+        static cParameter* set(float _value, std::string _name, uint16_t _comp_id, uint16_t _sys_id);
+        static cParameter* set(float _value, std::string _name, uint16_t _comp_id);
+        static cParameter* set(float _value, std::string _name);
 
-        static std::set<cParameter*> *get_instances()
+        static std::map<std::string, cParameter*>* get_instances()
         {
-            static std::set<cParameter*> list_parameter_instances;
+            static std::map<std::string, cParameter*> list_parameter_instances;
             return(&list_parameter_instances);
         }
 
