@@ -126,8 +126,21 @@ void cDataLink::receive_loop(void)
             {
                 if (mavlink_parse_char(MAVLINK_COMM_0, buf[i], &msg, &status))
                 {
+                    printf("\n\nmsg.msgid: %d\n", msg.msgid);
+
+                    const char* p_msg = (const char*)&buf[0];
+
+                    for(int i=0;i<265;i++)
+                            printf("%x|",p_msg[i]);
+                    printf("\n");
+
+                    for(int i=0;i<265;i++)
+                            printf("%c|",p_msg[i]);
+                    printf("\n");
+
                     // Packet received
                     handleMessage(&msg);
+
                 }// parse is ok
             }// for all bytes received
         }
@@ -147,8 +160,8 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
     char param_name[AP_MAX_NAME_SIZE] = "Hurz";
     float value = 42.;
 
-    mavlink_param_set_t set;
-    mavlink_msg_param_set_decode(msg, &set);
+    mavlink_param_set_t seti;
+    mavlink_msg_param_set_decode(msg, &seti);
 
     //uint8_t result = MAV_RESULT_UNSUPPORTED;
     switch (msg->msgid)
@@ -187,14 +200,17 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
     {
 
         printf("MAVLINK_MSG_ID_PARAM_REQUEST_READ!\n");
-        printf("...requested parameter: %s\n", set.param_id);
+//        printf("...requested parameter: %s\n", seti.param_id);
+        for(int i=0;i<16;i++)
+            printf("%x|",(unsigned char)(seti.param_id[i]));
+        printf("\n");
 
-Hier stimmt was nicht... set.param_id wird nicht ausgegeben!
-Daher funktioniert das strcmp() auch nicht???
+/*Hier stimmt was nicht... seti.param_id wird nicht ausgegeben!
+Daher funktioniert das strcmp() auch nicht???*/
 
         for(std::map<std::string, cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
         {
-            if(strcmp(it->second->get_name().c_str(),set.param_id))
+            if(strcmp(it->second->get_name().c_str(),seti.param_id))
             {
                 mavlink_msg_param_value_pack(
                     1, MAV_COMP_ID_SYSTEM_CONTROL,
@@ -239,6 +255,8 @@ Daher funktioniert das strcmp() auch nicht???
 
 //        FRAGE: Warum werden die Parameter nicht korrekt zur GCS zurück geschickt?
 //       Welche Antwort muss auf die MSG-IDS 20, 21,23 "wirklich" erfolgen?
+        Parameter werden über eine Liste codiert (2 Byte) -> Liste finden -> Paramter ID in namen decodieren -> name -> cParameter -> codieren->zurück
+        siehe mavlink_msg_param_request_read_decode in ardupilot
 
         break;
     }
@@ -248,17 +266,17 @@ Daher funktioniert das strcmp() auch nicht???
         //const char *param_id, float param_value, uint8_t param_type, uint16_t param_count, uint16_t param_index)
 
         printf("MAVLINK_MSG_ID_PARAM_SET!\n");
-        printf("...will set parameter: %s\n", set.param_id);
+        printf("...will set parameter: %s\n", seti.param_id);
 
 //        for(std::map<std::string, cParameter*>::iterator it=cParameter::get_instances()->begin(); it!=cParameter::get_instances()->end(); ++it)
 //        {
-//            if(strcmp(it->second->get_name().c_str(),set.param_id))
+//            if(strcmp(it->second->get_name().c_str(),seti.param_id))
 //            {
-            std::map<std::string, cParameter*>::iterator it=cParameter::get_instances()->find(set.param_id);
+            std::map<std::string, cParameter*>::iterator it=cParameter::get_instances()->find(seti.param_id);
             if(it != cParameter::get_instances()->end())
             {
-                printf("parameter: %s set to: %f\n", it->second->get_name().c_str(), set.param_value);
-                it->second->set_value(set.param_value);
+                printf("parameter: %s set to: %f\n", it->second->get_name().c_str(), seti.param_value);
+                it->second->set_value(seti.param_value);
                 // Report back new value
                 mavlink_msg_param_value_pack(
                     1, MAV_COMP_ID_SYSTEM_CONTROL,
