@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <string>
-#include <map>
+#include <vector>
 
 
 
@@ -16,13 +16,14 @@ class cParameter
         std::string get_name()  {return name;};
         float get_value()       {return value;};
         void set_value(float _value) {value=_value;};
+        static std::vector<cParameter*>::iterator exist(std::string);
         static cParameter* set(float _value, std::string _name, uint16_t _comp_id, uint16_t _sys_id);
         static cParameter* set(float _value, std::string _name, uint16_t _comp_id);
         static cParameter* set(float _value, std::string _name);
 
-        static std::map<std::string, cParameter*>* get_instances()
+        static std::vector<cParameter*>* get_instances()
         {
-            static std::map<std::string, cParameter*> list_parameter_instances;
+            static std::vector<cParameter*> list_parameter_instances;
             return(&list_parameter_instances);
         }
 
@@ -35,8 +36,6 @@ class cParameter
         uint16_t comp_id;
         float value;
         std::string name;
-
-
 };
 
 
