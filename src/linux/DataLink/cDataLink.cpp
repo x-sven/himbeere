@@ -245,148 +245,186 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
         }
         break;
     }
-        default:
-            break;
-        }// switch msgid
+    default:
+        break;
+    }// switch msgid
 
-    }
+}
 
-    void cDataLink::SendStatusMsg(int load, int millivoltage)
+void cDataLink::SendStatusMsg(int load, int millivoltage)
+{
+    int bytes_sent;
+    uint16_t len;
+
+
+
+    std::bitset<16> onboard_control_sensors_present = 0;
+    std::bitset<16> onboard_control_sensors_enabled = 0;
+    std::bitset<16> onboard_control_sensors_health = 0;
+
+
+    onboard_control_sensors_present.set(gyro);
+    onboard_control_sensors_present.set(acc);
+    onboard_control_sensors_present.set(mag);
+    onboard_control_sensors_present.set(absolute_pressure);
+    onboard_control_sensors_present.set(gps);
+
+    onboard_control_sensors_enabled = onboard_control_sensors_present;
+    onboard_control_sensors_health  = onboard_control_sensors_present;
+
+    /* Send Status */
+    mavlink_msg_sys_status_pack(1, MAV_COMP_ID_ALL, &m_msg,
+                                onboard_control_sensors_present.to_ulong(), //sensors present (uint32_bitmask)
+                                onboard_control_sensors_enabled.to_ulong(), //sensors enabled
+                                onboard_control_sensors_health.to_ulong(),  //sensors health
+                                load,  //main loop load
+                                millivoltage,    //voltage in millivolt
+                                -1,    // current in mA (-1 = no data)
+                                -1,    // remainig capacity
+                                0, 0, 0, 0, 0, 0); //communication and autopilot errors
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
+    (void)bytes_sent; //avoid compiler warning
+
+}
+void cDataLink::SendImuMsg(float ax, float ay, float az,
+                           float rx, float ry, float rz,
+                           float mx, float my, float mz,
+                           float p, float T, float p_alt,
+                           long update_mask)
+{
+    int bytes_sent;
+    uint16_t len;
+
+    /* Send high res imu */
+    mavlink_msg_highres_imu_pack(1, MAV_COMP_ID_IMU, &m_msg, microsSinceEpoch(),
+                                 ax, ay, az,    //ax, ay, az
+                                 rx, ry, rz,    //rx, ry, rz
+                                 mx, my, mz,    // mx, my, mz
+                                 p,             //abs
+                                 0.,            //diff
+                                 p_alt,         //pressure_alt
+                                 T,             //temperature
+                                 update_mask);  //bitmask of sensor updates
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+    (void)bytes_sent; //avoid compiler warning
+}
+
+void cDataLink::SendGpsMsg(unsigned short fix_type, long lat, long lon, long alt,
+                           long vdop, long hdop,
+                           long vel, long course, unsigned short sats)
+{
+    int bytes_sent;
+    uint16_t len;
+
+    /* Send GPS raw int */
+    mavlink_msg_gps_raw_int_pack(1, MAV_COMP_ID_GPS, &m_msg, microsSinceEpoch(),
+                                 fix_type,          //fix_type
+                                 lat, lon, alt,  //lat, lon, alt
+                                 vdop, hdop,  // hdop, vdop
+                                 vel,      //vel*100
+                                 course,       //course deg*100
+                                 sats);         //visible satellites
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+    (void)bytes_sent; //avoid compiler warning
+}
+
+void cDataLink::SendAttMsg(float roll, float pitch, float yaw,
+                           float rollspeed, float pitchspeed, float yawspeed)
+{
+    int bytes_sent;
+    uint16_t len;
+
+    /* Send attitude */
+    mavlink_msg_attitude_pack(1, MAV_COMP_ID_ALL, &m_msg, microsSinceEpoch(),
+                              roll, pitch, yaw,
+                              rollspeed, pitchspeed, yawspeed);
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+    (void)bytes_sent; //avoid compiler warning
+}
+
+void cDataLink::SendRcChannelsRaw(uint16_t ped_us, uint16_t col_us, uint16_t lon_us,
+                                  uint16_t lat_us, uint16_t aux_us,uint16_t mode_us)
+{
+    int bytes_sent;
+    uint16_t len;
+
+    /* Send RC channels */
     {
-        int bytes_sent;
-        uint16_t len;
-
-
-
-        std::bitset<16> onboard_control_sensors_present = 0;
-        std::bitset<16> onboard_control_sensors_enabled = 0;
-        std::bitset<16> onboard_control_sensors_health = 0;
-
-
-        onboard_control_sensors_present.set(gyro);
-        onboard_control_sensors_present.set(acc);
-        onboard_control_sensors_present.set(mag);
-        onboard_control_sensors_present.set(absolute_pressure);
-        onboard_control_sensors_present.set(gps);
-
-        onboard_control_sensors_enabled = onboard_control_sensors_present;
-        onboard_control_sensors_health  = onboard_control_sensors_present;
-
-        /* Send Status */
-        mavlink_msg_sys_status_pack(1, MAV_COMP_ID_ALL, &m_msg,
-                                    onboard_control_sensors_present.to_ulong(), //sensors present (uint32_bitmask)
-                                    onboard_control_sensors_enabled.to_ulong(), //sensors enabled
-                                    onboard_control_sensors_health.to_ulong(),  //sensors health
-                                    load,  //main loop load
-                                    millivoltage,    //voltage in millivolt
-                                    -1,    // current in mA (-1 = no data)
-                                    -1,    // remainig capacity
-                                    0, 0, 0, 0, 0, 0); //communication and autopilot errors
-        len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
-        bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof (struct sockaddr_in));
-        (void)bytes_sent; //avoid compiler warning
-
-    }
-    void cDataLink::SendImuMsg(float ax, float ay, float az,
-                               float rx, float ry, float rz,
-                               float mx, float my, float mz,
-                               float p, float T, float p_alt,
-                               long update_mask)
-    {
-        int bytes_sent;
-        uint16_t len;
-
-        /* Send high res imu */
-        mavlink_msg_highres_imu_pack(1, MAV_COMP_ID_IMU, &m_msg, microsSinceEpoch(),
-                                     ax, ay, az,    //ax, ay, az
-                                     rx, ry, rz,    //rx, ry, rz
-                                     mx, my, mz,    // mx, my, mz
-                                     p,             //abs
-                                     0.,            //diff
-                                     p_alt,         //pressure_alt
-                                     T,             //temperature
-                                     update_mask);  //bitmask of sensor updates
+        mavlink_msg_rc_channels_raw_pack(1, MAV_COMP_ID_ALL, &m_msg, microsSinceEpoch(),
+                                         uint8_t(1),                     // port
+                                         ped_us, col_us, lon_us, lat_us, //1...4
+                                         aux_us, mode_us,                //5, 6
+                                         uint16_t(65535), uint16_t(65535), // 6...8, 65535 implies the channel is unused
+                                         uint8_t(255));                   // rssi = unknown
         len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
         bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
         (void)bytes_sent; //avoid compiler warning
     }
+}
 
-    void cDataLink::SendGpsMsg(unsigned short fix_type, long lat, long lon, long alt,
-                               long vdop, long hdop,
-                               long vel, long course, unsigned short sats)
+void cDataLink::SendServoOutputRaw(uint16_t ped_us, uint16_t col_us, uint16_t lon_us,
+                                   uint16_t lat_us, uint16_t aux_us, uint16_t mode_us)
+{
+    int bytes_sent;
+    uint16_t len;
+
+    /* Send RC channels */
     {
-        int bytes_sent;
-        uint16_t len;
-
-        /* Send GPS raw int */
-        mavlink_msg_gps_raw_int_pack(1, MAV_COMP_ID_GPS, &m_msg, microsSinceEpoch(),
-                                     fix_type,          //fix_type
-                                     lat, lon, alt,  //lat, lon, alt
-                                     vdop, hdop,  // hdop, vdop
-                                     vel,      //vel*100
-                                     course,       //course deg*100
-                                     sats);         //visible satellites
+        mavlink_msg_servo_output_raw_pack(1, MAV_COMP_ID_ALL, &m_msg, microsSinceEpoch(),
+                                         uint8_t(1),                     // port
+                                         ped_us, col_us, lon_us, lat_us, //1...4
+                                         aux_us, mode_us,                //5, 6
+                                         uint16_t(65535), uint16_t(65535)); // 6...8, 65535 implies the channel is unused
         len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
         bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
         (void)bytes_sent; //avoid compiler warning
     }
+}
+void cDataLink::disconnect(void)
+{
+    execute_heartbeat_thread = false;
+    execute_receive_thread   = false;
 
-    void cDataLink::SendAttMsg(float roll, float pitch, float yaw,
-                               float rollspeed, float pitchspeed, float yawspeed)
-    {
-        int bytes_sent;
-        uint16_t len;
+    //...close socket etc.
+    close(sock);
 
-        /* Send attitude */
-        mavlink_msg_attitude_pack(1, MAV_COMP_ID_ALL, &m_msg, microsSinceEpoch(),
-                                  roll, pitch, yaw,
-                                  rollspeed, pitchspeed, yawspeed);
-        len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
-        bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
-        (void)bytes_sent; //avoid compiler warning
-    }
+}
 
-    void cDataLink::disconnect(void)
-    {
-        execute_heartbeat_thread = false;
-        execute_receive_thread   = false;
+cDataLink::~cDataLink()
+{
+    //dtor
+    disconnect();
+}
 
-        //...close socket etc.
-        close(sock);
-
-    }
-
-    cDataLink::~cDataLink()
-    {
-        //dtor
-        disconnect();
-    }
-
-    /* QNX timer version */
+/* QNX timer version */
 #if (defined __QNX__) | (defined __QNXNTO__)
-    uint64_t cDataLink::microsSinceEpoch()
-    {
+uint64_t cDataLink::microsSinceEpoch()
+{
 
-        struct timespec time;
+    struct timespec time;
 
-        uint64_t micros = 0;
+    uint64_t micros = 0;
 
-        clock_gettime(CLOCK_REALTIME, &time);
-        micros = (uint64_t)time.tv_sec * 100000 + time.tv_nsec/1000;
+    clock_gettime(CLOCK_REALTIME, &time);
+    micros = (uint64_t)time.tv_sec * 100000 + time.tv_nsec/1000;
 
-        return micros;
-    }
+    return micros;
+}
 #else
-    uint64_t cDataLink::microsSinceEpoch()
-    {
+uint64_t cDataLink::microsSinceEpoch()
+{
 
-        struct timeval tv;
+    struct timeval tv;
 
-        uint64_t micros = 0;
+    uint64_t micros = 0;
 
-        gettimeofday(&tv, NULL);
-        micros =  ((uint64_t)tv.tv_sec) * 1000000 + tv.tv_usec;
+    gettimeofday(&tv, NULL);
+    micros =  ((uint64_t)tv.tv_sec) * 1000000 + tv.tv_usec;
 
-        return micros;
-    }
+    return micros;
+}
 #endif

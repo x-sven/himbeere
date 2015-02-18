@@ -1,7 +1,12 @@
 // includes from: src
 #include "cECF/st_Euler.h"
+#include "ctrl_module.h"
 
 #include "datalink_module.h"
+#include "fcci_module.h"
+
+extern ctrl_module m_ctrl;
+extern fcci_module m_fcci;
 
 datalink_module::datalink_module(): cDataLink()
 {
@@ -117,6 +122,24 @@ void datalink_module::send_messages(void)
     else
     {
         std::cout << "Null pointer in datalink_module::send_messages (m_sf).\n";
+    }
+#endif
+
+    //if(NULL != m_fcci)
+    {
+        // Serco Output Message
+        uint16_t ped_us,  col_us,  lon_us,  lat_us, aux_us, mode_us;
+
+        m_fcci.getChannels(&ped_us,  &col_us,  &lon_us,  &lat_us, &aux_us, &mode_us);
+        cDataLink::SendRcChannelsRaw(ped_us,col_us,lon_us,lat_us, aux_us, mode_us);
+
+        m_ctrl.getControl( &ped_us,  &col_us,  &lon_us,  &lat_us);
+        cDataLink::SendServoOutputRaw(ped_us,col_us,lon_us,lat_us, aux_us, mode_us); // mode from fcci!
+    }
+#if defined(DEBUG)
+    else
+    {
+        std::cout << "Null pointer in datalink_module::send_messages (m_fcci).\n";
     }
 #endif
 }

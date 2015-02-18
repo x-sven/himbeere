@@ -13,8 +13,8 @@ ControlSystem::ControlSystem(){
   f_last_error = 0.0;
   f_ErrorMin = -1.57; //-pi/2
   f_ErrorMax =  1.57; //pi/2
-  f_ServoMin = 900;
-  f_ServoMax = 2100;
+  f_ControlMin = 900;
+  f_ControlMax = 2100;
 }
 
 
@@ -50,9 +50,9 @@ float ControlSystem::getGainKd(void){
   return(f_Kd);
 }
 
-void ControlSystem::setServoMinMax(float f_min, float f_max){
-  this-> f_ServoMin =  f_min;
-  this-> f_ServoMax =  f_max;
+void ControlSystem::setControlMinMax(float f_min, float f_max){
+  this-> f_ControlMin =  f_min;
+  this-> f_ControlMax =  f_max;
 }
 
 void ControlSystem::setErrorMinMax(float f_min, float f_max){
@@ -73,6 +73,6 @@ float ControlSystem::getControl(float f_cmd, float f_state, float f_offset){
   float f_dTerm = f_Kd * (f_ctrl_err - f_last_error);
   f_last_error = f_ctrl_err;
   //PID control
-  return(constrain( (float)((f_pTerm + f_iTerm + f_dTerm) + f_offset) , f_ServoMin, f_ServoMax)  );
+  return(constrain( (float)((f_pTerm + f_iTerm + f_dTerm) + f_offset) , f_ControlMin, f_ControlMax)  );
 }
 

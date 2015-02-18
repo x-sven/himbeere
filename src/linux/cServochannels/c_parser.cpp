@@ -45,16 +45,18 @@ void cParser::process_byte(byte rx_byte)
         break;
     case 2:
         rx_message[payload_counter++]=rx_byte;
-        if(payload_counter>9) // at least 10 bytes received (8+2)
+        if(payload_counter>=14) // at least 10 bytes received (12+2)
         {
-            unsigned int crc_received = (rx_message[8] << 8) + rx_message[9];
-            unsigned int crc_expected = crcFast(rx_message,8);
+            unsigned int crc_received = (rx_message[12] << 8) + rx_message[13];
+            unsigned int crc_expected = crcFast(rx_message,12); //msg received + Datasize without CRC
             if(crc_received == crc_expected)
             {
                 pchannels->setChannel( rud_1,(rx_message[0] << 8) + rx_message[1] );
                 pchannels->setChannel( thr_2,(rx_message[2] << 8) + rx_message[3] );
                 pchannels->setChannel( ele_3,(rx_message[4] << 8) + rx_message[5] );
                 pchannels->setChannel( ail_4,(rx_message[6] << 8) + rx_message[7] );
+                pchannels->setChannel( tbd_5,(rx_message[8] << 8) + rx_message[9] );
+                pchannels->setChannel( mod_6,(rx_message[10] << 8) + rx_message[11] );
                 b_new = true;
             }// crc verified
             else

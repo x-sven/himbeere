@@ -47,6 +47,10 @@ class cDataLink
                         long vel, long course, unsigned short sats);
         void SendAttMsg(float roll, float pitch, float yaw,
                     float rollspeed, float pitchspeed, float yawspeed);
+        void SendRcChannelsRaw(uint16_t ped_us, uint16_t col_us, uint16_t lon_us,
+                               uint16_t lat_us, uint16_t aux_us, uint16_t mode_us);
+        void SendServoOutputRaw(uint16_t ped_us, uint16_t col_us, uint16_t lon_us,
+                                uint16_t lat_us, uint16_t aux_us, uint16_t mode_us);
 
         boost::signal<void (void)>  signal_mag_calibration;
 

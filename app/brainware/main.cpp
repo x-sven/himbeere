@@ -34,6 +34,13 @@ struct st_options
 };
 st_options options;
 
+
+ctrl_module m_ctrl;
+fcci_module m_fcci;
+datalink_module m_datalink;
+
+
+
 bool execute = true;
 //***************************************
 void trap(int signal)
@@ -73,6 +80,13 @@ int main(int argc, char **argv )
    // register Ctrl-C signal
     signal(SIGINT, &trap);
 
+//ToDo: servo channels vom fcci zur GCS schicken, => Problem: Wir bekommen nur 4 channels vom FCCI!?
+// fcci communication testen + GCS channel Anzeige
+//  MAG calibrierung testen bzw. Button in GCS suchen,
+//  logging & timing testen
+//Verbesserung: signals/ static register? Konzept???
+
+
 //    gps_module m_gps;
 //    imu_module m_imu;
 //
@@ -82,7 +96,6 @@ int main(int argc, char **argv )
 //
 //    // TODO (sven#1#): ctrl commands from DataLink or fcci!?
 //    ctrl_module m_ctrl(m_ecf.get_sf_ptr());
-    ctrl_module m_ctrl;
 //    fcci_module m_fcci(&m_ctrl); // Ihhhhh!
 
 //    datalink_module m_datalink(m_imu.get_imu_ptr(),
@@ -91,7 +104,7 @@ int main(int argc, char **argv )
 //                               m_gps.get_gps_ptr(),
 //                               m_ecf.get_sf_ptr());
     //datalink_module m_datalink(NULL,NULL,NULL,NULL,NULL);
-    datalink_module m_datalink;
+//    datalink_module m_datalink;
     //m_ctrl.setDataLink(m_datalink.signal_mag_calibration);
 
 //    m_datalink.signal_mag_calibration.connect( boost::bind(&imu_module::run_mag_calibration, &m_imu) );

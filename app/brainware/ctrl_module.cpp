@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include "ctrl_module.h"
+#include "fcci_module.h"
 
 #ifndef constrain
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 #endif
+
+extern fcci_module m_fcci;
+
 
 ctrl_module::ctrl_module()
 {
@@ -45,18 +49,38 @@ void ctrl_module::set_gain(std::string name, float value)
 void ctrl_module::set_default_gains(void)
 {
     const uint16_t CTRL_ID = 0;
+    // U-Loop
     CtrlLoops[eCtrl_Loop_Vel_U].setGainKp         ( cParameter::set( 1.0 , "ctrl_u_gain_p" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_U].setServoMinMax    ( cParameter::set(-1.57, "ctrl_u_int_min", CTRL_ID)->get_value(),
-                                                    cParameter::set( 1.57, "ctrl_u_int_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_U].setGainKi         ( cParameter::set( 0.0 , "ctrl_u_gain_i" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_U].setGainKd         ( cParameter::set( 0.0 , "ctrl_u_gain_d" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_U].setErrorMinMax    ( cParameter::set(-1.0 , "ctrl_u_int_ms_min", CTRL_ID)->get_value(), // 1m/s
+                                                    cParameter::set( 1.0 , "ctrl_u_int_ms_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_U].setControlMinMax  ( cParameter::set(-1.0 , "ctrl_u_ctrl_rad_min", CTRL_ID)->get_value(), // about 60deg
+                                                    cParameter::set( 1.0 , "ctrl_u_ctrl_rad_max", CTRL_ID)->get_value());
+    // V-Loop
     CtrlLoops[eCtrl_Loop_Vel_V].setGainKp         ( cParameter::set( 1.0 , "ctrl_v_gain_p" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_V].setServoMinMax    ( cParameter::set(-1.57, "ctrl_v_int_min", CTRL_ID)->get_value(),
-                                                    cParameter::set( 1.57, "ctrl_v_int_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_V].setGainKi         ( cParameter::set( 0.0 , "ctrl_v_gain_i" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_V].setGainKd         ( cParameter::set( 0.0 , "ctrl_v_gain_d" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_V].setErrorMinMax    ( cParameter::set(-1.0 , "ctrl_v_int_ms_min", CTRL_ID)->get_value(), // 1m/s
+                                                    cParameter::set( 1.0 , "ctrl_v_int_ms_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_V].setControlMinMax  ( cParameter::set(-1.0 , "ctrl_v_ctrl_rad_min", CTRL_ID)->get_value(), // about 60deg
+                                                    cParameter::set( 1.0 , "ctrl_v_ctrl_rad_max", CTRL_ID)->get_value());
+    // W-Loop
     CtrlLoops[eCtrl_Loop_Vel_W].setGainKp         ( cParameter::set( 1.0 , "ctrl_w_gain_p" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_W].setServoMinMax    ( cParameter::set(-1.57, "ctrl_w_int_min", CTRL_ID)->get_value(),
-                                                    cParameter::set( 1.57, "ctrl_w_int_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_W].setGainKi         ( cParameter::set( 0.0 , "ctrl_w_gain_i" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_W].setGainKd         ( cParameter::set( 0.0 , "ctrl_w_gain_d" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_W].setErrorMinMax    ( cParameter::set(-1.0 , "ctrl_w_int_ms_min", CTRL_ID)->get_value(), // 1m/s
+                                                    cParameter::set( 1.0 , "ctrl_w_int_ms_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Vel_W].setControlMinMax  ( cParameter::set(-1.0 , "ctrl_w_ctrl_rad_min", CTRL_ID)->get_value(), // about 60deg
+                                                    cParameter::set( 1.0 , "ctrl_w_ctrl_rad_max", CTRL_ID)->get_value());
+    // Heading-Loop
     CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKp     ( cParameter::set( 1.0 , "ctrl_yaw_gain_p" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Yaw_angle].setServoMinMax( cParameter::set(-1.57, "ctrl_yaw_int_min", CTRL_ID)->get_value(),
-                                                    cParameter::set( 1.57, "ctrl_yaw_int_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKi     ( cParameter::set( 0.0 , "ctrl_yaw_gain_i" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKd     ( cParameter::set( 0.0 , "ctrl_yaw_gain_d" , CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Yaw_angle].setErrorMinMax( cParameter::set(-0.5 , "ctrl_yaw_int_rad_min", CTRL_ID)->get_value(), //about 30 deg
+                                                    cParameter::set( 0.5 , "ctrl_yaw_int_rad_max", CTRL_ID)->get_value());
+    CtrlLoops[eCtrl_Loop_Yaw_angle].setControlMinMax( cParameter::set(-1.0 , "ctrl_yaw_ctrl_rad_min", CTRL_ID)->get_value(), // about 60deg
+                                                      cParameter::set( 1.0 , "ctrl_yaw_ctrl_rad_max", CTRL_ID)->get_value());
 }
 
 void ctrl_module::start_thread(void)
@@ -97,8 +121,9 @@ void ctrl_module::loop(void)
 void ctrl_module::update(void)
 {
     float vel_scale = 5.0;  //for scaling +/-1-inputs to vel cmd: vel = scale*ctrl_input;
-    //uint16_t pilot[3] = {lon_us, lat_us, col_us};
 
+    uint16_t dummy;
+    m_fcci.getChannels(&dummy,  &m_in_col_us,  &m_in_lon_us,  &m_in_lat_us, &dummy, &dummy);
 
     //velocity command from pilot input, represents flat earth vel. rotated by yaw
     float vel_cmd[3] = {vel_scale*((float)m_in_lon_us-1500.0f)/500.0f,

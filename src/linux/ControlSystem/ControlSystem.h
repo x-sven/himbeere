@@ -16,7 +16,7 @@ class ControlSystem: public iCTRL
         float  getGainKi(void);
         void   setGainKd(float Kd);
         float  getGainKd(void);
-        void   setServoMinMax(float f_min, float f_max);
+        void   setControlMinMax(float f_min, float f_max);
         void   setErrorMinMax(float f_min, float f_max);
         float  getControl(float cmd, float state, float offset);
 
@@ -28,7 +28,7 @@ class ControlSystem: public iCTRL
         float f_integrated_error;
         float f_last_error;
         float f_ErrorMin, f_ErrorMax;
-        float f_ServoMin, f_ServoMax;
+        float f_ControlMin, f_ControlMax;
 };
 
 

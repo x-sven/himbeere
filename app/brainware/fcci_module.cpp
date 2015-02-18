@@ -5,15 +5,16 @@
 
 fcci_module::fcci_module()
 {
-    m_ctrl = NULL;
+//    m_ctrl = NULL;
+    fcci_in_channel = new cServoChannels(_num_channels);
     fcci_module::begin();
 }
 
-fcci_module::fcci_module(ctrl_module* _ctrl)
-{
-    m_ctrl = _ctrl;
-    fcci_module::begin();
-}
+//fcci_module::fcci_module(ctrl_module* _ctrl)
+//{
+//    m_ctrl = _ctrl;
+//    fcci_module::begin();
+//}
 
 void fcci_module::begin(void)
 {
@@ -58,9 +59,7 @@ void fcci_module::begin(void)
     }
 
     bControlUpdated = false;
-    if(NULL != m_ctrl)
-        m_ctrl->signal_newdata.connect( boost::bind(&fcci_module::ctrl_update,this) );
-
+    m_ctrl.signal_newdata.connect( boost::bind(&fcci_module::ctrl_update,this) );
     fcci_module::signal_newdata.connect( boost::bind(&fcci_module::fcci_log,this) );
 }
 
@@ -80,12 +79,13 @@ void fcci_module::loop(void)
             }
             if(true == bControlUpdated)
             {
-                m_ctrl->getControl(&ped_us, &col_us, &lon_us, &lat_us);
+                m_ctrl.getControl(&ped_us, &col_us, &lon_us, &lat_us);
                 fcci_module::send_commands(ped_us, col_us, lon_us, lat_us);
                 bControlUpdated = false;
             }
             if(parser.new_channels())
             {
+                *fcci_in_channel = parser.get_channels();
                 fcci_module::signal_newdata();
             }
         }
@@ -160,12 +160,23 @@ void fcci_module::send_commands(uint16_t ped_us, uint16_t col_us, uint16_t lon_u
     }
 }
 
-
+void fcci_module::getChannels(uint16_t *ped_us, uint16_t *col_us, uint16_t *lon_us,
+                              uint16_t *lat_us, uint16_t *aux_us, uint16_t *mod_us)
+{
+    *ped_us = fcci_in_channel->getChannel(rud_1);
+    *col_us = fcci_in_channel->getChannel(thr_2);
+    *lon_us = fcci_in_channel->getChannel(ele_3);
+    *lat_us = fcci_in_channel->getChannel(ail_4);
+    *aux_us = fcci_in_channel->getChannel(tbd_5);
+    *mod_us = fcci_in_channel->getChannel(mod_6);
+}
 
 
 fcci_module::~fcci_module()
 {
     fccilog.end();
+    if(NULL != fcci_in_channel)
+        delete(fcci_in_channel);
 
     delete(fcci_serial);
     fcci_serial = NULL;

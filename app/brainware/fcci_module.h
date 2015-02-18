@@ -9,15 +9,19 @@
 
 #include "ctrl_module.h" // ugly this way!
 
+extern ctrl_module m_ctrl;
+
+
 class fcci_module
 {
     public:
         fcci_module();
-        fcci_module(ctrl_module*);
+//        fcci_module(ctrl_module*);
 
         boost::signal<void (void)>  signal_newdata;
         std::string getString(void);
-
+        void getChannels(uint16_t *ped_us, uint16_t *col_us, uint16_t *lon_us,
+                         uint16_t *lat_us, uint16_t *aux_us, uint16_t *mod_us);
         void send_commands(uint16_t ped_us, uint16_t col_us, uint16_t lon_us, uint16_t lat_us);
         virtual ~fcci_module();
     protected:
@@ -26,7 +30,6 @@ class fcci_module
         Logging fccilog;
         cParser parser;
 
-        ctrl_module* m_ctrl; // ihhhh
 
         boost::thread the_thread;
         bool thread_running;
@@ -37,6 +40,9 @@ class fcci_module
 
         uint8_t command_buffer[12];
         uint16_t ped_us, col_us, lon_us, lat_us; // better with cServoChannels!
+
+        cServoChannels *fcci_in_channel;
+
         void fcci_log(void) { fccilog.data(this->getString()); }
 
 
