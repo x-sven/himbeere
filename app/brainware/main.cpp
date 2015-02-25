@@ -38,7 +38,8 @@ st_options options;
 ctrl_module m_ctrl;
 fcci_module m_fcci;
 datalink_module m_datalink;
-
+gps_module m_gps;
+imu_module m_imu;
 
 
 bool execute = true;
@@ -78,7 +79,8 @@ int main(int argc, char **argv )
 //***************************************
 {
    // register Ctrl-C signal
-    signal(SIGINT, &trap);
+    signal(SIGINT, &trap);//static float counter =0;
+
 
 //ToDo: servo channels vom fcci zur GCS schicken, => Problem: Wir bekommen nur 4 channels vom FCCI!?
 // fcci communication testen + GCS channel Anzeige

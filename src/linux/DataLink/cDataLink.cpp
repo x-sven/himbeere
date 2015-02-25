@@ -246,6 +246,9 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
         break;
     }
     default:
+        {
+          printf("msg->msgid not known: %d\n", msg->msgid);
+        }
         break;
     }// switch msgid
 
@@ -287,6 +290,9 @@ void cDataLink::SendStatusMsg(int load, int millivoltage)
     (void)bytes_sent; //avoid compiler warning
 
 }
+
+//static float counter =0;
+
 void cDataLink::SendImuMsg(float ax, float ay, float az,
                            float rx, float ry, float rz,
                            float mx, float my, float mz,
@@ -295,6 +301,20 @@ void cDataLink::SendImuMsg(float ax, float ay, float az,
 {
     int bytes_sent;
     uint16_t len;
+
+//    ax = 1;
+//    ay = 2;
+//    az = 9.81;
+//
+//
+//
+//    counter = counter + 3.14*0.01;
+//
+//     mx=.1*cos(counter)*cos(counter)+0.1;
+//     my=.1*sin(counter)*cos(counter)+0.2;
+//     mz=0.1*sin(counter);
+//
+//    printf("mag: %f, %f, %f\n", mx, my, mz);
 
     /* Send high res imu */
     mavlink_msg_highres_imu_pack(1, MAV_COMP_ID_IMU, &m_msg, microsSinceEpoch(),
@@ -306,8 +326,28 @@ void cDataLink::SendImuMsg(float ax, float ay, float az,
                                  p_alt,         //pressure_alt
                                  T,             //temperature
                                  update_mask);  //bitmask of sensor updates
+
     len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
     bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+
+    /* Send raw_imu */
+    mavlink_msg_raw_imu_pack(1, MAV_COMP_ID_IMU, &m_msg, microsSinceEpoch(),
+                                 (int16_t)(ax*100.), (int16_t)(ay*100.), (int16_t)(az*100.),    //ax, ay, az
+                                 (int16_t)(rx*100.), (int16_t)(ry*100.), (int16_t)(rz*100.),    //rx, ry, rz
+                                 (int16_t)(mx*1000.), (int16_t)(my*1000.), (int16_t)(mz*1000.));  //bitmask of sensor updates
+
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+
+    /* Send high scaled_imu */
+    mavlink_msg_scaled_imu_pack(1, MAV_COMP_ID_IMU, &m_msg, microsSinceEpoch(),
+                                 (int16_t)(ax*100.), (int16_t)(ay*100.), (int16_t)(az*100.),    //ax, ay, az
+                                 (int16_t)(rx*100.), (int16_t)(ry*100.), (int16_t)(rz*100.),    //rx, ry, rz
+                                 (int16_t)(mx*1000.), (int16_t)(my*1000.), (int16_t)(mz*1000.));  //bitmask of sensor updates
+
+    len = mavlink_msg_to_send_buffer(m_buf, &m_msg);
+    bytes_sent = sendto(sock, m_buf, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+
     (void)bytes_sent; //avoid compiler warning
 }
 

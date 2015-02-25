@@ -29,7 +29,7 @@ public:
 private:
   unsigned char step;              // step of serial data parser
   unsigned char payload_counter;   // counter for serial data
-  unsigned char rx_message[10];    // char buffer for (complete) serial message
+  unsigned char rx_message[14];    // char buffer for (complete) serial message
   uint32_t parse_errors;   // counter for serial recieve errors
   cServoChannels *pchannels;
   boolean b_new;
