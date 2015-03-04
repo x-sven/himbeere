@@ -18,7 +18,7 @@ class fcci_module
         fcci_module();
 //        fcci_module(ctrl_module*);
 
-        boost::signal<void (void)>  signal_newdata;
+        boost::signals2::signal<void (void)>  signal_newdata;
         std::string getString(void);
         void getChannels(uint16_t *ped_us, uint16_t *col_us, uint16_t *lon_us,
                          uint16_t *lat_us, uint16_t *aux_us, uint16_t *mod_us);

@@ -3,7 +3,7 @@
 
 #include "SDL.h"
 #include <boost/thread.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 
 class cJoystick
 {
@@ -20,8 +20,8 @@ public:
     int getButton(uint8_t button);
 
 
-    boost::signal<void (const cJoystick*, int axis  )>  signal_axis;
-    boost::signal<void (const cJoystick*, int button)>  signal_button;
+    boost::signals2::signal<void (const cJoystick*, int axis  )>  signal_axis;
+    boost::signals2::signal<void (const cJoystick*, int button)>  signal_button;
 
 protected:
 private:

@@ -1,7 +1,7 @@
 #ifndef C_SIGNAL_REGISTER_H
 #define C_SIGNAL_REGISTER_H
 
-#include<boost/signal.hpp>
+#include<boost/signals2.hpp>
 
 class c_signal_register
 {
@@ -9,7 +9,7 @@ class c_signal_register
         /** Default constructor */
         c_signal_register();
 
-        void register_func(boost::signal<void (void)> source, boost::function<void (void)> target);
+        void register_func(boost::signals2::signal<void (void)> source, boost::function<void (void)> target);
         /** Default destructor */
         virtual ~c_signal_register();
     protected:

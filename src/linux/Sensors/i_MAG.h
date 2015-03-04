@@ -1,7 +1,7 @@
 #ifndef __MAG_H__
 #define __MAG_H__
 
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 
 class iMAG
 {
@@ -11,7 +11,7 @@ class iMAG
 
         virtual void getField_Gauss(float *mx, float *my, float *mz) = 0;
 
-        boost::signal<void (void)>  signal_magdata;
+        boost::signals2::signal<void (void)>  signal_magdata;
 
     protected:
     private:

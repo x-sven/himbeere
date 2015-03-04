@@ -1,7 +1,7 @@
 #ifndef I_CTRL_H_INCLUDED
 #define I_CTRL_H_INCLUDED
 
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 
 class iCTRL
 {
@@ -11,7 +11,7 @@ class iCTRL
 
         virtual float getControl(float cmd, float state, float offset) = 0;
 
-        boost::signal<void (void)>  signal_newdata;
+        boost::signals2::signal<void (void)>  signal_newdata;
 
     protected:
     private:

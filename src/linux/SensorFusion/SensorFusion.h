@@ -15,7 +15,7 @@ class SensorFusion: public ECFClass, public BackgroundAction
         SensorFusion();
         virtual ~SensorFusion();
 
-        boost::signal<void (void)>  signal_newdata;
+        boost::signals2::signal<void (void)>  signal_newdata;
         std::string getString(void);
 
         void register_imu(iIMU*);

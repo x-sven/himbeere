@@ -54,8 +54,8 @@ void HardwareSerial::receive_loop(void)
 {
     while(thread_running)
     {
-        unsigned char c[SERIAL_BUFFER_SIZE];
-        memset(c, 0, SERIAL_BUFFER_SIZE);
+        unsigned char buffer[SERIAL_BUFFER_SIZE];
+        memset(buffer, 0, SERIAL_BUFFER_SIZE);
         ssize_t nchars_read = 0;
 
         if(fd != -1)
@@ -64,11 +64,15 @@ void HardwareSerial::receive_loop(void)
                          number read, -1 for errors or 0 for EOF.*/
             /* It follows a BLOCKING read from fd*/
 
-            nchars_read = ::read(fd, &c, 1);
+            nchars_read = ::read(fd, buffer, sizeof(buffer));
+
+            // ::write(STDOUT_FILENO, buffer, nchars_read);
 
             for(uint16_t ii=0; ii<nchars_read; ii++ )
             {
-                store_char(c[ii], _rx_buffer);
+                //std::cout << "nchars_read: " << nchars_read << std::endl;
+
+                store_char(buffer[ii], _rx_buffer);
                 signal_newdata();
             }
         }
@@ -81,7 +85,70 @@ void HardwareSerial::receive_loop(void)
     std::cout << "leaving serial receive_loop thread" << std::endl;
 }
 
-
+static inline speed_t convertBaudrate(speed_t to_conv)
+{
+    speed_t ret_val=to_conv;
+    switch (to_conv)
+    {
+    case 0:
+        ret_val = B0;
+        break;
+    case 50:
+        ret_val = B50;
+        break;
+    case 75:
+        ret_val = B75;
+        break;
+    case 110:
+        ret_val = B110;
+        break;
+    case 134:
+        ret_val = B134;
+        break;
+    case 150:
+        ret_val = B150;
+        break;
+    case 200:
+        ret_val = B200;
+        break;
+    case 300:
+        ret_val = B300;
+        break;
+    case 600:
+        ret_val = B600;
+        break;
+    case 1200:
+        ret_val = B1200;
+        break;
+    case 1800:
+        ret_val = B1800;
+        break;
+    case 2400:
+        ret_val = B2400;
+        break;
+    case 4800:
+        ret_val = B4800;
+        break;
+    case 9600:
+        ret_val = B9600;
+        break;
+    case 19200:
+        ret_val = B19200;
+        break;
+    case 38400:
+        ret_val = B38400;
+        break;
+    case 57600:
+        ret_val = B57600;
+        break;
+    case 115200:
+        ret_val = B115200;
+        break;
+    default:
+        break;
+    }
+    return ret_val;
+}
 
 // Constructors ////////////////////////////////////////////////////////////////
 
@@ -92,7 +159,11 @@ HardwareSerial::HardwareSerial( const char* device)
     _rx_buffer = &rx_buffer;
     _tx_buffer = &tx_buffer;
 
-    fd = open(device, O_RDWR | O_NOCTTY);
+    //O_RDWR: open for reading and writing,
+    //O_NDELAY:  don't care what state the DCD signal line is,
+    //O_NOCTTY: don’t assign a controlling terminal
+    //Remark:  [no O_NONBLOCK means its blocking!]
+    fd = open(device, O_RDWR | O_NDELAY| O_NOCTTY);
 #if defined(DEBUG)
     if(fd == -1)
     {
@@ -111,86 +182,30 @@ void HardwareSerial::begin(unsigned long baudrate)
     {
         termios ios_config;
 
-        if (tcgetattr(fd, &ios_config)>=0)
+        if (-1 < tcgetattr(fd, &ios_config))
         {
             ios_config_backup = ios_config;
-            // BAUDRATE: Set bps rate. You could also use cfsetispeed and cfsetospeed.
-            switch (baudrate)
-            {
-            case 0:
-                ios_config.c_cflag = B0;
-                break;
-            case 50:
-                ios_config.c_cflag = B50;
-                break;
-            case 75:
-                ios_config.c_cflag = B75;
-                break;
-            case 110:
-                ios_config.c_cflag = B110;
-                break;
-            case 134:
-                ios_config.c_cflag = B134;
-                break;
-            case 150:
-                ios_config.c_cflag = B150;
-                break;
-            case 200:
-                ios_config.c_cflag = B200;
-                break;
-            case 300:
-                ios_config.c_cflag = B300;
-                break;
-            case 600:
-                ios_config.c_cflag = B600;
-                break;
-            case 1200:
-                ios_config.c_cflag = B1200;
-                break;
-            case 1800:
-                ios_config.c_cflag = B1800;
-                break;
-            case 2400:
-                ios_config.c_cflag = B2400;
-                break;
-            case 4800:
-                ios_config.c_cflag = B4800;
-                break;
-            case 9600:
-                ios_config.c_cflag = B9600;
-                break;
-            case 19200:
-                ios_config.c_cflag = B19200;
-                break;
-            case 38400:
-                ios_config.c_cflag = B38400;
-                break;
-            case 57600:
-                ios_config.c_cflag = B57600;
-                break;
-            case 115200:
-                ios_config.c_cflag = B115200;
-                break;
-            case 230400:
-                ios_config.c_cflag = B230400;
-                break;
-            default:
-                ios_config.c_cflag = B9600;
-                break;
-            }
+
+
             // CS8     : 8n1 (8bit,no parity,1 stopbit)
             // CLOCAL  : local connection, no modem contol
             // CREAD   : enable receiving characters
-            ios_config.c_cflag = ios_config.c_cflag | CS8 | CLOCAL | CREAD;
-            ios_config.c_iflag = (IGNPAR);                 // IGNPAR: Ignore bytes with parity errors
+            ios_config.c_cflag =  CS8 | CLOCAL | CREAD;    //ios_config.c_cflag |
+            ios_config.c_iflag =  IGNPAR;                  // IGNPAR: Ignore bytes with parity errors
             ios_config.c_oflag = 0;                        // Raw output
             ios_config.c_lflag = 0;                        // Set input mode (non-canonical, no echo,...)
             ios_config.c_cc[VTIME] = 0;                    // Disable timeout of 1.0 seconds
             ios_config.c_cc[VMIN]  = 1;                    // Blocking read until "min" chars received
-            // info: no flowcontrol used here
-            tcflush(fd, TCIFLUSH);                         // Flush terminal
-            if( tcsetattr(fd, TCSANOW, &ios_config) >= 0 ) // Apply configuration
+
+            if (   -1 < cfsetspeed(&ios_config, convertBaudrate(baudrate) )
+                    && -1 < tcsetattr(fd, TCSANOW, &ios_config))
             {
+//                char buffer[80];
+//                while (true)
+//                {
+//                    size_t n = ::read(fd, buffer, sizeof(buffer) );
+//                    ::write(STDOUT_FILENO, buffer, n);
+//                }
                 // start thread in sucess
                 thread_running = true;
                 receiving_thread = boost::thread( boost::bind(&HardwareSerial::receive_loop, this) );
@@ -302,5 +317,3 @@ size_t HardwareSerial::write(uint8_t c)
 {
     return( ::write(fd, (void*)&c, (size_t)1) );
 }
-
-

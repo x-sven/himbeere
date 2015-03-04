@@ -18,7 +18,7 @@ class ctrl_module
         void set_gain(std::string name, float value);
         ~ctrl_module();
 
-        boost::signal<void (void)>  signal_newdata;
+        boost::signals2::signal<void (void)>  signal_newdata;
 
     protected:
     private:

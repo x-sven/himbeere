@@ -7,7 +7,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/condition_variable.hpp>
 

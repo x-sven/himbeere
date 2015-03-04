@@ -1,7 +1,7 @@
 #ifndef __IMU_H__
 #define __IMU_H__
 
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 
 class iIMU
 {
@@ -12,7 +12,7 @@ class iIMU
         virtual void getAccel_mss(float *ax, float *ay, float *az) = 0;
         virtual void getRates_rads(float *rx, float *ry, float *rz) = 0;
 
-        boost::signal<void (void)>  signal_imudata;
+        boost::signals2::signal<void (void)>  signal_imudata;
 
     protected:
     private:

@@ -24,7 +24,7 @@
 #endif
 
 #include <boost/thread.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 
 #include "mavlink/include/common/mavlink.h"
 
@@ -52,7 +52,7 @@ class cDataLink
         void SendServoOutputRaw(uint16_t ped_us, uint16_t col_us, uint16_t lon_us,
                                 uint16_t lat_us, uint16_t aux_us, uint16_t mode_us);
 
-        boost::signal<void (void)>  signal_mag_calibration;
+        boost::signals2::signal<void (void)>  signal_mag_calibration;
 
         virtual ~cDataLink();
     protected:

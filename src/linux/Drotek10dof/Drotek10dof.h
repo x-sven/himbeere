@@ -2,7 +2,7 @@
 #define DROTEK10DOF_H
 
 #include <boost/thread.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 #include <boost/thread/mutex.hpp>
 
 #include <I2Cdev.h>

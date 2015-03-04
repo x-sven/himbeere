@@ -1,7 +1,7 @@
 #ifndef __BACKGROUNDPROCESS_H__
 #define __BACKGROUNDPROCESS_H__
 
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/condition_variable.hpp>
 
@@ -12,7 +12,7 @@ class BackgroundAction
         virtual ~BackgroundAction();
 
         void update(void);
-        boost::signal<void (void)> signal_trigger;
+        boost::signals2::signal<void (void)> signal_trigger;
 
     protected:
     private:

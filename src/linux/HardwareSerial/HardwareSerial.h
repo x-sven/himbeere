@@ -25,7 +25,7 @@
 #include <inttypes.h>
 #include <termios.h>
 
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/condition_variable.hpp>
 
@@ -67,7 +67,7 @@ class HardwareSerial : public Stream
     virtual size_t write(uint8_t);
     using Print::write; // pull in write(str) and write(buf, size) from Print
 
-    boost::signal<void (void)>  signal_newdata;
+    boost::signals2::signal<void (void)>  signal_newdata;
 
 };
 

@@ -16,7 +16,7 @@ class gps_module: public AP_GPS_MTK16, public iGPS
         ~gps_module();
         iGPS* get_gps_ptr(void ) {return(this);};
 
-//        boost::signal<void (void)>  signal_newdata;
+//        boost::signals2::signal<void (void)>  signal_newdata;
         std::string getString(void);
 
          void position_ecf_m(float* north, float* east, float* down);
