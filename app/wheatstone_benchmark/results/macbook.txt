@@ -1,0 +1,33 @@
+
+##############################################
+Whetstone Single  Precision Benchmark in C/C++
+
+Date         2015-03-23
+Model        macbook
+CPU          Core2Duo
+Clock MHz    2400
+Cache        
+H/W options  
+OS           MAC OS X
+Compiler     gcc
+Options      
+Run by       Sven
+From         
+Email        
+
+Loop content                   Result              MFLOPS      MOPS   Seconds
+
+N1 floating point      -1.12475013732910156       569.486               0.699
+N2 floating point      -1.12274742126464844       552.820               5.040
+N3 if then else         1.00000000000000000                 525.184     4.085
+N4 fixed point         12.00000000000000000                 741.663     8.804
+N5 sin,cos etc.         0.49911010265350342                 108.773    15.856
+N6 floating point       0.99999982118606567       311.096              35.941
+N7 assignments          3.00000000000000000                 262.714    14.581
+N8 exp,sqrt etc.        0.75110864639282227                  51.013    15.116
+
+MWIPS                                            2070.371             100.122
+
+Results  to  load  to  spreadsheet                  MWIPS   Mflops1   Mflops2   Mflops3   Cosmops   Expmops  Fixpmops    Ifmops    Eqmops
+Results  to  load  to  spreadsheet               2070.371   569.486   552.820   311.096   108.773    51.013   741.663   525.184   262.714
+
