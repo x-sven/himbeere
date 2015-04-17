@@ -12,12 +12,24 @@ class ControlSystem: public iCTRL
         ControlSystem(); //Constructor
         void   setGainKp(float Kp);
         float  getGainKp(void);
+        float* Kp(void){return &f_Kp;}
+
         void   setGainKi(float Ki);
         float  getGainKi(void);
+        float* Ki(void){return &f_Ki;}
+
         void   setGainKd(float Kd);
         float  getGainKd(void);
+        float* Kd(void){return &f_Kd;}
+
         void   setControlMinMax(float f_min, float f_max);
+        float*   ControlMin(void){return &f_ControlMin; }
+        float*   ControlMax(void){return &f_ControlMax;}
+
         void   setErrorMinMax(float f_min, float f_max);
+        float*   ErrorMin(void){return &f_ErrorMin; }
+        float*   ErrorMax(void){return &f_ErrorMax;}
+
         float  getControl(float cmd, float state, float offset);
 
 

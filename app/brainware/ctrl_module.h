@@ -5,6 +5,8 @@
 #include "SensorFusion/SensorFusion.h"
 #include "cParameter/cParameter.h"
 
+extern SensorFusion* m_sf;
+
 class ctrl_module
 {
     public:
@@ -32,8 +34,6 @@ class ctrl_module
     };
 
         ControlSystem CtrlLoops[eCtrl_Loop_max_number];
-
-        SensorFusion* m_sf;
 
         void begin(void);
         void set_default_gains(void);

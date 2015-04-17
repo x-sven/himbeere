@@ -50,41 +50,79 @@ void ctrl_module::set_default_gains(void)
 {
     const uint16_t CTRL_ID = 0;
     // U-Loop
-    CtrlLoops[eCtrl_Loop_Vel_U].setGainKp         ( cParameter::set( 1.0 , "ctrl_u_gain_p" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_U].setGainKi         ( cParameter::set( 0.0 , "ctrl_u_gain_i" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_U].setGainKd         ( cParameter::set( 0.0 , "ctrl_u_gain_d" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_U].setErrorMinMax    ( cParameter::set(-1.0 , "ctrl_u_int_ms_min", CTRL_ID)->get_value(), // 1m/s
-                                                    cParameter::set( 1.0 , "ctrl_u_int_ms_max", CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_U].setControlMinMax  ( cParameter::set(-1.0 , "ctrl_u_ctrl_rad_min", CTRL_ID)->get_value(), // about 60deg
-                                                    cParameter::set( 1.0 , "ctrl_u_ctrl_rad_max", CTRL_ID)->get_value());
-    // V-Loop
-    CtrlLoops[eCtrl_Loop_Vel_V].setGainKp         ( cParameter::set( 1.0 , "ctrl_v_gain_p" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_V].setGainKi         ( cParameter::set( 0.0 , "ctrl_v_gain_i" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_V].setGainKd         ( cParameter::set( 0.0 , "ctrl_v_gain_d" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_V].setErrorMinMax    ( cParameter::set(-1.0 , "ctrl_v_int_ms_min", CTRL_ID)->get_value(), // 1m/s
-                                                    cParameter::set( 1.0 , "ctrl_v_int_ms_max", CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_V].setControlMinMax  ( cParameter::set(-1.0 , "ctrl_v_ctrl_rad_min", CTRL_ID)->get_value(), // about 60deg
-                                                    cParameter::set( 1.0 , "ctrl_v_ctrl_rad_max", CTRL_ID)->get_value());
-    // W-Loop
-    CtrlLoops[eCtrl_Loop_Vel_W].setGainKp         ( cParameter::set( 1.0 , "ctrl_w_gain_p" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_W].setGainKi         ( cParameter::set( 0.0 , "ctrl_w_gain_i" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_W].setGainKd         ( cParameter::set( 0.0 , "ctrl_w_gain_d" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_W].setErrorMinMax    ( cParameter::set(-1.0 , "ctrl_w_int_ms_min", CTRL_ID)->get_value(), // 1m/s
-                                                    cParameter::set( 1.0 , "ctrl_w_int_ms_max", CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Vel_W].setControlMinMax  ( cParameter::set(-1.0 , "ctrl_w_ctrl_rad_min", CTRL_ID)->get_value(), // about 60deg
-                                                    cParameter::set( 1.0 , "ctrl_w_ctrl_rad_max", CTRL_ID)->get_value());
-    // Heading-Loop
-    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKp     ( cParameter::set( 1.0 , "ctrl_yaw_gain_p" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKi     ( cParameter::set( 0.0 , "ctrl_yaw_gain_i" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKd     ( cParameter::set( 0.0 , "ctrl_yaw_gain_d" , CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Yaw_angle].setErrorMinMax( cParameter::set(-0.5 , "ctrl_yaw_int_rad_min", CTRL_ID)->get_value(), //about 30 deg
-                                                    cParameter::set( 0.5 , "ctrl_yaw_int_rad_max", CTRL_ID)->get_value());
-    CtrlLoops[eCtrl_Loop_Yaw_angle].setControlMinMax( cParameter::set(-1.0 , "ctrl_yaw_ctrl_rad_min", CTRL_ID)->get_value(), // about 60deg
-                                                      cParameter::set( 1.0 , "ctrl_yaw_ctrl_rad_max", CTRL_ID)->get_value());
+    cParameter::set( 1.0 , "c_u_gain_p"   , CtrlLoops[eCtrl_Loop_Vel_U].Kp(), CTRL_ID );
+    cParameter::set( 0.0 , "c_u_gain_i"   , CtrlLoops[eCtrl_Loop_Vel_U].Ki(), CTRL_ID );
+    cParameter::set( 0.0 , "c_u_gain_d"   , CtrlLoops[eCtrl_Loop_Vel_U].Kd(), CTRL_ID );
+    cParameter::set( -1.0, "c_u_int_l_ms" , CtrlLoops[eCtrl_Loop_Vel_U].ErrorMin(), CTRL_ID );
+    cParameter::set( 1.0 , "c_u_int_h_ms" , CtrlLoops[eCtrl_Loop_Vel_U].ErrorMax(), CTRL_ID );
+
+    cParameter::set( -1.0, "c_u_lim_l_rad" , CtrlLoops[eCtrl_Loop_Vel_U].ControlMin(), CTRL_ID );
+    cParameter::set( 1.0 , "c_u_lim_h_rad" , CtrlLoops[eCtrl_Loop_Vel_U].ControlMax(), CTRL_ID );
+
+
+//    CtrlLoops[eCtrl_Loop_Vel_U].setControlMinMax  ( cParameter::set(-1.0 , "c_u_lim_l_rad", CTRL_ID)->get_value(), // about 60deg
+//                                                    cParameter::set( 1.0 , "c_u_lim_h_rad", CTRL_ID)->get_value());
+//    // V-Loop
+
+    cParameter::set( 1.0 , "c_v_gain_p"   , CtrlLoops[eCtrl_Loop_Vel_V].Kp(), CTRL_ID );
+    cParameter::set( 0.0 , "c_v_gain_i"   , CtrlLoops[eCtrl_Loop_Vel_V].Ki(), CTRL_ID );
+    cParameter::set( 0.0 , "c_v_gain_d"   , CtrlLoops[eCtrl_Loop_Vel_V].Kd(), CTRL_ID );
+    cParameter::set( -1.0, "c_v_int_l_ms" , CtrlLoops[eCtrl_Loop_Vel_V].ErrorMin(), CTRL_ID );
+    cParameter::set( 1.0 , "c_v_int_h_ms" , CtrlLoops[eCtrl_Loop_Vel_V].ErrorMax(), CTRL_ID );
+
+    cParameter::set( -1.0, "c_v_lim_l_rad" , CtrlLoops[eCtrl_Loop_Vel_V].ControlMin(), CTRL_ID );
+    cParameter::set( 1.0 , "c_v_lim_h_rad" , CtrlLoops[eCtrl_Loop_Vel_V].ControlMax(), CTRL_ID );
+
+
+//    // V-Loop
+//    CtrlLoops[eCtrl_Loop_Vel_V].setGainKp         ( cParameter::set( 1.0 , "c_v_gain_p" , CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Vel_V].setGainKi         ( cParameter::set( 0.0 , "c_v_gain_i" , CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Vel_V].setGainKd         ( cParameter::set( 0.0 , "c_v_gain_d" , CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Vel_V].setErrorMinMax    ( cParameter::set(-1.0 , "c_v_int_l_ms", CTRL_ID)->get_value(), // 1m/s
+//                                                    cParameter::set( 1.0 , "c_v_int_h_ms", CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Vel_V].setControlMinMax  ( cParameter::set(-1.0 , "c_v_lim_l_rad", CTRL_ID)->get_value(), // about 60deg
+//                                                    cParameter::set( 1.0 , "c_v_lim_h_rad", CTRL_ID)->get_value());
+
+
+//    // W-Loop
+
+    cParameter::set( 1.0 , "c_w_gain_p"   , CtrlLoops[eCtrl_Loop_Vel_W].Kp(), CTRL_ID );
+    cParameter::set( 0.0 , "c_w_gain_i"   , CtrlLoops[eCtrl_Loop_Vel_W].Ki(), CTRL_ID );
+    cParameter::set( 0.0 , "c_w_gain_d"   , CtrlLoops[eCtrl_Loop_Vel_W].Kd(), CTRL_ID );
+    cParameter::set( -1.0, "c_w_int_l_ms" , CtrlLoops[eCtrl_Loop_Vel_W].ErrorMin(), CTRL_ID );
+    cParameter::set( 1.0 , "c_w_int_h_ms" , CtrlLoops[eCtrl_Loop_Vel_W].ErrorMax(), CTRL_ID );
+
+    cParameter::set( -1.0, "c_w_lim_l_rad" , CtrlLoops[eCtrl_Loop_Vel_W].ControlMin(), CTRL_ID );
+    cParameter::set( 1.0 , "c_w_lim_h_rad" , CtrlLoops[eCtrl_Loop_Vel_W].ControlMax(), CTRL_ID );
+//    CtrlLoops[eCtrl_Loop_Vel_W].setGainKp         ( cParameter::set( 1.0 , "c_w_gain_p" , CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Vel_W].setGainKi         ( cParameter::set( 0.0 , "c_w_gain_i" , CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Vel_W].setGainKd         ( cParameter::set( 0.0 , "c_w_gain_d" , CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Vel_W].setErrorMinMax    ( cParameter::set(-1.0 , "c_w_int_l_ms", CTRL_ID)->get_value(), // 1m/s
+//                                                    cParameter::set( 1.0 , "c_w_int_h_ms", CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Vel_W].setControlMinMax  ( cParameter::set(-1.0 , "c_w_lim_l_rad", CTRL_ID)->get_value(), // about 60deg
+//                                                    cParameter::set( 1.0 , "c_w_lim_h_rad", CTRL_ID)->get_value());
+//    // Heading-Loop
+    cParameter::set( 1.0 , "c_yaw_gain_p"   , CtrlLoops[eCtrl_Loop_Yaw_angle].Kp(), CTRL_ID );
+    cParameter::set( 0.0 , "c_yaw_gain_i"   , CtrlLoops[eCtrl_Loop_Yaw_angle].Ki(), CTRL_ID );
+    cParameter::set( 0.0 , "c_yaw_gain_d"   , CtrlLoops[eCtrl_Loop_Yaw_angle].Kd(), CTRL_ID );
+    cParameter::set( -1.0, "c_yaw_int_l_ms" , CtrlLoops[eCtrl_Loop_Yaw_angle].ErrorMin(), CTRL_ID );
+    cParameter::set( 1.0 , "c_yaw_int_h_ms" , CtrlLoops[eCtrl_Loop_Yaw_angle].ErrorMax(), CTRL_ID );
+
+    cParameter::set( -1.0, "c_yaw_lim_l_rad" , CtrlLoops[eCtrl_Loop_Yaw_angle].ControlMin(), CTRL_ID );
+    cParameter::set( 1.0 , "c_yaw_lim_h_rad" , CtrlLoops[eCtrl_Loop_Yaw_angle].ControlMax(), CTRL_ID );
+//    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKp     ( cParameter::set( 1.0 , "c_yaw_gain_p" , CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKi     ( cParameter::set( 0.0 , "c_yaw_gain_i" , CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Yaw_angle].setGainKd     ( cParameter::set( 0.0 , "c_yaw_gain_d" , CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Yaw_angle].setErrorMinMax( cParameter::set(-0.5 , "c_yaw_int_l_rad", CTRL_ID)->get_value(), //about 30 deg
+//                                                    cParameter::set( 0.5 , "c_yaw_int_h_rad", CTRL_ID)->get_value());
+//    CtrlLoops[eCtrl_Loop_Yaw_angle].setControlMinMax( cParameter::set(-1.0 , "c_yaw_lim_l_rad", CTRL_ID)->get_value(), // about 60deg
+//                                                      cParameter::set( 1.0 , "c_yaw_lim_h_rad", CTRL_ID)->get_value());
 }
 
 void ctrl_module::start_thread(void)
 {
+    printf("Starting Controller Thread!\n");
+
     // create thread
     thread_running = true;
     the_thread = boost::thread( boost::bind(&ctrl_module::loop, this));
@@ -116,6 +154,7 @@ void ctrl_module::loop(void)
         boost::this_thread::sleep(timer - boost::posix_time::microsec_clock::local_time());
         timer += interval_50Hz; // update timer
     }
+    printf("Leaving Controller Thread!\n");
 }
 
 void ctrl_module::update(void)

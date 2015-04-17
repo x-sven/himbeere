@@ -66,12 +66,12 @@ void HardwareSerial::receive_loop(void)
 
             nchars_read = ::read(fd, buffer, sizeof(buffer));
 
+            if(1 > nchars_read)
+                std::cout << "nchars_read: " << nchars_read << std::endl;
             // ::write(STDOUT_FILENO, buffer, nchars_read);
 
             for(uint16_t ii=0; ii<nchars_read; ii++ )
             {
-                //std::cout << "nchars_read: " << nchars_read << std::endl;
-
                 store_char(buffer[ii], _rx_buffer);
                 signal_newdata();
             }
@@ -163,7 +163,13 @@ HardwareSerial::HardwareSerial( const char* device)
     //O_NDELAY:  don't care what state the DCD signal line is,
     //O_NOCTTY: don’t assign a controlling terminal
     //Remark:  [no O_NONBLOCK means its blocking!]
+#if defined(__linux__) // for linux O_NDELAY is defeind to be O_NONBLOCK *grrrr*
+    fd = open(device, O_RDWR | O_NOCTTY);
+#else // at least for apple its this:
     fd = open(device, O_RDWR | O_NDELAY| O_NOCTTY);
+    #error Hurz!
+#endif
+
 #if defined(DEBUG)
     if(fd == -1)
     {

@@ -5,16 +5,9 @@
 
 fcci_module::fcci_module()
 {
-//    m_ctrl = NULL;
     fcci_in_channel = new cServoChannels(_num_channels);
     fcci_module::begin();
 }
-
-//fcci_module::fcci_module(ctrl_module* _ctrl)
-//{
-//    m_ctrl = _ctrl;
-//    fcci_module::begin();
-//}
 
 void fcci_module::begin(void)
 {
@@ -43,6 +36,7 @@ void fcci_module::begin(void)
     fccilog.header(headline.str());
     fccilog.begin("logfile_fcci.log", 5); // 10Hz
 
+    printf("Starting FCCI Thread!\n");
     // create thread
     thread_running = true;
     the_thread = boost::thread( boost::bind(&fcci_module::loop, this));
@@ -92,6 +86,7 @@ void fcci_module::loop(void)
         boost::this_thread::sleep(timer - boost::posix_time::microsec_clock::local_time());
         timer += interval_50Hz; // update timer
     }
+    printf("Leaving FCCI Thread!\n");
 }
 
 std::string fcci_module::getString(void)

@@ -35,11 +35,17 @@ struct st_options
 st_options options;
 
 
-ctrl_module m_ctrl;
-fcci_module m_fcci;
-datalink_module m_datalink;
 gps_module m_gps;
 imu_module m_imu;
+
+ecf_module m_ecf(m_imu.get_imu_ptr(), m_imu.get_mag_ptr(), NULL);
+SensorFusion* m_sf = m_ecf.get_sf_ptr();
+
+ctrl_module m_ctrl;
+
+fcci_module m_fcci;
+
+datalink_module m_datalink;
 
 
 bool execute = true;
@@ -79,8 +85,7 @@ int main(int argc, char **argv )
 //***************************************
 {
    // register Ctrl-C signal
-    signal(SIGINT, &trap);//static float counter =0;
-
+    signal(SIGINT, &trap);
 
 //ToDo: servo channels vom fcci zur GCS schicken, => Problem: Wir bekommen nur 4 channels vom FCCI!?
 // fcci communication testen + GCS channel Anzeige
@@ -122,7 +127,7 @@ int main(int argc, char **argv )
     if(!options.gcs_udp_addr.empty())
     {
         cout << "Trying to send to: "<< options.gcs_udp_addr << endl;
-        m_datalink.connect(options.gcs_udp_addr);
+      //  m_datalink.connect(options.gcs_udp_addr);
     }
     if(0 < options.logging_rate)
     {

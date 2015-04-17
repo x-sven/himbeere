@@ -39,6 +39,15 @@ Drotek10dof::Drotek10dof(std::string _device)
         mag_max[ii] = 0;
         mag_ofs[ii] = 0.0;
     }
+
+    const uint16_t SENSOR_ID = 1;
+
+    cParameter::set( 0.0 , "mag_off_x", &mag_ofs[0], SENSOR_ID );
+    cParameter::set( 0.0 , "mag_off_y", &mag_ofs[1], SENSOR_ID );
+    cParameter::set( 0.0 , "mag_off_z", &mag_ofs[2], SENSOR_ID );
+
+
+
     mag_calibration_running = false;
     pressure=temp=0;
     time_imu = time_mag = time_baro = boost::posix_time::microsec_clock::local_time();

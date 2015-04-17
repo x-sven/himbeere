@@ -188,7 +188,7 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
             packet.target_component,
             msg,
             cParameter::get_instances()->at(packet.param_index)->get_name().c_str(),
-            cParameter::get_instances()->at(packet.param_index)->get_value(),
+            *(cParameter::get_instances()->at(packet.param_index)->get_value()),
             MAV_PARAM_TYPE_REAL32,
             cParameter::get_instances()->size(),      // param_count = Anzahl der Parameter
             packet.param_index);                      // param_index = Nummer f. aktellen Parameter
@@ -208,7 +208,7 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
                 1, MAV_COMP_ID_SYSTEM_CONTROL,
                 msg,
                 (*it)->get_name().c_str(),
-                (*it)->get_value(),
+                *((*it)->get_value()),   //Iterator goes to vector list with cParameter pointers. Get value returns a pointer to the component value -> again dereference
                 MAV_PARAM_TYPE_REAL32,
                 cParameter::get_instances()->size(),                         // param_count = Anzahl der Parameter
                 std::distance(cParameter::get_instances()->begin(),it));     // param_index = Nummer f. aktellen Parameter
@@ -235,7 +235,7 @@ void cDataLink::handleMessage(mavlink_message_t* msg)
                 packet.target_component,
                 msg,
                 (*it)->get_name().c_str(),
-                (*it)->get_value(),
+                *((*it)->get_value()),
                 MAV_PARAM_TYPE_REAL32,
                 cParameter::get_instances()->size(),                     // param_count = Anzahl der Parameter
                 std::distance(cParameter::get_instances()->begin(),it)); // param_index = Nummer f. aktellen Parameter

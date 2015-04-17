@@ -16,7 +16,6 @@ class fcci_module
 {
     public:
         fcci_module();
-//        fcci_module(ctrl_module*);
 
         boost::signals2::signal<void (void)>  signal_newdata;
         std::string getString(void);

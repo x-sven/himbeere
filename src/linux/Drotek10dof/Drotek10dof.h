@@ -14,6 +14,8 @@
 #include "Sensors/i_MAG.h"
 #include "Sensors/i_BARO.h"
 
+#include "cParameter/cParameter.h"
+
 class Drotek10dof:
     public iIMU,
     public iMAG,

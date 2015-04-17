@@ -130,11 +130,11 @@ void datalink_module::send_messages(void)
         // Serco Output Message
         uint16_t ped_us,  col_us,  lon_us,  lat_us, aux_us, mode_us;
 
-        m_fcci.getChannels(&ped_us,  &col_us,  &lon_us,  &lat_us, &aux_us, &mode_us);
-        cDataLink::SendRcChannelsRaw(ped_us,col_us,lon_us,lat_us, aux_us, mode_us);
-
-        m_ctrl.getControl( &ped_us,  &col_us,  &lon_us,  &lat_us);
-        cDataLink::SendServoOutputRaw(ped_us,col_us,lon_us,lat_us, aux_us, mode_us); // mode from fcci!
+//        m_fcci.getChannels(&ped_us,  &col_us,  &lon_us,  &lat_us, &aux_us, &mode_us);
+//        cDataLink::SendRcChannelsRaw(ped_us,col_us,lon_us,lat_us, aux_us, mode_us);
+//
+//        m_ctrl.getControl( &ped_us,  &col_us,  &lon_us,  &lat_us);
+//        cDataLink::SendServoOutputRaw(ped_us,col_us,lon_us,lat_us, aux_us, mode_us); // mode from fcci!
     }
 #if defined(DEBUG)
     else
