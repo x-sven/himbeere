@@ -45,8 +45,11 @@ ctrl_module m_ctrl;
 
 fcci_module m_fcci;
 
-datalink_module m_datalink;
-
+datalink_module m_datalink( m_imu.get_imu_ptr(),
+                            m_imu.get_mag_ptr(),
+                            m_imu.get_baro_ptr(),
+                            m_gps.get_gps_ptr(),
+                            m_ecf.get_sf_ptr());
 
 bool execute = true;
 //***************************************
@@ -127,7 +130,7 @@ int main(int argc, char **argv )
     if(!options.gcs_udp_addr.empty())
     {
         cout << "Trying to send to: "<< options.gcs_udp_addr << endl;
-      //  m_datalink.connect(options.gcs_udp_addr);
+        m_datalink.connect(options.gcs_udp_addr);
     }
     if(0 < options.logging_rate)
     {

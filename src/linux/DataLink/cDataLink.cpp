@@ -90,6 +90,7 @@ void cDataLink::heartbeat_loop(void)
     while(execute_heartbeat_thread)
     {
         /*Send Heartbeat */
+        //MAV_TYPE_TRICOPTER
         mavlink_msg_heartbeat_pack(1, MAV_COMP_ID_SYSTEM_CONTROL, &m_msg,
                                    MAV_TYPE_TRICOPTER,
                                    MAV_AUTOPILOT_GENERIC,

@@ -87,6 +87,7 @@ class Drotek10dof:
         int16_t mag_min[3];
         int16_t mag_max[3];
         float mag_ofs[3];
+        float mag_scl[3];
         bool mag_calibration_running;
         void mag_calibration_timer(uint16_t runtime);
         boost::thread calibration_timer;

@@ -44,6 +44,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="rt" />
 				</Linker>
 			</Target>
 		</Build>
@@ -67,8 +68,8 @@
 			<Add library="boost_filesystem" />
 			<Add library="boost_signals" />
 			<Add library="boost_program_options" />
-			<Add library="boost_chrono" />
 			<Add library="boost_timer" />
+			<Add library="boost_chrono" />
 			<Add library="pthread" />
 		</Linker>
 		<Unit filename="../../src/AP_GPS/AP_GPS.h" />

@@ -38,15 +38,17 @@ Drotek10dof::Drotek10dof(std::string _device)
         mag_min[ii] = 0;
         mag_max[ii] = 0;
         mag_ofs[ii] = 0.0;
+        mag_scl[ii] = 1.0;
     }
 
     const uint16_t SENSOR_ID = 1;
 
-    cParameter::set( 0.0 , "mag_off_x", &mag_ofs[0], SENSOR_ID );
-    cParameter::set( 0.0 , "mag_off_y", &mag_ofs[1], SENSOR_ID );
-    cParameter::set( 0.0 , "mag_off_z", &mag_ofs[2], SENSOR_ID );
-
-
+    cParameter::set( - 55.0 , "mag_off_x", &mag_ofs[0], SENSOR_ID );
+    cParameter::set( +140.0 , "mag_off_y", &mag_ofs[1], SENSOR_ID );
+    cParameter::set( + 50.0 , "mag_off_z", &mag_ofs[2], SENSOR_ID );
+    cParameter::set(    1.0 , "mag_scale_x", &mag_scl[0], SENSOR_ID );
+    cParameter::set(    1.0 , "mag_scale_y", &mag_scl[1], SENSOR_ID );
+    cParameter::set(    1.0 , "mag_scale_z", &mag_scl[2], SENSOR_ID );
 
     mag_calibration_running = false;
     pressure=temp=0;
@@ -289,9 +291,9 @@ void Drotek10dof::getScaledMAG(float *_mx, float *_my, float *_mz)
     }
 
     mutex.lock();
-    *_mx = MAG_SCALE*mx;
-    *_my = MAG_SCALE*my;
-    *_mz = MAG_SCALE*mz;
+    *_mx = MAG_SCALE*(mx + mag_ofs[0])*mag_scl[0];
+    *_my = MAG_SCALE*(my + mag_ofs[1])*mag_scl[1];
+    *_mz = MAG_SCALE*(mz + mag_ofs[2])*mag_scl[2];
     mutex.unlock();
 }
 
